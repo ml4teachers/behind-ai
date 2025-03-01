@@ -116,7 +116,7 @@ export default function FinetuningPage() {
             ) : (
               <div className="text-gray-500 text-center h-full flex flex-col justify-center items-center">
                 <p className="mb-2">
-                  Klicke auf "Simulation starten", um den Unterschied zu sehen
+                  Klicke auf &quot;Simulation starten&quot;, um den Unterschied zu sehen
                 </p>
                 <p className="text-sm max-w-md">
                   Du wirst den Unterschied zwischen einem Modell direkt nach dem Pretraining und 

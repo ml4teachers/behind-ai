@@ -70,9 +70,9 @@ export const FinetuningSimulation = () => {
 
     // Füge die Nachricht zum richtigen Chat hinzu
     if (activeTab === 'pretrained') {
-      setPretrainedMessages(prev => [...prev, userMessage])
+      setPretrainedMessages(prev => [...prev, userMessage as ChatMessage])
     } else {
-      setFinetunedMessages(prev => [...prev, userMessage])
+      setFinetunedMessages(prev => [...prev, userMessage as ChatMessage])
     }
 
     setIsTyping(true)
@@ -88,9 +88,9 @@ export const FinetuningSimulation = () => {
       }
       
       if (activeTab === 'pretrained') {
-        setPretrainedMessages(prev => [...prev, assistantMessage])
+        setPretrainedMessages(prev => [...prev, assistantMessage as ChatMessage])
       } else {
-        setFinetunedMessages(prev => [...prev, assistantMessage])
+        setFinetunedMessages(prev => [...prev, assistantMessage as ChatMessage])
       }
     }
     

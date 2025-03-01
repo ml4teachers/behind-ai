@@ -136,7 +136,7 @@ export function TokenizationAnimation({ text }: TokenizationAnimationProps) {
             </div>
             
             {/* Interactive visualization of what parts of the text become tokens */}
-            {stage !== 'loading' && (
+            {(stage === 'tokenizing' || stage === 'to-ids' || stage === 'from-ids' || stage === 'complete') && (
               <div className="bg-gray-50 p-4 rounded-lg w-full max-w-lg mb-2">
                 <p className="text-sm text-center text-gray-600 mb-2">
                   So sieht das Sprachmodell deinen Text:

@@ -81,10 +81,13 @@ export async function POST(request: Request) {
     console.error('Next-Token Prediction Fehler:', error);
     
     // Fallback-Vorhersagen bereitstellen, wenn die API nicht erreichbar ist
-    const fallbackTokens = getFallbackPredictions(text);
+    const requestText = typeof request.body === 'object' && request.body !== null 
+      ? (request.body as { text?: string })?.text || ""
+      : "";
+    const fallbackTokens = getFallbackPredictions(requestText);
     
     return NextResponse.json({
-      text: text,
+      text: requestText,
       topTokens: fallbackTokens,
       remainingProbability: 0.33,
       generatedToken: fallbackTokens[0].token,

@@ -62,11 +62,11 @@ export default function ChainOfThoughtPage() {
               </p>
               <p className="text-sm text-violet-700 mt-2">
                 In modernen KI-Modellen wie Claude 3.7, OpenAI o3 oder Grok 3 wurde dieses Konzept weiterentwickelt 
-                zu einem "Thinking Mode" oder "Extended Thinking", bei dem das Modell:
+                zu einem &quot;Thinking Mode&quot; oder &quot;Extended Thinking&quot;, bei dem das Modell:
               </p>
               <ul className="text-sm text-violet-700 list-disc pl-5 mt-1 space-y-1">
                 <li>Mehr Rechenzeit für komplexe Probleme erhält</li>
-                <li>Einen internen "Notizblock" (Scratchpad) verwendet, um Zwischenschritte festzuhalten</li>
+                <li>Einen internen &quot;Notizblock&quot; (Scratchpad) verwendet, um Zwischenschritte festzuhalten</li>
                 <li>Verschiedene Lösungsansätze durchspielt und bewertet</li>
                 <li>Sich selbst korrigiert, bevor die endgültige Antwort ausgegeben wird</li>
               </ul>
@@ -116,7 +116,7 @@ export default function ChainOfThoughtPage() {
             ) : (
               <div className="text-gray-500 text-center h-full flex flex-col justify-center items-center">
                 <p className="mb-2">
-                  Klicke auf "Simulation starten", um die Chain-of-Thought-Methode zu erleben
+                  Klicke auf &quot;Simulation starten&quot;, um die Chain-of-Thought-Methode zu erleben
                 </p>
                 <p className="text-sm max-w-md">
                   Du kannst verschiedene Aufgabentypen ausprobieren und beobachten, wie ein KI-Modell

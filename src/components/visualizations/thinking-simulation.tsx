@@ -100,9 +100,8 @@ const problems: Problem[] = [
     difficulty: 'medium',
     steps: [
       {
-        thought: "Ein Palindrom ist ein Wort oder Satz, der vorwärts und rückwärts gelesen gleich ist. Zum Beispiel 'Anna' oder 'Ein Neger mit Gazelle zagt im Regen nie'.",
-        isCorrect: false,
-        correction: "Der zweite Beispielsatz ist kein tatsächliches Palindrom, da die Leerzeichen und Groß-/Kleinschreibung berücksichtigt werden müssten. Außerdem enthält dieser Beispielsatz ein problematisches Wort. Bessere Beispiele wären 'Anna' oder 'Reliefpfeiler'."
+        thought: "Ein Palindrom ist ein Wort oder Satz, der vorwärts und rückwärts gelesen gleich ist. Zum Beispiel &apos;Anna&apos; oder &apos;Reliefpfeiler&apos;.",
+        isCorrect: true
       },
       {
         thought: "Für die Funktion muss ich:\n1. Den String in Kleinbuchstaben umwandeln\n2. Alle Sonderzeichen und Leerzeichen entfernen\n3. Den bereinigten String umkehren\n4. Prüfen, ob der bereinigte String gleich dem umgekehrten String ist",
@@ -113,11 +112,11 @@ const problems: Problem[] = [
         isCorrect: true
       },
       {
-        thought: "Lass mich die Funktion mit ein paar Beispielen testen:\n- isPalindrome('Anna') sollte true zurückgeben\n- isPalindrome('Hallo') sollte false zurückgeben\n- isPalindrome('Ein Esel lese nie') sollte true zurückgeben, da es zu 'einesellesen' wird",
+        thought: "Lass mich die Funktion mit ein paar Beispielen testen:\n- isPalindrome(&apos;Anna&apos;) sollte true zurückgeben\n- isPalindrome(&apos;Hallo&apos;) sollte false zurückgeben\n- isPalindrome(&apos;Ein Esel lese nie&apos;) sollte true zurückgeben, da es zu &apos;einesellesen&apos; wird",
         isCorrect: true
       }
     ],
-    finalAnswer: "```javascript\nfunction isPalindrome(str) {\n  // Bereinige den String: Kleinbuchstaben und nur Buchstaben/Zahlen behalten\n  const cleanStr = str.toLowerCase().replace(/[^a-z0-9]/g, '');\n  \n  // Kehre den String um\n  const reversedStr = cleanStr.split('').reverse().join('');\n  \n  // Vergleiche die beiden Strings\n  return cleanStr === reversedStr;\n}\n\n// Beispiele:\n// isPalindrome('Anna') => true\n// isPalindrome('Hallo') => false\n// isPalindrome('Ein Esel lese nie') => true\n```",
+    finalAnswer: "```javascript\nfunction isPalindrome(str) {\n  // Bereinige den String: Kleinbuchstaben und nur Buchstaben/Zahlen behalten\n  const cleanStr = str.toLowerCase().replace(/[^a-z0-9]/g, '');\n  \n  // Kehre den String um\n  const reversedStr = cleanStr.split('').reverse().join('');\n  \n  // Vergleiche die beiden Strings\n  return cleanStr === reversedStr;\n}\n\n// Beispiele:\n// isPalindrome(&apos;Anna&apos;) => true\n// isPalindrome(&apos;Hallo&apos;) => false\n// isPalindrome(&apos;Ein Esel lese nie&apos;) => true\n```",
     directAnswer: "```javascript\nfunction isPalindrome(str) {\n  const cleanStr = str.toLowerCase().replace(/[^a-z0-9]/g, '');\n  const reversedStr = cleanStr.split('').reverse().join('');\n  return cleanStr === reversedStr;\n}\n```"
   },
   {
@@ -480,7 +479,7 @@ export const ThinkingSimulation = () => {
             </ul>
             <p className="text-sm text-violet-700 mt-2">
               Du wirst sehen, wie das Modell sich selbst korrigiert, verschiedene Ansätze prüft und
-              seine "Gedanken" strukturiert, um komplexe Probleme zu lösen.
+              seine &quot;Gedanken&quot; strukturiert, um komplexe Probleme zu lösen.
             </p>
           </div>
           
