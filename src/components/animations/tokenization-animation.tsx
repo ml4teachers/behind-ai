@@ -115,7 +115,7 @@ export function TokenizationAnimation({ text }: TokenizationAnimationProps) {
           key="tokenization"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="w-full"
+          style={{ width: '100%' }}
         >
           <motion.p 
             className="text-center text-lg font-medium mb-4"
