@@ -1,4 +1,4 @@
-import Image from 'next/image'
+// import Image from 'next/image' - nicht verwendet
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
@@ -64,7 +64,7 @@ export default function ResourcesPage() {
             ></iframe>
           </div>
           <p className="mt-2 text-sm text-gray-600">
-            Der Titel "How I use LLMs" täuscht, da auch hier wieder sehr viel über die Nützlichkeit und Funktionsweise von LLMs erzählt wird.
+            Der Titel &quot;How I use LLMs&quot; täuscht, da auch hier wieder sehr viel über die Nützlichkeit und Funktionsweise von LLMs erzählt wird.
             Zum Beispiel betont er, wie präsent Halluzinationen immer noch sind auch in den modernsten, grössten und
             teilweise sehr teuren KI-Tool-Abos.
           </p>
@@ -86,7 +86,7 @@ export default function ResourcesPage() {
           HuggingFace FineWeb Demo
         </Link>
         <p className="mt-4">
-          Die deutschen Textausschnitte wurden mit Hilfe von Google's kleinstem LLM "gemini-2.0-flash-lite" kostenlos per API übersetzt.
+          Die deutschen Textausschnitte wurden mit Hilfe von Google&apos;s kleinstem LLM &quot;gemini-2.0-flash-lite&quot; kostenlos per API übersetzt.
         </p>
       </section>
 
@@ -158,7 +158,7 @@ export default function ResourcesPage() {
         <div className="mt-6">
           <p className="mb-4">
             Ich finde es wichtig zu erwähnen, dass ich einen Master in Fachdidaktik Medien und Informatik an der PH Schwyz gemacht habe. 
-            Ich habe ein Semester lang die Grundlagen des Programmierens kennengelernt. Der Rest ist selbst beigebracht. Was man hier auf dieser Seite sieht ist eindeutig "Vibe Coding"...
+            Ich habe ein Semester lang die Grundlagen des Programmierens kennengelernt. Der Rest ist selbst beigebracht. Was man hier auf dieser Seite sieht ist eindeutig &quot;Vibe Coding&quot;...
           </p>
           
           <div className="space-y-6 mt-6">
@@ -166,7 +166,7 @@ export default function ResourcesPage() {
               <h3 className="font-medium mb-2">Vibe Coding</h3>
               <blockquote className="border-l-4 border-violet-400 pl-4 italic">
                 <p>
-                  There's a new kind of coding I call "vibe coding", where you fully give in to the vibes, embrace exponentials, and forget that the code even exists. It's possible because the LLMs (e.g. Cursor Composer w Sonnet) are getting too good. Also I just talk to Composer with SuperWhisper so I barely even touch the keyboard. I ask for the dumbest things like "decrease the padding on the sidebar by half" because I'm too lazy to find it. I "Accept All" always, I don't read the diffs anymore. When I get error messages I just copy paste them in with no comment, usually that fixes it. The code grows beyond my usual comprehension, I'd have to really read through it for a while. Sometimes the LLMs can't fix a bug so I just work around it or ask for random changes until it goes away. It's not too bad for throwaway weekend projects, but still quite amusing. I'm building a project or webapp, but it's not really coding - I just see stuff, say stuff, run stuff, and copy paste stuff, and it mostly works.
+                  There&apos;s a new kind of coding I call &quot;vibe coding&quot;, where you fully give in to the vibes, embrace exponentials, and forget that the code even exists. It&apos;s possible because the LLMs (e.g. Cursor Composer w Sonnet) are getting too good. Also I just talk to Composer with SuperWhisper so I barely even touch the keyboard. I ask for the dumbest things like &quot;decrease the padding on the sidebar by half&quot; because I&apos;m too lazy to find it. I &quot;Accept All&quot; always, I don&apos;t read the diffs anymore. When I get error messages I just copy paste them in with no comment, usually that fixes it. The code grows beyond my usual comprehension, I&apos;d have to really read through it for a while. Sometimes the LLMs can&apos;t fix a bug so I just work around it or ask for random changes until it goes away. It&apos;s not too bad for throwaway weekend projects, but still quite amusing. I&apos;m building a project or webapp, but it&apos;s not really coding - I just see stuff, say stuff, run stuff, and copy paste stuff, and it mostly works.
                 </p>
               </blockquote>
               <div className="mt-2 text-sm">
@@ -192,7 +192,7 @@ export default function ResourcesPage() {
               <h3 className="font-medium mb-2">Programmieren mit natürlicher Sprache</h3>
               <blockquote className="border-l-4 border-violet-400 pl-4 italic">
                 <p>
-                  "The hottest new programming language is English"
+                  &quot;The hottest new programming language is English&quot;
                 </p>
               </blockquote>
               <div className="mt-2 text-sm">

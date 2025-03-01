@@ -4,9 +4,7 @@ const nextConfig = {
   output: 'standalone',
   
   // Disable Turbopack for Vercel deployment
-  experimental: {
-    turbo: false
-  }
+  experimental: {}
 };
 
 module.exports = nextConfig;

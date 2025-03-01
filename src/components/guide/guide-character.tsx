@@ -1,4 +1,4 @@
-import Image from 'next/image'
+// import Image from 'next/image' - nicht verwendet
 import { cn } from '@/lib/utils'
 
 type GuideEmotion = 'happy' | 'thinking' | 'explaining' | 'surprised' | 'excited' | 'curious' | 'enthusiastic'

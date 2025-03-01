@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Card } from '@/components/ui/card'
-import dynamic from 'next/dynamic'
 import { Skeleton } from '@/components/ui/skeleton'
 import Papa from 'papaparse'
 
@@ -19,10 +18,10 @@ const mockPlotly = {
   d3: { scale: { category10: () => () => '#000' } }
 };
 
-// For direct access to Plotly API
-const usePlotly = () => {
-  return { Plotly: mockPlotly };
-}
+// No longer needed
+// const usePlotly = () => {
+//   return { Plotly: mockPlotly };
+// }
 
 interface ClusterInfo {
   clusterId: number
@@ -38,6 +37,24 @@ interface DataPoint {
   eduScore: number
   label: number
   text: string
+}
+
+// CSV row type definitions to avoid 'any'
+interface InfoRow {
+  cluster_id: string
+  cluster_summaries?: string
+  cluster_summaries_translated?: string
+  cluster_position_x: string
+  cluster_position_y: string
+}
+
+interface DataRow {
+  X: string
+  Y: string
+  edu_labels: string
+  cluster_labels: string
+  content_display_translated?: string
+  content_display?: string
 }
 
 // Color generator for clusters
@@ -82,17 +99,17 @@ export function DatensetCluster() {
         // Lade Cluster-Informationen aus der CSV-Datei
         const infoResponse = await fetch('/daten/assets/info.csv')
         const infoText = await infoResponse.text()
-        
-        // Parse die CSV mit Papa Parse
-        const infoResults = Papa.parse(infoText, {
+      
+        // Parse die CSV mit Papa Parse mit Typisierung
+        const infoResults = Papa.parse<InfoRow>(infoText, {
           header: true,
           skipEmptyLines: true,
         })
         
         // Konvertiere die CSV-Daten in das ClusterInfo-Format
         const clusterInfo: ClusterInfo[] = infoResults.data
-          .filter((row: any) => row.cluster_id !== undefined && row.cluster_id !== '-1' && row.cluster_summaries_translated)
-          .map((row: any) => ({
+          .filter(row => row.cluster_id !== undefined && row.cluster_id !== '-1' && row.cluster_summaries_translated)
+          .map(row => ({
             clusterId: parseInt(row.cluster_id),
             label: row.cluster_summaries || '',
             labelTranslated: row.cluster_summaries_translated || '',
@@ -104,8 +121,8 @@ export function DatensetCluster() {
         const dataResponse = await fetch('/daten/assets/data.csv')
         const dataText = await dataResponse.text()
         
-        // Parse die CSV mit Papa Parse
-        const dataResults = Papa.parse(dataText, {
+        // Parse die CSV mit Papa Parse mit Typisierung
+        const dataResults = Papa.parse<DataRow>(dataText, {
           header: true,
           skipEmptyLines: true,
           delimiter: ';' // Beachte das Semikolon als Trennzeichen
@@ -113,8 +130,8 @@ export function DatensetCluster() {
         
         // Konvertiere die CSV-Daten in das DataPoint-Format
         const dataPoints: DataPoint[] = dataResults.data
-          .filter((row: any) => row.X !== undefined && row.Y !== undefined)
-          .map((row: any) => ({
+          .filter(row => row.X !== undefined && row.Y !== undefined)
+          .map(row => ({
             x: parseFloat(row.X), // Skaliere die x-Koordinaten
             y: parseFloat(row.Y), // Skaliere die y-Koordinaten
             eduScore: parseInt(row.edu_labels) || 0,
@@ -152,26 +169,26 @@ export function DatensetCluster() {
             labelIDToName[info.clusterId] = info.labelTranslated
           })
           
-          // Scatter-Plot-Daten erstellen
-          const plotData = [{
-            type: 'scatter',
-            mode: 'markers',
-            x: dataPoints.map(d => d.x),
-            y: dataPoints.map(d => d.y),
-            marker: {
-              color: dataPoints.map(d => getColor(d.label, 0.4)),
-              size: 5.5,
-            },
-            hoverinfo: 'text',
-            hovertext: dataPoints.map(d => 
-              `<b>Thema:</b> ${labelIDToName[d.label] || "Unbekannt"}<br>
-              <b>Bildungswert:</b> ${d.eduScore}/5<br>
-              <b>Text:</b> ${formatHoverText(d.text, 10, 15)}`
-            ),
-            hoverlabel: {
-              bgcolor: 'white',
-            },
-          }]
+          // Scatter-Plot-Daten erstellen (nicht direkt verwendet, aber für zukünftige Implementierung)
+          // const plotData = [{
+          //   type: 'scatter',
+          //   mode: 'markers',
+          //   x: dataPoints.map(d => d.x),
+          //   y: dataPoints.map(d => d.y),
+          //   marker: {
+          //     color: dataPoints.map(d => getColor(d.label, 0.4)),
+          //     size: 5.5,
+          //   },
+          //   hoverinfo: 'text',
+          //   hovertext: dataPoints.map(d => 
+          //     `<b>Thema:</b> ${labelIDToName[d.label] || "Unbekannt"}<br>
+          //     <b>Bildungswert:</b> ${d.eduScore}/5<br>
+          //     <b>Text:</b> ${formatHoverText(d.text, 10, 15)}`
+          //   ),
+          //   hoverlabel: {
+          //     bgcolor: 'white',
+          //   },
+          // }]
           
           // Annotationen für Cluster-Labels hinzufügen
           const annotations = clusterInfo.map(info => ({
@@ -188,74 +205,54 @@ export function DatensetCluster() {
             borderpad: 2,
           }))
           
-          // Layout-Konfiguration
-          const layout = {
-            height: 500,
-            width: plotRef.current.clientWidth,
-            xaxis: {
-              showticklabels: false,
-              showgrid: false,
-              zeroline: false,
-              title: {
-                text: "Interaktive Visualisierung des FineWeb-Datensatzes",
-                font: {
-                  size: 16,
-                  style: "italic",
-                },
-              },
-              // Automatischer Bereich basierend auf Daten
-              autorange: true
-            },
-            yaxis: {
-              showticklabels: false,
-              showgrid: false,
-              zeroline: false,
-              // Automatischer Bereich basierend auf Daten
-              autorange: true
-            },
-            annotations: annotations.slice(0, 15), // Auf 15 Annotationen für Übersichtlichkeit begrenzen
-            font: {
-              family: "system-ui, sans-serif",
-            },
-            margin: {
-              t: 30,
-              b: 50,
-              l: 15,
-              r: 15,
-            },
-            hovermode: 'closest'
-          }
+          // Layout-Konfiguration (nicht direkt verwendet, aber für zukünftige Implementierung)
+          // const layout = {
+          //   height: 500,
+          //   width: plotRef.current.clientWidth,
+          //   xaxis: {
+          //     showticklabels: false,
+          //     showgrid: false,
+          //     zeroline: false,
+          //     title: {
+          //       text: "Interaktive Visualisierung des FineWeb-Datensatzes",
+          //       font: {
+          //         size: 16,
+          //         style: "italic",
+          //       },
+          //     },
+          //     // Automatischer Bereich basierend auf Daten
+          //     autorange: true
+          //   },
+          //   yaxis: {
+          //     showticklabels: false,
+          //     showgrid: false,
+          //     zeroline: false,
+          //     // Automatischer Bereich basierend auf Daten
+          //     autorange: true
+          //   },
+          //   annotations: annotations.slice(0, 15), // Auf 15 Annotationen für Übersichtlichkeit begrenzen
+          //   font: {
+          //     family: "system-ui, sans-serif",
+          //   },
+          //   margin: {
+          //     t: 30,
+          //     b: 50,
+          //     l: 15,
+          //     r: 15,
+          //   },
+          //   hovermode: 'closest'
+          // }
           
           // Plotly-Funktionalität temporär deaktiviert für TypeScript-Kompilierung
           // const Plotly = await import('plotly.js-basic-dist-min')
           // Plotly.default.newPlot(plotRef.current, plotData, layout)
           
-          // Event-Handler für Zoom hinzufügen (deaktiviert)
-          // Plotly-Funktionalität temporär deaktiviert für TypeScript-Kompilierung
-          
-          // Fenstergrößenänderung abfangen und Plot anpassen
-          const handleResize = () => {
-            // Temporär deaktiviert für TypeScript-Kompilierung
-            /*
-            if (plotRef.current) {
-              Plotly.default.relayout(plotRef.current, {
-                width: plotRef.current.offsetWidth,
-              })
-            }
-            */
-          }
-          
-          // window.addEventListener('resize', handleResize)
+          // Event-Handler für Zoom wurden entfernt, da nicht verwendet
           
           setIsLoading(false)
           
           return () => {
-            // window.removeEventListener('resize', handleResize)
-            /*
-            if (plotRef.current && Plotly.default) {
-              Plotly.default.purge(plotRef.current)
-            }
-            */
+            // Cleanup code - frühere Eventlistener wurden entfernt
           }
         }
       } catch (err) {

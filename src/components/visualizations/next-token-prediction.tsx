@@ -308,7 +308,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
                   />
                   
                   <div className="font-semibold min-w-20 px-2">
-                    "{token.token.replace(/ /g, '␣')}"
+                    &quot;{token.token.replace(/ /g, '␣')}&quot;
                   </div>
                   
                   <Button

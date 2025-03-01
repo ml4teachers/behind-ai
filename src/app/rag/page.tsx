@@ -48,7 +48,7 @@ export default function RAGPage() {
             <li>Das Wissen ist auf den <strong>Trainingszeitraum begrenzt</strong> - alles, was danach passiert ist, kennt das Modell nicht</li>
             <li>Sehr <strong>spezifische, fachliche oder aktuelle Informationen</strong> sind möglicherweise nicht präzise genug</li>
             <li>Ohne Kontext kann das Modell <strong>keine Berechnungen durchführen</strong> oder auf Daten zugreifen, die nicht Teil seines Wissens sind</li>
-            <li>Es kann <strong>Informationen "halluzinieren"</strong> - also Dinge erfinden, die falsch oder ungenau sind</li>
+            <li>Es kann <strong>Informationen &quot;halluzinieren&quot;</strong> - also Dinge erfinden, die falsch oder ungenau sind</li>
           </ul>
           
           <div className="bg-violet-50 border border-violet-100 rounded-lg p-4 my-4 flex gap-3">
@@ -113,7 +113,7 @@ export default function RAGPage() {
             ) : (
               <div className="text-gray-500 text-center h-full flex flex-col justify-center items-center">
                 <p className="mb-2">
-                  Klicke auf "Simulation starten", um RAG in Aktion zu erleben
+                  Klicke auf &quot;Simulation starten&quot;, um RAG in Aktion zu erleben
                 </p>
                 <p className="text-sm max-w-md">
                   Du kannst verschiedene Anfragen testen und sehen, wie externe Informationen die Antworten

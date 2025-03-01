@@ -124,11 +124,11 @@ export default function NextTokenPage() {
             ) : (
               <div className="text-gray-500 text-center h-full flex flex-col justify-center items-center">
                 <p className="mb-2">
-                  Klicke auf "Nächsten Token vorhersagen", um echte KI-Vorhersagen zu sehen.
+                  Klicke auf &quot;Nächsten Token vorhersagen&quot;, um echte KI-Vorhersagen zu sehen.
                 </p>
                 <p className="text-sm max-w-md">
                   Du kannst einzelne Tokens auswählen, um zu sehen, wie das Modell 
-                  Schritt für Schritt Text generiert. Oder wähle "Zufälliger Token" für 
+                  Schritt für Schritt Text generiert. Oder wähle &quot;Zufälliger Token&quot; für 
                   eine wahrscheinlichkeitsbasierte Auswahl.
                 </p>
               </div>

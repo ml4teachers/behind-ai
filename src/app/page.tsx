@@ -29,7 +29,7 @@ export default function Home() {
             kann ziemlich gut vorhersagen, welches Wort als nächstes kommen könnte.
           </p>
           <p>
-            Stell dir vor, jemand sagt: "Der Himmel hat die Farbe..." - du könntest wahrscheinlich raten, dass "blau" 
+            Stell dir vor, jemand sagt: &quot;Der Himmel hat die Farbe...&quot; - du könntest wahrscheinlich raten, dass &quot;blau&quot; 
             als nächstes kommen könnte. KI-Sprachmodelle machen genau das, nur mit viel mehr Daten und für 
             jeden möglichen Text!
           </p>
@@ -49,7 +49,7 @@ export default function Home() {
             <li>Wie das Modell das nächste Wort vorhersagt</li>
             <li>Woher die Trainingsdaten kommen</li>
             <li>Wie Wörter im Modell gespeichert sind</li>
-            <li>Wie das Modell auf wichtige Wörter "achtet"</li>
+            <li>Wie das Modell auf wichtige Wörter &quot;achtet&quot;</li>
             <li>Wie das Modell trainiert wird</li>
             <li>Wie Menschen dem Modell Feedback geben</li>
             <li>Wie KI besser und genauer werden kann</li>

@@ -271,7 +271,7 @@ export function TokenizationAnimation({ text }: TokenizationAnimationProps) {
                 </p>
                 {tokens.length >= 10 && (
                   <p className="text-sm text-violet-700 mt-1">
-                    Sprachmodelle haben ein begrenztes "Gedächtnis" von Tokens (z.B. 128 000 bei GPT-4o).
+                    Sprachmodelle haben ein begrenztes &quot;Gedächtnis&quot; von Tokens (z.B. 128 000 bei GPT-4o).
                     Das sind etwa 300 Seiten.
                   </p>
                 )}
@@ -295,12 +295,12 @@ export function TokenizationAnimation({ text }: TokenizationAnimationProps) {
           </p>
           <ul className="list-disc ml-5 mt-2 text-sm text-blue-700 space-y-1">
             <li>Häufig zusammen vorkommende Zeichen zu größeren Einheiten zusammenfasst</li>
-            <li>Einzelne Wörter in mehrere Tokens aufteilen kann (wie "<span className="font-mono">program + m + mieren</span>")</li>
+            <li>Einzelne Wörter in mehrere Tokens aufteilen kann (wie &quot;<span className="font-mono">program + m + mieren</span>&quot;)</li>
             <li>Häufige Wörter als eigene Tokens behandelt</li>
             <li>Für seltene Wörter auf kleinere Teile zurückgreift</li>
           </ul>
           <p className="text-sm mt-2 text-blue-700">
-            Das Modell "sieht" den Text nur als Zahlenfolge, nicht als echte Wörter!
+            Das Modell &quot;sieht&quot; den Text nur als Zahlenfolge, nicht als echte Wörter!
           </p>
         </motion.div>
       )}

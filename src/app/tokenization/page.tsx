@@ -33,7 +33,7 @@ export default function TokenizationPage() {
           <h1 className="text-3xl font-bold mb-2 text-violet-900">Tokenisierung: Text in Stücke zerlegen</h1>
           <p className="text-lg text-gray-600">
             Der erste Schritt bei Sprachmodellen ist, Text in kleine Teile zu zerlegen,
-            die wir "Tokens" nennen.
+            die wir &quot;Tokens&quot; nennen.
           </p>
         </div>
       </div>
@@ -42,7 +42,7 @@ export default function TokenizationPage() {
         <CardHeader>
           <CardTitle>Was ist Tokenisierung?</CardTitle>
           <CardDescription>
-            Wie ein Computer Text "liest"
+            Wie ein Computer Text &quot;liest&quot;
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -51,7 +51,7 @@ export default function TokenizationPage() {
             in kleine Stücke zerlegen und dann in Zahlen umwandeln.
           </p>
           <p className="mb-4">
-            Diese Stücke nennt man "Tokens" - manchmal sind das ganze Wörter, manchmal 
+            Diese Stücke nennt man &quot;Tokens&quot; - manchmal sind das ganze Wörter, manchmal 
             Teile eines Wortes oder auch nur einzelne Buchstaben.
           </p>
           
@@ -68,7 +68,7 @@ export default function TokenizationPage() {
           </div>
           
           <p>
-            Zum Beispiel wird das Wort "Programmieren" in die drei Tokens "Program" + "m" + "ieren"
+            Zum Beispiel wird das Wort &quot;Programmieren&quot; in die drei Tokens &quot;Program&quot; + &quot;m&quot; + &quot;ieren&quot;
             zerlegt werden, statt in einzelne Buchstaben oder Silben.
           </p>
         </CardContent>
@@ -126,7 +126,7 @@ export default function TokenizationPage() {
             ) : (
               <div className="text-center text-gray-500 h-full flex flex-col justify-center items-center">
                 <p className="mb-2">
-                  Klicke auf "Text tokenisieren", um zu sehen, wie dein Text in Tokens zerlegt wird.
+                  Klicke auf &quot;Text tokenisieren&quot;, um zu sehen, wie dein Text in Tokens zerlegt wird.
                 </p>
                 <p className="text-sm max-w-md">
                   Wir verwenden den echten GPT-Tokenizer, den auch ChatGPT benutzt! 

@@ -109,7 +109,7 @@ export default function RLHFPage() {
             ) : (
               <div className="text-gray-500 text-center h-full flex flex-col justify-center items-center">
                 <p className="mb-2">
-                  Klicke auf "Simulation starten", um den RLHF-Prozess zu erleben
+                  Klicke auf &quot;Simulation starten&quot;, um den RLHF-Prozess zu erleben
                 </p>
                 <p className="text-sm max-w-md">
                   Du wirst verschiedene KI-Antworten bewerten, einen Eindruck vom Belohnungsmodell bekommen

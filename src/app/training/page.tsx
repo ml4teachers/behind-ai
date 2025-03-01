@@ -133,7 +133,7 @@ export default function TrainingPage() {
             ) : (
               <div className="text-gray-500 text-center h-full flex flex-col justify-center items-center">
                 <p className="mb-2">
-                  Klicke auf "Training starten", um zu sehen, wie ein KI-Modell trainiert wird.
+                  Klicke auf &quot;Training starten&quot;, um zu sehen, wie ein KI-Modell trainiert wird.
                 </p>
                 <p className="text-sm max-w-md">
                   Du wirst den Trainingsprozess Schritt für Schritt erleben und sehen, wie das Modell seine 
