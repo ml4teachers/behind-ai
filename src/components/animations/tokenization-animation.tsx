@@ -272,7 +272,7 @@ export function TokenizationAnimation({ text }: TokenizationAnimationProps) {
                 </p>
                 {tokens.length >= 10 && (
                   <p className="text-sm text-violet-700 mt-1">
-                    Sprachmodelle haben ein begrenztes &quot;Gedächtnis&quot; von Tokens (z.B. 128 000 bei GPT-4o).
+                    Sprachmodelle haben ein begrenztes &quot;Gedächtnis&quot; von Tokens (z.B. 128k bei GPT-4o).
                     Das sind etwa 300 Seiten.
                   </p>
                 )}

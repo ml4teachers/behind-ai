@@ -4,24 +4,13 @@ import { useEffect, useRef, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import Papa from 'papaparse'
+import dynamic from 'next/dynamic'
 
-// Temporarily comment out problematic Plotly code
-// We'll need to install react-plotly.js or use a different approach
-// const PlotlyComponent = dynamic(() => import('react-plotly.js'), {
-//   ssr: false,
-//   loading: () => <p>Lädt Visualisierung...</p>
-// })
-
-// Using a mock for now to fix type errors
-const mockPlotly = {
-  newPlot: () => {},
-  d3: { scale: { category10: () => () => '#000' } }
-};
-
-// No longer needed
-// const usePlotly = () => {
-//   return { Plotly: mockPlotly };
-// }
+// React-Plotly with dynamic import to avoid SSR issues
+const PlotlyComponent = dynamic(() => import('react-plotly.js'), {
+  ssr: false,
+  loading: () => <p>Lädt Visualisierung...</p>
+})
 
 interface ClusterInfo {
   clusterId: number
@@ -169,26 +158,26 @@ export function DatensetCluster() {
             labelIDToName[info.clusterId] = info.labelTranslated
           })
           
-          // Scatter-Plot-Daten erstellen (nicht direkt verwendet, aber für zukünftige Implementierung)
-          // const plotData = [{
-          //   type: 'scatter',
-          //   mode: 'markers',
-          //   x: dataPoints.map(d => d.x),
-          //   y: dataPoints.map(d => d.y),
-          //   marker: {
-          //     color: dataPoints.map(d => getColor(d.label, 0.4)),
-          //     size: 5.5,
-          //   },
-          //   hoverinfo: 'text',
-          //   hovertext: dataPoints.map(d => 
-          //     `<b>Thema:</b> ${labelIDToName[d.label] || "Unbekannt"}<br>
-          //     <b>Bildungswert:</b> ${d.eduScore}/5<br>
-          //     <b>Text:</b> ${formatHoverText(d.text, 10, 15)}`
-          //   ),
-          //   hoverlabel: {
-          //     bgcolor: 'white',
-          //   },
-          // }]
+          // Scatter-Plot-Daten erstellen
+          const plotData = [{
+            type: 'scatter',
+            mode: 'markers',
+            x: dataPoints.map(d => d.x),
+            y: dataPoints.map(d => d.y),
+            marker: {
+              color: dataPoints.map(d => getColor(d.label, 0.4)),
+              size: 5.5,
+            },
+            hoverinfo: 'text',
+            hovertext: dataPoints.map(d => 
+              `<b>Thema:</b> ${labelIDToName[d.label] || "Unbekannt"}<br>
+              <b>Bildungswert:</b> ${d.eduScore}/5<br>
+              <b>Text:</b> ${formatHoverText(d.text, 10, 15)}`
+            ),
+            hoverlabel: {
+              bgcolor: 'white',
+            },
+          }]
           
           // Annotationen für Cluster-Labels hinzufügen
           const annotations = clusterInfo.map(info => ({
@@ -205,54 +194,52 @@ export function DatensetCluster() {
             borderpad: 2,
           }))
           
-          // Layout-Konfiguration (nicht direkt verwendet, aber für zukünftige Implementierung)
-          // const layout = {
-          //   height: 500,
-          //   width: plotRef.current.clientWidth,
-          //   xaxis: {
-          //     showticklabels: false,
-          //     showgrid: false,
-          //     zeroline: false,
-          //     title: {
-          //       text: "Interaktive Visualisierung des FineWeb-Datensatzes",
-          //       font: {
-          //         size: 16,
-          //         style: "italic",
-          //       },
-          //     },
-          //     // Automatischer Bereich basierend auf Daten
-          //     autorange: true
-          //   },
-          //   yaxis: {
-          //     showticklabels: false,
-          //     showgrid: false,
-          //     zeroline: false,
-          //     // Automatischer Bereich basierend auf Daten
-          //     autorange: true
-          //   },
-          //   annotations: annotations.slice(0, 15), // Auf 15 Annotationen für Übersichtlichkeit begrenzen
-          //   font: {
-          //     family: "system-ui, sans-serif",
-          //   },
-          //   margin: {
-          //     t: 30,
-          //     b: 50,
-          //     l: 15,
-          //     r: 15,
-          //   },
-          //   hovermode: 'closest'
-          // }
+          // Layout-Konfiguration
+          const layout = {
+            height: 500,
+            width: plotRef.current.clientWidth,
+            xaxis: {
+              showticklabels: false,
+              showgrid: false,
+              zeroline: false,
+              title: {
+                text: "Interaktive Visualisierung des FineWeb-Datensatzes",
+                font: {
+                  size: 16,
+                  style: "italic",
+                },
+              },
+              // Automatischer Bereich basierend auf Daten
+              autorange: true
+            },
+            yaxis: {
+              showticklabels: false,
+              showgrid: false,
+              zeroline: false,
+              // Automatischer Bereich basierend auf Daten
+              autorange: true
+            },
+            annotations: annotations.slice(0, 15), // Auf 15 Annotationen für Übersichtlichkeit begrenzen
+            font: {
+              family: "system-ui, sans-serif",
+            },
+            margin: {
+              t: 30,
+              b: 50,
+              l: 15,
+              r: 15,
+            },
+            hovermode: 'closest'
+          }
           
-          // Plotly-Funktionalität temporär deaktiviert für TypeScript-Kompilierung
-          // const Plotly = await import('plotly.js-basic-dist-min')
-          // Plotly.default.newPlot(plotRef.current, plotData, layout)
-          
-          // Event-Handler für Zoom wurden entfernt, da nicht verwendet
-          
+          // Setze die Daten für react-plotly.js
+          setPlotData(plotData)
+          setPlotLayout(layout)
           setIsLoading(false)
           
+          // Nur ein cleanup für potentielle future listeners
           return () => {
-            // Cleanup code - frühere Eventlistener wurden entfernt
+            // Cleanup code wenn nötig
           }
         }
       } catch (err) {
@@ -273,6 +260,18 @@ export function DatensetCluster() {
     )
   }
   
+  // State für Plotly Daten und Layout
+  const [plotData, setPlotData] = useState<any[]>([])
+  const [plotLayout, setPlotLayout] = useState<any>({})
+  
+  // Zustandsvariable für Client-side rendering
+  const [isReady, setIsReady] = useState(false)
+  
+  // Setze isReady nach dem ersten Render
+  useEffect(() => {
+    setIsReady(true)
+  }, [])
+  
   return (
     <div className="relative">
       {isLoading && (
@@ -281,11 +280,27 @@ export function DatensetCluster() {
           <p className="text-gray-500">Lade Datenvisualisierung...</p>
         </div>
       )}
+      
       <div 
         ref={plotRef} 
         className="w-full"
         style={{ minHeight: '500px' }}
-      />
+      >
+        {!isLoading && isReady && plotData.length > 0 && (
+          <PlotlyComponent
+            data={plotData}
+            layout={plotLayout}
+            config={{ 
+              displayModeBar: true,
+              responsive: true,
+              scrollZoom: true,
+              displaylogo: false
+            }}
+            style={{ width: '100%', height: '500px' }}
+          />
+        )}
+      </div>
+      
       {!isLoading && (
         <div className="text-xs text-gray-500 mt-2">
           Hinweis: Beachte die Werkzeuge oben rechts, um in einzelne Bereiche 🔍 hineinzuzoomen und das 🏠 Haus, um wieder zur ursprünglichen Darstellung zu wechseln.
