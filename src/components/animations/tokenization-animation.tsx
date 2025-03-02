@@ -118,7 +118,8 @@ export function TokenizationAnimation({ text }: TokenizationAnimationProps) {
           style={{ width: '100%' }}
         >
           <motion.p 
-            className="text-center text-lg font-medium mb-4"
+            // className="text-center text-lg font-medium mb-4"
+            style={{textAlign: 'center'}}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
