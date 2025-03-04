@@ -32,15 +32,26 @@ interface Scenario {
 
 const scenarios: Scenario[] = [
   {
-    question: "Wer ist der aktuelle Bundeskanzler von Deutschland und seit wann ist er im Amt?",
-    context: "Olaf Scholz (SPD) ist seit dem 8. Dezember 2021 Bundeskanzler von Deutschland. Er wurde nach der Bundestagswahl 2021 zum Nachfolger von Angela Merkel gewählt und führt eine Koalition aus SPD, Grünen und FDP (die sogenannte Ampel-Koalition) an.",
-    vanillaAnswer: "Soweit ich weiß, ist Olaf Scholz (SPD) der aktuelle Bundeskanzler von Deutschland. Er übernahm das Amt nach Angela Merkel, aber ich bin mir nicht ganz sicher, wann genau er vereidigt wurde. Ich glaube, es war Ende 2021, aber das genaue Datum kann ich nicht mit Sicherheit nennen.",
-    ragAnswer: "Olaf Scholz (SPD) ist der aktuelle Bundeskanzler von Deutschland. Er ist seit dem 8. Dezember 2021 im Amt, als er als Nachfolger von Angela Merkel vereidigt wurde. Scholz führt eine Koalitionsregierung aus SPD, Grünen und FDP an, die auch als Ampel-Koalition bezeichnet wird.",
-    explanation: "Bei dieser Frage kann das Modell den aktuellen Bundeskanzler möglicherweise korrekt nennen, aber beim genauen Datum der Amtsübernahme unsicher sein. Mit RAG kann es auf aktuelle und präzise Informationen zugreifen.",
+    question: "Wer ist der aktuelle Bundespräsident der Schweiz und wie lange dauert seine Amtszeit?",
+    context: "Viola Amherd war Bundespräsidentin der Schweiz für das Jahr 2024. Für das Jahr 2025 ist es Karin Keller-Suter. In der Schweiz wechselt das Amt des Bundespräsidenten jährlich unter den sieben Mitgliedern des Bundesrates (der Schweizer Regierung). Die Bundespräsidentin oder der Bundespräsident wird für ein Jahr gewählt und hat vorwiegend repräsentative Aufgaben.",
+    vanillaAnswer: "Ich kann Ihnen leider keine aktuelle Information darüber geben, wer derzeit Bundespräsident oder Bundespräsidentin der Schweiz ist, da meine Informationen nicht aktuell sind. In der Schweiz rotiert das Amt des Bundespräsidenten jährlich unter den Mitgliedern des Bundesrats, wobei jeder Bundespräsident für ein Jahr im Amt ist. Anders als in vielen anderen Ländern hat der Schweizer Bundespräsident hauptsächlich repräsentative Funktionen.",
+    ragAnswer: "Die aktuelle Bundespräsidentin der Schweiz ist Viola Amherd, die dieses Amt für das Jahr 2024 innehat. In der Schweiz dauert die Amtszeit des Bundespräsidenten oder der Bundespräsidentin genau ein Jahr. Das Amt rotiert jährlich unter den sieben Mitgliedern des Bundesrates, wobei die Bundespräsidentin oder der Bundespräsident vorwiegend repräsentative Aufgaben wahrnimmt, aber keine zusätzlichen Machtbefugnisse gegenüber den anderen Bundesratsmitgliedern hat.",
+    explanation: "Bei dieser Frage kann das Modell das politische System der Schweiz grundsätzlich erklären, aber die aktuelle Amtsinhaberin nicht korrekt benennen. Mit RAG kann es auf aktuelle und präzise Informationen zugreifen.",
     category: 'factual',
     source: 'internet',
     accuracy: 'high',
-    sourceInfo: 'Aktuelle Regierungsinformationen (Bundesregierung.de)'
+    sourceInfo: 'Offizielle Website der Schweizerischen Eidgenossenschaft (admin.ch)'
+  },
+  {
+    question: "Welche zehn Staaten der USA haben die höchste Bevölkerungsdichte?",
+    context: "Die zehn US-Bundesstaaten mit der höchsten Bevölkerungsdichte (Einwohner pro Quadratmeile, 2023):\n1. New Jersey: 1,263\n2. Rhode Island: 1,080\n3. Massachusetts: 897\n4. Connecticut: 745\n5. Maryland: 636\n6. Delaware: 512\n7. New York: 429\n8. Florida: 412\n9. Pennsylvania: 290\n10. Ohio: 289",
+    vanillaAnswer: "Ich kann Ihnen eine ungefähre Liste der US-Bundesstaaten mit hoher Bevölkerungsdichte geben, aber ohne aktuelle Daten kann die Reihenfolge nicht ganz präzise sein. Typischerweise gehören zu den dichtest besiedelten Staaten: New Jersey, Rhode Island, Massachusetts, Connecticut, Maryland und New York. Weitere Staaten mit hoher Bevölkerungsdichte sind wahrscheinlich Delaware, Pennsylvania und eventuell Kalifornien oder Florida. Für die genaue Rangfolge und aktuelle Zahlen sollten Sie offizielle Bevölkerungsstatistiken konsultieren.",
+    ragAnswer: "Die zehn US-Bundesstaaten mit der höchsten Bevölkerungsdichte (Stand 2023, in Einwohnern pro Quadratmeile) sind:\n\n1. New Jersey: 1.263\n2. Rhode Island: 1.080\n3. Massachusetts: 897\n4. Connecticut: 745\n5. Maryland: 636\n6. Delaware: 512\n7. New York: 429\n8. Florida: 412\n9. Pennsylvania: 290\n10. Ohio: 289",
+    explanation: "Bei geografischen oder statistischen Fakten kann das Modell eine grundlegende Vorstellung haben, aber möglicherweise keine präzisen und aktuellen Daten liefern. RAG ermöglicht den Zugriff auf aktuelle demografische Statistiken.",
+    category: 'factual',
+    source: 'database',
+    accuracy: 'high',
+    sourceInfo: 'US Census Bureau - Bevölkerungsstatistiken 2023'
   },
   {
     question: "Was ist die Quadratwurzel aus 7569 multipliziert mit dem Logarithmus von 1000?",
@@ -54,6 +65,28 @@ const scenarios: Scenario[] = [
     sourceInfo: 'Taschenrechner-Tool'
   },
   {
+    question: "Berechne den Flächeninhalt eines Kreises mit einem Radius von 4,7 cm.",
+    context: "Flächeninhalt eines Kreises = π × r²\nπ ≈ 3,14159\nr = 4,7 cm\nFlächeninhalt = 3,14159 × (4,7 cm)²\nFlächeninhalt = 3,14159 × 22,09 cm²\nFlächeninhalt ≈ 69,4 cm²",
+    vanillaAnswer: "Der Flächeninhalt eines Kreises wird mit der Formel A = π × r² berechnet, wobei r der Radius ist. In diesem Fall ist r = 4,7 cm. Ich schätze, dass der Flächeninhalt ungefähr 70 cm² beträgt, aber für eine präzise Berechnung würde ich einen Taschenrechner benötigen, da ich komplexe Berechnungen nicht genau durchführen kann.",
+    ragAnswer: "Um den Flächeninhalt eines Kreises zu berechnen, verwende ich die Formel: A = π × r²\n\nGegeben ist: r = 4,7 cm\n\nEinsetzen der Werte:\nA = 3,14159 × (4,7 cm)²\nA = 3,14159 × 22,09 cm²\nA ≈ 69,4 cm²\n\nDer Flächeninhalt des Kreises beträgt also 69,4 cm².",
+    explanation: "Auch bei einfacheren mathematischen Berechnungen kann das Modell ohne Taschenrechner-Tool nur ungefähre Ergebnisse liefern. Mit RAG kann es präzise Berechnungen durchführen.",
+    category: 'calculation',
+    source: 'calculator',
+    accuracy: 'high',
+    sourceInfo: 'Mathematisches Berechnungs-Tool'
+  },
+  {
+    question: "Löse die folgende Gleichung: 3x² - 14x - 5 = 0",
+    context: "Für die quadratische Gleichung 3x² - 14x - 5 = 0:\n\nSchritt 1: Mitternachtsformel verwenden: x = (-b ± √(b² - 4ac))/(2a)\nwobei a=3, b=-14, c=-5\n\nSchritt 2: Berechnen der Diskriminante: b² - 4ac = (-14)² - 4(3)(-5) = 196 + 60 = 256\n\nSchritt 3: Einsetzen in die Formel\nx = (14 ± √256)/(2×3)\nx = (14 ± 16)/6\n\nDaher sind die Lösungen:\nx₁ = (14 + 16)/6 = 30/6 = 5\nx₂ = (14 - 16)/6 = -2/6 = -1/3",
+    vanillaAnswer: "Um die quadratische Gleichung 3x² - 14x - 5 = 0 zu lösen, würde ich die Mitternachtsformel verwenden. Allerdings kann ich ohne Taschenrechner komplexe Berechnungen nicht präzise durchführen, besonders wenn Wurzeln involviert sind. Ich vermute, dass eine der Lösungen positiv und eine negativ ist, aber ich kann keine genauen Werte angeben.",
+    ragAnswer: "Um die quadratische Gleichung 3x² - 14x - 5 = 0 zu lösen, verwende ich die Mitternachtsformel:\n\nx = (-b ± √(b² - 4ac))/(2a)\n\nIdentifiziere die Koeffizienten: a=3, b=-14, c=-5\n\nBerechne die Diskriminante:\nb² - 4ac = (-14)² - 4(3)(-5) = 196 + 60 = 256\n\nSetze in die Formel ein:\nx = (14 ± √256)/(2×3)\nx = (14 ± 16)/6\n\nDie beiden Lösungen sind:\nx₁ = (14 + 16)/6 = 30/6 = 5\nx₂ = (14 - 16)/6 = -2/6 = -1/3\n\nDie Gleichung hat also die Lösungen x = 5 und x = -1/3.",
+    explanation: "Bei mathematischen Gleichungen kann das Modell ohne Hilfsmittel nur den Lösungsweg beschreiben, aber keine präzisen Berechnungen durchführen. Mit RAG kann es auf Rechenwerkzeuge zugreifen und genaue Ergebnisse liefern.",
+    category: 'calculation',
+    source: 'calculator',
+    accuracy: 'high',
+    sourceInfo: 'Mathematisches Berechnungs-Tool'
+  },
+  {
     question: "Welches Team hat die Fußball-Europameisterschaft 2024 gewonnen?",
     context: "Spanien hat die UEFA Fußball-Europameisterschaft 2024 in Deutschland gewonnen. Im Finale besiegte die spanische Nationalmannschaft England mit 2:1 und sicherte sich damit ihren vierten EM-Titel nach 1964, 2008 und 2012.",
     vanillaAnswer: "Ich habe keine aktuellen Informationen über die Fußball-Europameisterschaft 2024, da mein Wissen nicht die neuesten Sportereignisse umfasst. Die EM 2024 sollte in Deutschland stattfinden, aber ich kann Ihnen nicht sagen, welches Team gewonnen hat. Um eine zuverlässige Antwort zu erhalten, empfehle ich Ihnen, dies in einer aktuellen Sportquelle nachzuschlagen.",
@@ -65,43 +98,32 @@ const scenarios: Scenario[] = [
     sourceInfo: 'Aktuelle Sportnachrichten'
   },
   {
-    question: "Was waren die wichtigsten Änderungen im deutschen Erneuerbare-Energien-Gesetz von 2023?",
-    context: "Die Novelle des Erneuerbare-Energien-Gesetzes (EEG) 2023 brachte wichtige Änderungen:\n1. Anhebung der Ausbauziele: 80% erneuerbarer Strom bis 2030\n2. Vereinfachung von Genehmigungsverfahren für Solar- und Windkraftanlagen\n3. Einführung eines Bonus für Bürgerenergiegesellschaften\n4. Neue Flächenziele für Windenergie (2% der Landesfläche)\n5. Abschaffung der EEG-Umlage für Verbraucher seit Juli 2022",
-    vanillaAnswer: "Ich kann Ihnen einige allgemeine Informationen zu Änderungen im EEG geben, aber für die spezifischen Änderungen von 2023 habe ich möglicherweise nicht die aktuellsten Details. Typische Änderungen in EEG-Novellen umfassen Anpassungen der Vergütungssätze, Ausbauziele und Förderkonditionen. Für präzise und aktuelle Informationen zu den Änderungen 2023 sollten Sie das Bundesministerium für Wirtschaft und Klimaschutz oder die Gesetzestexte direkt konsultieren.",
-    ragAnswer: "Die wichtigsten Änderungen im EEG 2023 umfassen:\n1. Deutliche Anhebung der Ausbauziele auf 80% erneuerbaren Strom bis 2030\n2. Beschleunigte Genehmigungsverfahren für Solar- und Windkraftanlagen\n3. Finanzieller Bonus für Bürgerenergiegesellschaften zur Förderung lokaler Beteiligung\n4. Verbindliche Flächenziele für Windenergie (2% der Landesfläche)\n5. Vollständige Abschaffung der EEG-Umlage für Verbraucher (bereits seit Juli 2022 wirksam)",
-    explanation: "Bei spezifischen regulatorischen oder fachlichen Informationen kann das Modell Wissenslücken haben. RAG ermöglicht den Zugriff auf Fachinformationen und aktuelle Gesetzestexte.",
+    question: "Was waren die wichtigsten Änderungen im Schweizer Energiegesetz von 2023?",
+    context: "Das revidierte Schweizer Energiegesetz von 2023 enthielt folgende Kernpunkte:\n1. Ausbauziel von 35 TWh erneuerbarer Stromproduktion bis 2035\n2. Vereinfachte Bewilligungsverfahren für Solar-, Wind- und Wasserkraftanlagen\n3. Solarpflicht für neue und grundlegend sanierte öffentliche Gebäude\n4. Erhöhung der Investitionsbeiträge für Photovoltaikanlagen\n5. Erleichterter Bau von alpinen Solaranlagen über 1800 m.ü.M.\n6. Reservekraftwerke zur Absicherung der Winterstromversorgung",
+    vanillaAnswer: "Ich kann Ihnen leider keine präzisen Informationen zu den spezifischen Änderungen im Schweizer Energiegesetz von 2023 geben, da mein Wissensstand nicht die aktuellsten gesetzlichen Entwicklungen in der Schweiz umfasst. Typische Änderungen in Energiegesetzen betreffen aber oft Ausbauziele für erneuerbare Energien, Fördermaßnahmen und regulatorische Anpassungen. Für genaue Informationen sollten Sie das Bundesamt für Energie oder offizielle Schweizer Rechtsquellen konsultieren.",
+    ragAnswer: "Die wichtigsten Änderungen im revidierten Schweizer Energiegesetz von 2023 umfassen:\n\n1. Ein ambitioniertes Ausbauziel von 35 Terawattstunden (TWh) erneuerbarer Stromproduktion bis 2035\n2. Deutlich vereinfachte und beschleunigte Bewilligungsverfahren für Solar-, Wind- und Wasserkraftanlagen\n3. Einführung einer Solarpflicht für neue sowie grundlegend sanierte öffentliche Gebäude\n4. Substantielle Erhöhung der Investitionsbeiträge für Photovoltaikanlagen\n5. Besondere Förderung und erleichterte Genehmigungsverfahren für alpine Solaranlagen über 1800 Meter über Meer\n6. Schaffung rechtlicher Grundlagen für Reservekraftwerke zur Absicherung der Winterstromversorgung",
+    explanation: "Bei spezifischen regulatorischen oder fachlichen Informationen kann das Modell Wissenslücken haben. RAG ermöglicht den Zugriff auf Fachliteratur und aktuelle Gesetzestexte.",
     category: 'specific',
     source: 'document',
     accuracy: 'high',
-    sourceInfo: 'EEG 2023 - Gesetzestext und Erläuterungen'
+    sourceInfo: 'Bundesamt für Energie - Gesetzestexte und Erläuterungen'
   },
   {
-    question: "Wie hat sich die Inflationsrate in Deutschland in den letzten 6 Monaten entwickelt?",
-    context: "Inflationsrate in Deutschland (Verbraucherpreisindex, Veränderung zum Vorjahresmonat):\nJanuar 2024: 2,9%\nFebruar 2024: 2,5%\nMärz 2024: 2,3%\nApril 2024: 2,2%\nMai 2024: 2,0%\nJuni 2024: 1,9%",
-    vanillaAnswer: "Ich habe leider keine aktuellen Daten zur Inflationsentwicklung in Deutschland für die letzten 6 Monate. Mein Wissen ist nicht auf dem neuesten Stand für aktuelle wirtschaftliche Indikatoren. Vor meinem Wissenscutoff zeigte Deutschland, wie viele andere Länder auch, erhöhte Inflationsraten, aber für präzise und aktuelle Informationen sollten Sie das Statistische Bundesamt oder die Deutsche Bundesbank konsultieren.",
-    ragAnswer: "Die Inflationsrate in Deutschland (gemessen am Verbraucherpreisindex im Vergleich zum Vorjahresmonat) zeigt in den letzten 6 Monaten einen kontinuierlichen Rückgang:\n- Januar 2024: 2,9%\n- Februar 2024: 2,5%\n- März 2024: 2,3%\n- April 2024: 2,2%\n- Mai 2024: 2,0%\n- Juni 2024: 1,9%\n\nDie Inflation ist somit in diesem Zeitraum von 2,9% auf unter 2% gesunken, was der Zielmarke der Europäischen Zentralbank entspricht.",
+    question: "Wie hat sich die Inflationsrate in der Schweiz in den letzten 6 Monaten entwickelt?",
+    context: "In den letzten sechs Monaten ist die Inflationsrate in der Schweiz kontinuierlich gesunken. Im August 2024 lag sie noch bei 1,1%, bevor sie im September auf 0,8% und im Oktober auf 0,6% fiel. Im November stieg sie kurzzeitig leicht auf 0,7%, bevor sie im Dezember wieder auf 0,6% zurückging. Im Januar 2025 sank die Inflationsrate weiter auf 0,4%. Dieser Rückgang liegt innerhalb des von der Schweizerischen Nationalbank (SNB) angestrebten Zielbands von 0 % bis 2 %. Die SNB hat im Jahr 2024 mehrfach die Leitzinsen gesenkt, um die wirtschaftliche Entwicklung zu stabilisieren. Diese geldpolitischen Maßnahmen haben dazu beigetragen, dass sich die Teuerung verlangsamt hat.",
+    vanillaAnswer: "Ich habe leider keine aktuellen Daten zur Inflationsentwicklung in der Schweiz für die letzten 6 Monate. Mein Wissen umfasst keine aktuellen wirtschaftlichen Kennzahlen. Generell hatte die Schweiz historisch betrachtet oft niedrigere Inflationsraten als viele andere europäische Länder, aber für aktuelle und präzise Informationen sollten Sie das Schweizerische Bundesamt für Statistik konsultieren.",
+    ragAnswer: "In den letzten sechs Monaten ist die Inflationsrate in der Schweiz kontinuierlich gesunken. Im August 2024 lag sie noch bei 1,1%, bevor sie im September auf 0,8% und im Oktober auf 0,6% fiel. Im November stieg sie kurzzeitig leicht auf 0,7%, bevor sie im Dezember wieder auf 0,6% zurückging. Im Januar 2025 sank die Inflationsrate weiter auf 0,4%. Dieser Rückgang liegt innerhalb des von der Schweizerischen Nationalbank (SNB) angestrebten Zielbands von 0 % bis 2 %. Die SNB hat im Jahr 2024 mehrfach die Leitzinsen gesenkt, um die wirtschaftliche Entwicklung zu stabilisieren. Diese geldpolitischen Maßnahmen haben dazu beigetragen, dass sich die Teuerung verlangsamt hat.",
     explanation: "Für aktuelle wirtschaftliche Daten und Trends ist RAG besonders wichtig, da sich diese Informationen ständig ändern und nicht im trainierten Wissen des Modells enthalten sein können.",
     category: 'recent',
     source: 'database',
     accuracy: 'high',
-    sourceInfo: 'Statistisches Bundesamt - Wirtschaftsdaten'
+    sourceInfo: 'Schweizerisches Bundesamt für Statistik'
   },
   {
-    question: "Welche Nebenwirkungen hat der COVID-19-Impfstoff BNT162b2 (Pfizer/BioNTech)?",
-    context: "Häufige Nebenwirkungen des Pfizer/BioNTech COVID-19-Impfstoffs (BNT162b2/Comirnaty):\n- Sehr häufig (>10%): Schmerzen an der Injektionsstelle, Müdigkeit, Kopfschmerzen, Muskelschmerzen, Schüttelfrost, Gelenkschmerzen, Fieber\n- Häufig (1-10%): Rötung/Schwellung an der Einstichstelle, Übelkeit\n- Gelegentlich (0,1-1%): Lymphknotenschwellung, Schlaflosigkeit, Lethargie, verminderter Appetit\n- Selten (<0,01%): Gesichtslähmung (Bell's Palsy)\n- Sehr selten: Myokarditis und Perikarditis, insbesondere bei jungen Männern nach der zweiten Dosis",
-    vanillaAnswer: "Der COVID-19-Impfstoff von Pfizer/BioNTech (BNT162b2, auch bekannt als Comirnaty) kann verschiedene Nebenwirkungen haben. Zu den häufigeren zählen Schmerzen an der Injektionsstelle, Müdigkeit, Kopfschmerzen und Muskelschmerzen. Fieber, Schüttelfrost und Gelenkschmerzen können ebenfalls auftreten. Seltenere Nebenwirkungen können sein: Lymphknotenschwellungen und allergische Reaktionen. Sehr selten wurden Fälle von Myokarditis (Herzmuskelentzündung) berichtet, besonders bei jüngeren männlichen Personen. Die meisten Nebenwirkungen sind mild bis moderat und klingen innerhalb weniger Tage ab.",
-    ragAnswer: "Der Pfizer/BioNTech COVID-19-Impfstoff (BNT162b2/Comirnaty) kann folgende Nebenwirkungen haben:\n\nSehr häufig (>10%):\n- Schmerzen an der Injektionsstelle\n- Müdigkeit\n- Kopfschmerzen\n- Muskelschmerzen\n- Schüttelfrost\n- Gelenkschmerzen\n- Fieber\n\nHäufig (1-10%):\n- Rötung/Schwellung an der Einstichstelle\n- Übelkeit\n\nGelegentlich (0,1-1%):\n- Lymphknotenschwellung\n- Schlaflosigkeit\n- Lethargie\n- Verminderter Appetit\n\nSelten (<0,01%):\n- Gesichtslähmung (Bell's Palsy)\n\nSehr selten, aber wichtig zu beachten:\n- Myokarditis und Perikarditis (Herzentzündungen), besonders bei jungen Männern nach der zweiten Dosis",
-    explanation: "Bei medizinischen Fragen kann das Modell grundlegende Informationen haben, aber möglicherweise nicht alle spezifischen Details präzise wiedergeben. RAG ermöglicht den Zugriff auf Fachliteratur und aktuelle Studien.",
-    category: 'specific',
-    source: 'document',
-    accuracy: 'medium',
-    sourceInfo: 'Fachinformationen der Europäischen Arzneimittelagentur (EMA)'
-  },
-  {
-    question: "Wer hat den Oscar 2025 für den besten Film gewonnen?",
-    context: "Bei der Oscar-Verleihung 2025 gewann der Film 'The Horizon' von Regisseurin Sarah Chen den Preis für den besten Film. Der Science-Fiction-Drama setzte sich gegen starke Konkurrenten durch und erhielt insgesamt fünf Auszeichnungen, darunter auch für Regie und visuelle Effekte.",
-    vanillaAnswer: "Ich habe keine Informationen über die Oscar-Verleihung 2025, da diese noch nicht stattgefunden hat oder nach meinem letzten Wissensstand liegt. Mein Trainingszeitraum endet früher, daher kann ich Ihnen nicht sagen, wer den Oscar 2025 für den besten Film gewonnen hat. Sobald die Verleihung stattgefunden hat, werden diese Informationen in aktuellen Nachrichtenquellen verfügbar sein.",
-    ragAnswer: "Laut den abgerufenen Informationen hat der Film 'The Horizon' von Regisseurin Sarah Chen den Oscar 2025 für den besten Film gewonnen. Der Science-Fiction-Drama erhielt bei der Verleihung insgesamt fünf Auszeichnungen, darunter auch für Regie und visuelle Effekte.",
+    question: "Wer hat den Oscar 2026 für den besten Film gewonnen?",
+    context: "Bei der Oscar-Verleihung 2026 gewann der Film 'The Horizon' von Regisseurin Sarah Chen den Preis für den besten Film. Der Science-Fiction-Drama setzte sich gegen starke Konkurrenten durch und erhielt insgesamt fünf Auszeichnungen, darunter auch für Regie und visuelle Effekte.",
+    vanillaAnswer: "Ich habe keine Informationen über die Oscar-Verleihung 2026, da diese noch nicht stattgefunden hat oder nach meinem letzten Wissensstand liegt. Mein Trainingszeitraum endet früher, daher kann ich Ihnen nicht sagen, wer den Oscar 2026 für den besten Film gewonnen hat. Sobald die Verleihung stattgefunden hat, werden diese Informationen in aktuellen Nachrichtenquellen verfügbar sein.",
+    ragAnswer: "Laut den abgerufenen Informationen hat der Film 'The Horizon' von Regisseurin Sarah Chen den Oscar 2026 für den besten Film gewonnen. Der Science-Fiction-Drama erhielt bei der Verleihung insgesamt fünf Auszeichnungen, darunter auch für Regie und visuelle Effekte.",
     explanation: "Diese Frage bezieht sich auf ein fiktives zukünftiges Ereignis. Ein gutes RAG-System sollte die Qualität seiner Quellen prüfen und keine falschen Informationen übernehmen. Hier zeigt sich eine Schwäche, wenn das Retrieval fehlerhafte oder erfundene Informationen liefert.",
     category: 'recent',
     source: 'internet',
@@ -109,15 +131,26 @@ const scenarios: Scenario[] = [
     sourceInfo: 'Unzuverlässige Quelle mit falschen Informationen'
   },
   {
-    question: "Was sind die wichtigsten Exportgüter Deutschlands nach Kanada im Jahr 2023?",
-    context: "Die wichtigsten Exportgüter Deutschlands nach Kanada im Jahr 2023 waren:\n1. Kraftfahrzeuge und Kraftfahrzeugteile: 5,2 Mrd. Euro\n2. Maschinen: 3,8 Mrd. Euro\n3. Pharmazeutische Erzeugnisse: 2,7 Mrd. Euro\n4. Chemische Erzeugnisse: 1,9 Mrd. Euro\n5. Elektrische Ausrüstungen: 1,5 Mrd. Euro\nDas Gesamtexportvolumen betrug 19,6 Mrd. Euro, was einem Anstieg von 3,2% gegenüber dem Vorjahr entspricht.",
-    vanillaAnswer: "Als wichtigste Exportgüter Deutschlands nach Kanada zählen typischerweise Kraftfahrzeuge und Kraftfahrzeugteile, Maschinen, pharmazeutische Erzeugnisse und chemische Produkte. Allerdings kann ich ohne Zugriff auf aktuelle Handelsstatistiken keine genauen Zahlen oder Rangfolgen für das Jahr 2023 nennen. Die deutsch-kanadischen Handelsbeziehungen sind traditionell stark im Bereich hochwertiger Industrieprodukte und Technologien.",
-    ragAnswer: "Die wichtigsten Exportgüter Deutschlands nach Kanada im Jahr 2023 waren:\n\n1. Kraftfahrzeuge und Kraftfahrzeugteile mit einem Wert von 5,2 Milliarden Euro\n2. Maschinen: 3,8 Milliarden Euro\n3. Pharmazeutische Erzeugnisse: 2,7 Milliarden Euro\n4. Chemische Erzeugnisse: 1,9 Milliarden Euro\n5. Elektrische Ausrüstungen: 1,5 Milliarden Euro\n\nDas gesamte Exportvolumen betrug 19,6 Milliarden Euro, was einem Anstieg von 3,2% im Vergleich zum Vorjahr entspricht.",
+    question: "Was waren die wichtigsten Technologietrends in den USA im Jahr 2023?",
+    context: "Die dominierenden Technologietrends in den USA 2023 waren:\n1. Generative KI und Large Language Models\n2. Quantencomputing-Fortschritte mit praktischen Anwendungen\n3. Mixed Reality durch neue AR/VR-Headsets\n4. Edge Computing und dezentrale Rechenzentren\n5. KI-gestützte Cybersicherheit\n6. Nachhaltige Technologien und Green IT\n7. Fortschritte bei autonomen Fahrzeugen\n8. Biotechnologie-Innovationen mit KI-Integration",
+    vanillaAnswer: "Als führende Technologietrends in den USA dürften künstliche Intelligenz, Cloud Computing und möglicherweise Augmented/Virtual Reality eine wichtige Rolle gespielt haben. Allerdings kann ich keine spezifischen Trends für 2023 nennen, da mein Wissensstand nicht aktuell genug ist. Für eine genaue Einschätzung der wichtigsten Technologietrends von 2023 empfehle ich, aktuelle Berichte von Marktforschungsunternehmen wie Gartner, Forrester oder IDC zu konsultieren.",
+    ragAnswer: "Die wichtigsten Technologietrends in den USA im Jahr 2023 waren:\n\n1. Generative KI und Large Language Models, die in zahlreiche Anwendungen und Produkte integriert wurden\n2. Durchbrüche im Quantencomputing mit ersten praktischen Anwendungsfällen\n3. Mixed Reality durch neue AR/VR-Headsets von führenden Tech-Unternehmen\n4. Edge Computing und der Ausbau dezentraler Rechenzentren\n5. KI-gestützte Cybersicherheitslösungen\n6. Nachhaltige Technologien und Green IT-Initiativen\n7. Weiterentwicklung autonomer Fahrzeuge und entsprechender Infrastruktur\n8. Biotechnologie-Innovationen mit verstärkter KI-Integration",
+    explanation: "Bei Fragen zu aktuellen Trends kann das Modell nur allgemeine Aussagen treffen, aber keine spezifischen Entwicklungen eines bestimmten Jahres nennen. RAG ermöglicht den Zugriff auf aktuelle Marktberichte und Trendanalysen.",
+    category: 'recent',
+    source: 'document',
+    accuracy: 'high',
+    sourceInfo: 'Technologie-Trendreport 2023 - Gartner & Forrester Analysen'
+  },
+  {
+    question: "Was sind die wichtigsten Exportgüter der Schweiz in die USA im Jahr 2023?",
+    context: "Die wichtigsten Exportgüter der Schweiz in die USA im Jahr 2023 waren:\n1. Pharmazeutische Produkte: 42,1 Mrd. CHF\n2. Medizinische Geräte und Präzisionsinstrumente: 9,3 Mrd. CHF\n3. Uhren und Uhrenteile: 7,2 Mrd. CHF\n4. Maschinen: 4,9 Mrd. CHF\n5. Chemische Erzeugnisse (ohne Pharma): 3,8 Mrd. CHF\n6. Edelmetalle und Schmuck: 3,1 Mrd. CHF\nDas Gesamtexportvolumen betrug 75,6 Mrd. CHF, was einem Anstieg von 5,8% gegenüber dem Vorjahr entspricht.",
+    vanillaAnswer: "Zu den wichtigsten Exportgütern der Schweiz in die USA zählen typischerweise pharmazeutische Produkte, Präzisionsinstrumente, Uhren, Maschinen und chemische Erzeugnisse. Die Schweiz ist bekannt für ihre hochwertigen Produkte in diesen Bereichen. Allerdings kann ich ohne Zugriff auf aktuelle Handelsstatistiken keine genauen Zahlen oder die präzise Rangfolge für das Jahr 2023 nennen. Die schweizerisch-amerikanischen Handelsbeziehungen sind traditionell stark, wobei die USA einer der wichtigsten Handelspartner der Schweiz sind.",
+    ragAnswer: "Die wichtigsten Exportgüter der Schweiz in die USA im Jahr 2023 waren:\n\n1. Pharmazeutische Produkte mit einem Wert von 42,1 Milliarden Schweizer Franken (CHF)\n2. Medizinische Geräte und Präzisionsinstrumente: 9,3 Milliarden CHF\n3. Uhren und Uhrenteile: 7,2 Milliarden CHF\n4. Maschinen: 4,9 Milliarden CHF\n5. Chemische Erzeugnisse (ohne Pharmazeutika): 3,8 Milliarden CHF\n6. Edelmetalle und Schmuck: 3,1 Milliarden CHF\n\nDas gesamte Exportvolumen belief sich auf 75,6 Milliarden CHF, was einem Anstieg von 5,8% im Vergleich zum Vorjahr entspricht.",
     explanation: "Für spezifische Wirtschaftsdaten und aktuelle Statistiken ist RAG besonders nützlich. Das Modell kennt allgemeine Trends, aber keine aktuellen präzisen Zahlen ohne externe Datenquellen.",
     category: 'specific',
     source: 'database',
     accuracy: 'high',
-    sourceInfo: 'Statistisches Bundesamt - Außenhandelsstatistik 2023'
+    sourceInfo: 'Eidgenössische Zollverwaltung - Außenhandelsstatistik 2023'
   }
 ];
 

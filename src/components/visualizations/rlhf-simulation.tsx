@@ -122,28 +122,29 @@ export const RLHFSimulation = () => {
     
     const newFeedbackCount = feedbackCount + 1;
     setFeedbackCount(newFeedbackCount);
-    
-    // Nach kurzer Verzögerung zum nächsten Szenario oder zur nächsten Phase
-    setTimeout(() => {
-      if (newFeedbackCount < 3) {
-        // Zufälligen neuen Index wählen, der noch nicht verwendet wurde
-        let usedIndices = Object.keys(selectedAnswers).map(Number);
-        let availableIndices = Array.from({length: scenarios.length}, (_, i) => i)
-          .filter(i => !usedIndices.includes(i));
-        
-        // Falls alle Szenarien verwendet wurden oder keine verfügbar sind, zur nächsten Phase
-        if (availableIndices.length === 0) {
-          setPhase('reward-model');
-        } else {
-          // Zufälligen Index aus den verfügbaren wählen
-          const randomIndex = Math.floor(Math.random() * availableIndices.length);
-          setCurrentScenarioIndex(availableIndices[randomIndex]);
-        }
-      } else {
-        // Nach 3 Feedbacks zur Reward-Modell-Phase wechseln
+  };
+  
+  // Handler für den "Weiter"-Button
+  const handleContinue = () => {
+    const newFeedbackCount = feedbackCount;
+    if (newFeedbackCount < 3) {
+      // Zufälligen neuen Index wählen, der noch nicht verwendet wurde
+      let usedIndices = Object.keys(selectedAnswers).map(Number);
+      let availableIndices = Array.from({length: scenarios.length}, (_, i) => i)
+        .filter(i => !usedIndices.includes(i));
+      
+      // Falls alle Szenarien verwendet wurden oder keine verfügbar sind, zur nächsten Phase
+      if (availableIndices.length === 0) {
         setPhase('reward-model');
+      } else {
+        // Zufälligen Index aus den verfügbaren wählen
+        const randomIndex = Math.floor(Math.random() * availableIndices.length);
+        setCurrentScenarioIndex(availableIndices[randomIndex]);
       }
-    }, 5000);
+    } else {
+      // Nach 3 Feedbacks zur Reward-Modell-Phase wechseln
+      setPhase('reward-model');
+    }
   };
   
   // Test-Antworten anzeigen und zum nächsten testfall wechseln
@@ -261,9 +262,18 @@ export const RLHFSimulation = () => {
                   className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-100"
                 >
                   <p className="text-sm text-blue-700 font-medium mb-1">Warum ist eine Antwort besser?</p>
-                  <p className="text-sm text-blue-600">
+                  <p className="text-sm text-blue-600 mb-3">
                     {scenarios[currentScenarioIndex].explanation}
                   </p>
+                  <div className="flex justify-end">
+                    <Button 
+                      onClick={handleContinue}
+                      size="sm"
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      Weiter
+                    </Button>
+                  </div>
                 </motion.div>
               )}
             </CardContent>

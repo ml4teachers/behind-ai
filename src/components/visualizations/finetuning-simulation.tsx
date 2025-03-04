@@ -133,6 +133,24 @@ export const FinetuningSimulation = () => {
           </div>
         </div>
       )}
+
+      <div className="mt-4">
+        <p className="text-sm text-gray-600 mb-2">Beispielanfragen:</p>
+        <div className="flex flex-wrap gap-2">
+          {sampleQueries.map((sample, index) => (
+            <Button 
+              key={index} 
+              variant="outline" 
+              size="sm"
+              onClick={() => handleSampleQuery(sample)}
+              className="text-xs"
+              disabled={isTyping}
+            >
+              {sample}
+            </Button>
+          ))}
+        </div>
+      </div>
       
       <Tabs defaultValue="pretrained" value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
@@ -292,24 +310,6 @@ export const FinetuningSimulation = () => {
           </div>
         </TabsContent>
       </Tabs>
-      
-      <div className="mt-4">
-        <p className="text-sm text-gray-600 mb-2">Beispielanfragen:</p>
-        <div className="flex flex-wrap gap-2">
-          {sampleQueries.map((sample, index) => (
-            <Button 
-              key={index} 
-              variant="outline" 
-              size="sm"
-              onClick={() => handleSampleQuery(sample)}
-              className="text-xs"
-              disabled={isTyping}
-            >
-              {sample}
-            </Button>
-          ))}
-        </div>
-      </div>
       
       <div className="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-100">
         <h3 className="font-medium text-amber-800 mb-2">Wie funktioniert Finetuning?</h3>

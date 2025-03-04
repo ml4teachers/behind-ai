@@ -80,10 +80,10 @@ const problems: Problem[] = [
       {
         thought: "Ich überlege, wie viele Händeschütteln pro Person stattfinden. Jede Person schüttelt allen anderen Personen die Hand, also 19 Händeschütteln pro Person.",
         isCorrect: false,
-        correction: "Hier liegt ein Denkfehler vor. Wenn jede Person allen anderen die Hand schüttelt, hätten wir 20 × 19 = 380 Händeschütteln. Aber dabei würde jedes Händeschütteln doppelt gezählt (einmal für Person A und einmal für Person B)."
+        correction: "Hier liegt ein Denkfehler vor. Wenn jede Person allen anderen die Hand schüttelt, wären es 20 × 19 = 380, aber jedes Händeschütteln wird doppelt gezählt."
       },
       {
-        thought: "Ich muss das Problem anders angehen. Es geht um Paare von Personen. Mit 20 Personen kann ich n(n-1)/2 verschiedene Paare bilden, wobei n die Anzahl der Personen ist.\nAlso: 20 × (20-1) / 2 = 20 × 19 / 2 = 380 / 2 = 190 Paare.",
+        thought: "Ich muss das Problem anders angehen. Es geht um Paare von Personen. Mit 20 Personen kann ich n(n-1)/2 verschiedene Paare bilden, also: 20 × 19 / 2 = 190 Paare.",
         isCorrect: true
       },
       {
@@ -100,7 +100,7 @@ const problems: Problem[] = [
     difficulty: 'medium',
     steps: [
       {
-        thought: "Ein Palindrom ist ein Wort oder Satz, der vorwärts und rückwärts gelesen gleich ist. Zum Beispiel &apos;Anna&apos; oder &apos;Reliefpfeiler&apos;.",
+        thought: "Ein Palindrom ist ein Wort oder Satz, der vorwärts und rückwärts gelesen gleich ist. Zum Beispiel 'Anna' oder 'Reliefpfeiler'.",
         isCorrect: true
       },
       {
@@ -112,11 +112,11 @@ const problems: Problem[] = [
         isCorrect: true
       },
       {
-        thought: "Lass mich die Funktion mit ein paar Beispielen testen:\n- isPalindrome(&apos;Anna&apos;) sollte true zurückgeben\n- isPalindrome(&apos;Hallo&apos;) sollte false zurückgeben\n- isPalindrome(&apos;Ein Esel lese nie&apos;) sollte true zurückgeben, da es zu &apos;einesellesen&apos; wird",
+        thought: "Lass mich die Funktion mit ein paar Beispielen testen:\n- isPalindrome('Anna') sollte true zurückgeben\n- isPalindrome('Hallo') sollte false zurückgeben\n- isPalindrome('Ein Esel lese nie') sollte true zurückgeben, da es zu 'einesellesen' wird",
         isCorrect: true
       }
     ],
-    finalAnswer: "```javascript\nfunction isPalindrome(str) {\n  // Bereinige den String: Kleinbuchstaben und nur Buchstaben/Zahlen behalten\n  const cleanStr = str.toLowerCase().replace(/[^a-z0-9]/g, '');\n  \n  // Kehre den String um\n  const reversedStr = cleanStr.split('').reverse().join('');\n  \n  // Vergleiche die beiden Strings\n  return cleanStr === reversedStr;\n}\n\n// Beispiele:\n// isPalindrome(&apos;Anna&apos;) => true\n// isPalindrome(&apos;Hallo&apos;) => false\n// isPalindrome(&apos;Ein Esel lese nie&apos;) => true\n```",
+    finalAnswer: "```javascript\nfunction isPalindrome(str) {\n  // Bereinige den String: Kleinbuchstaben und nur Buchstaben/Zahlen behalten\n  const cleanStr = str.toLowerCase().replace(/[^a-z0-9]/g, '');\n  \n  // Kehre den String um\n  const reversedStr = cleanStr.split('').reverse().join('');\n  \n  // Vergleiche die beiden Strings\n  return cleanStr === reversedStr;\n}\n\n// Beispiele:\n// isPalindrome('Anna') => true\n// isPalindrome('Hallo') => false\n// isPalindrome('Ein Esel lese nie') => true\n```",
     directAnswer: "```javascript\nfunction isPalindrome(str) {\n  const cleanStr = str.toLowerCase().replace(/[^a-z0-9]/g, '');\n  const reversedStr = cleanStr.split('').reverse().join('');\n  return cleanStr === reversedStr;\n}\n```"
   },
   {
@@ -129,9 +129,9 @@ const problems: Problem[] = [
         isCorrect: true
       },
       {
-        thought: "Um die Brüche zu addieren, brauche ich einen gemeinsamen Nenner. Der kleinste gemeinsame Nenner von 3, 4 und 5 ist 60.",
+        thought: "Um die Brüche zu addieren, brauche ich einen gemeinsamen Nenner. Der kleinste gemeinsame Nenner von 3, 4 und 5 ist 30.",
         isCorrect: false,
-        correction: "Der kleinste gemeinsame Nenner von 3, 4 und 5 ist nicht 60, sondern 60. Lass mich das nochmal berechnen: kgV(3, 4, 5) = 60."
+        correction: "Das ist falsch. Der kleinste gemeinsame Nenner von 3, 4 und 5 ist 60, nicht 30."
       },
       {
         thought: "Jetzt rechne ich die Brüche in Sechzigstel um:\nAnna: 1/3 = 20/60\nBen: 1/4 = 15/60\nCharlie: 1/5 = 12/60",
@@ -147,7 +147,7 @@ const problems: Problem[] = [
       }
     ],
     finalAnswer: "Nachdem Anna 1/3, Ben 1/4 und Charlie 1/5 der Pizza gegessen haben, bleiben 13/60 (oder etwa 21,7%) der Pizza übrig.",
-    directAnswer: "Es bleiben 13/60 der Pizza übrig."
+    directAnswer: "Es bleiben 12/60 der Pizza übrig."
   },
   {
     question: "Wenn alle Katzen Tiere sind und einige Tiere können schwimmen, können wir daraus schließen, dass einige Katzen schwimmen können?",
@@ -161,10 +161,10 @@ const problems: Problem[] = [
       {
         thought: "Aus diesen beiden Aussagen können wir schließen, dass einige Katzen schwimmen können, da alle Katzen Tiere sind und einige Tiere schwimmen können.",
         isCorrect: false,
-        correction: "Das ist ein logischer Fehlschluss. Nur weil alle Katzen Tiere sind und einige Tiere schwimmen können, folgt daraus nicht notwendigerweise, dass einige Katzen zu den schwimmenden Tieren gehören. Die schwimmenden Tiere könnten alle Nicht-Katzen sein."
+        correction: "Das ist ein logischer Fehlschluss. Nur weil alle Katzen Tiere sind und einige Tiere schwimmen können, folgt daraus nicht notwendigerweise, dass einige Katzen schwimmen können."
       },
       {
-        thought: "Lassen Sie mich das mit einem Venn-Diagramm visualisieren. Wir haben eine Menge 'Tiere', die alle 'Katzen' enthält. Innerhalb der Menge 'Tiere' gibt es eine Teilmenge 'Schwimmende Tiere'. Aber wir wissen nicht, ob die Teilmenge 'Schwimmende Tiere' und die Teilmenge 'Katzen' sich überschneiden.",
+        thought: "Lassen Sie mich das mit einem Venn-Diagramm visualisieren. Wir haben eine Menge 'Tiere', die alle 'Katzen' enthält. Innerhalb der Menge 'Tiere' gibt es eine Teilmenge 'Schwimmende Tiere'. Aber wir wissen nicht, ob diese Teilmengen sich überschneiden.",
         isCorrect: true
       },
       {
@@ -222,33 +222,29 @@ const problems: Problem[] = [
         isCorrect: true
       },
       {
-        thought: "Da ich nur eine Frucht ziehen darf, sollte ich eine Kiste wählen, bei der ich mit Sicherheit auf den Inhalt schließen kann. Die 'Gemischt'-Kiste ist ein guter Kandidat, da sie definitiv nicht gemischt ist (wegen der falschen Beschriftung).",
+        thought: "Da ich nur eine Frucht ziehen darf, sollte ich eine Kiste wählen, bei der ich mit Sicherheit auf den Inhalt schließen kann. Die 'Gemischt'-Kiste ist ein guter Kandidat, da sie definitiv nicht gemischt ist.",
         isCorrect: true
       },
       {
-        thought: "Angenommen, ich ziehe eine Frucht aus der 'Gemischt'-Kiste und es ist ein Apfel. Dann weiß ich, dass diese Kiste nur Äpfel enthält (da sie nicht gemischt sein kann).",
+        thought: "Angenommen, ich ziehe eine Frucht aus der 'Gemischt'-Kiste und es ist ein Apfel. Dann weiß ich, dass diese Kiste nur Äpfel enthält.",
         isCorrect: true
       },
       {
-        thought: "Da die 'Gemischt'-Kiste tatsächlich nur Äpfel enthält und die 'Äpfel'-Kiste falsch beschriftet ist, muss die 'Äpfel'-Kiste entweder nur Orangen oder gemischte Früchte enthalten. Da aber die 'Orangen'-Kiste auch falsch beschriftet ist, kann die 'Äpfel'-Kiste keine Orangen enthalten (sonst wäre eine Kiste korrekt beschriftet). Also muss die 'Äpfel'-Kiste gemischte Früchte enthalten.",
+        thought: "Da die 'Gemischt'-Kiste nur Äpfel enthält und die 'Äpfel'-Kiste falsch beschriftet ist, muss die 'Äpfel'-Kiste entweder nur Orangen oder gemischte Früchte enthalten. Da aber die 'Orangen'-Kiste auch falsch beschriftet ist, kann die 'Äpfel'-Kiste keine gemischten Früchte enthalten, also muss sie nur Orangen enthalten.",
         isCorrect: true
       },
       {
-        thought: "Durch Ausschluss bleibt dann nur noch die Möglichkeit, dass die 'Orangen'-Kiste nur Orangen enthält. Aber das wäre eine korrekte Beschriftung, was unmöglich ist. Hier habe ich einen Denkfehler gemacht.",
+        thought: "Durch Ausschluss bleibt dann nur noch die Möglichkeit, dass die 'Orangen'-Kiste gemischte Früchte enthält. Allerdings führt diese Überlegung zu einer Korrektur, denn wenn die 'Orangen'-Kiste gemischte Früchte enthält, wäre sie korrekt, was nicht sein kann.",
         isCorrect: false,
-        correction: "Das ist ein Fehler. Wenn die 'Gemischt'-Kiste nur Äpfel enthält und die 'Äpfel'-Kiste gemischte Früchte enthält, dann muss die 'Orangen'-Kiste nur Orangen enthalten. Das würde bedeuten, dass die 'Orangen'-Kiste korrekt beschriftet wäre, was im Widerspruch zur Aufgabenstellung steht."
+        correction: "Das ist ein Fehler. Die richtige Logik wäre: Wenn die 'Gemischt'-Kiste nur Äpfel enthält, dann muss die 'Äpfel'-Kiste Orangen enthalten und die 'Orangen'-Kiste gemischte Früchte."
       },
       {
-        thought: "Ich muss meine Überlegung korrigieren. Wenn die 'Gemischt'-Kiste nur Äpfel enthält, dann kann die 'Äpfel'-Kiste keine gemischten Früchte enthalten (sonst wäre keine Kiste für nur Orangen übrig). Also muss die 'Äpfel'-Kiste nur Orangen enthalten und die 'Orangen'-Kiste muss gemischte Früchte enthalten.",
-        isCorrect: true
-      },
-      {
-        thought: "Alternativ, wenn ich eine Orange aus der 'Gemischt'-Kiste ziehe, würde ich ähnlich schließen: Die 'Gemischt'-Kiste enthält nur Orangen, die 'Orangen'-Kiste enthält nur Äpfel, und die 'Äpfel'-Kiste enthält gemischte Früchte.",
+        thought: "Alternativ, wenn ich eine Orange aus der 'Gemischt'-Kiste ziehe, würde ich ähnlich schließen: Die 'Gemischt'-Kiste enthält nur Orangen, die 'Orangen'-Kiste enthält Äpfel, und die 'Äpfel'-Kiste enthält gemischte Früchte.",
         isCorrect: true
       }
     ],
-    finalAnswer: "Ich würde eine Frucht aus der Kiste ziehen, die als 'Gemischt' beschriftet ist. Wenn ich einen Apfel ziehe, dann enthält diese Kiste nur Äpfel. Daraus folgt, dass die als 'Äpfel' beschriftete Kiste Orangen enthält und die als 'Orangen' beschriftete Kiste die gemischten Früchte enthält.\n\nWenn ich eine Orange ziehe, dann enthält die 'Gemischt'-Kiste nur Orangen. Daraus folgt, dass die als 'Orangen' beschriftete Kiste Äpfel enthält und die als 'Äpfel' beschriftete Kiste die gemischten Früchte enthält.",
-    directAnswer: "Ziehe eine Frucht aus der mit 'Gemischt' beschrifteten Kiste. Sie bestimmt, ob diese Kiste nur Äpfel oder nur Orangen enthält. Durch logischen Ausschluss kannst du dann die anderen beiden Kisten korrekt beschriften."
+    finalAnswer: "Ich würde eine Frucht aus der Kiste ziehen, die als 'Gemischt' beschriftet ist. Wenn ich einen Apfel ziehe, dann enthält diese Kiste nur Äpfel. Daraus folgt, dass die als 'Äpfel' beschriftete Kiste Orangen enthält und die als 'Orangen' beschriftete Kiste gemischte Früchte enthält.\n\nWenn ich eine Orange ziehe, dann enthält die 'Gemischt'-Kiste nur Orangen. Daraus folgt, dass die als 'Orangen' beschriftete Kiste Äpfel enthält und die als 'Äpfel' beschriftete Kiste gemischte Früchte enthält.",
+    directAnswer: "Ziehe eine Frucht aus der mit 'Gemischt' beschrifteten Kiste. Wenn du einen Apfel ziehst, enthält diese Kiste nur Äpfel, die Kiste mit 'Orangen' enthält dann Orangen und die Kiste mit 'Äpfel' gemischte Früchte."
   },
   {
     question: "Erstelle eine Python-Funktion zum Sortieren einer Liste von Zahlen mit dem Quicksort-Algorithmus.",
@@ -264,7 +260,7 @@ const problems: Problem[] = [
         isCorrect: true
       },
       {
-        thought: "```python\ndef partition(arr, low, high):\n    pivot = arr[high]  # Wähle das letzte Element als Pivot\n    i = low - 1  # Index für das kleinere Element\n    \n    for j in range(low, high):\n        # Wenn aktuelles Element kleiner oder gleich Pivot ist\n        if arr[j] <= pivot:\n            i += 1  # Erhöhe Index des kleineren Elements\n            arr[i], arr[j] = arr[j], arr[i]  # Tausche Elemente\n    \n    arr[i + 1], arr[high] = arr[high], arr[i + 1]  # Platziere Pivot an seiner korrekten Position\n    return i + 1  # Gib die Position des Pivots zurück\n```",
+        thought: "```python\ndef partition(arr, low, high):\n    pivot = arr[high]  # Wähle das letzte Element als Pivot\n    i = low - 1  # Index für das kleinere Element\n    \n    for j in range(low, high):\n        # Wenn aktuelles Element kleiner oder gleich Pivot ist\n        if arr[j] <= pivot:\n            i += 1\n            arr[i], arr[j] = arr[j], arr[i]\n    \n    arr[i + 1], arr[high] = arr[high], arr[i + 1]\n    return i + 1\n```",
         isCorrect: true
       },
       {
@@ -272,7 +268,7 @@ const problems: Problem[] = [
         isCorrect: true
       },
       {
-        thought: "```python\ndef quicksort(arr, low, high):\n    if low < high:\n        # pi ist der Partitionsindex\n        pi = partition(arr, low, high)\n        \n        # Sortiere die Elemente getrennt vor und nach dem Partitionsindex\n        quicksort(arr, low, pi - 1)\n        quicksort(arr, pi + 1, high)\n```",
+        thought: "```python\ndef quicksort(arr, low, high):\n    if low < high:\n        pi = partition(arr, low, high)\n        quicksort(arr, low, pi - 1)\n        quicksort(arr, pi + 1, high)\n```",
         isCorrect: true
       },
       {
@@ -280,21 +276,21 @@ const problems: Problem[] = [
         isCorrect: true
       },
       {
-        thought: "```python\ndef sort_list(arr):\n    if not arr:\n        return arr  # Gib leere Liste zurück, wenn die Eingabe leer ist\n    quicksort(arr, 0, len(arr) - 1)\n    return arr\n```",
+        thought: "```python\ndef sort_list(arr):\n    if (!arr):\n        return arr  # Gib leere Liste zurück, wenn die Eingabe leer ist\n    quicksort(arr, 0, len(arr) - 1)\n    return arr\n```",
         isCorrect: false,
-        correction: "Die Funktion `sort_list` modifiziert die Eingabeliste direkt, sollte aber eine neue sortierte Liste zurückgeben, ohne die Originalliste zu verändern. Eine bessere Implementierung wäre:\n```python\ndef sort_list(arr):\n    if not arr:\n        return []  # Gib leere Liste zurück, wenn die Eingabe leer ist\n    arr_copy = arr.copy()  # Erstelle eine Kopie der Eingabeliste\n    quicksort(arr_copy, 0, len(arr_copy) - 1)\n    return arr_copy\n```"
+        correction: "Die Funktion sort_list modifiziert die Eingabeliste direkt. Es ist besser, eine Kopie der Liste zu erstellen, um die Originalliste nicht zu verändern."
       },
       {
-        thought: "Alternativ könnte ich auch den Quicksort-Algorithmus implementieren, ohne die Originalliste zu verändern, indem ich neue Listen erstelle. Das wäre weniger effizient im Speicherverbrauch, aber konzeptionell einfacher und folgt dem funktionalen Programmierparadigma:",
+        thought: "Alternativ könnte ich auch den Quicksort-Algorithmus implementieren, ohne die Originalliste zu verändern, indem ich neue Listen erstelle. Das wäre weniger speichereffizient, aber konzeptionell einfacher:",
         isCorrect: true
       },
       {
-        thought: "```python\ndef quicksort_functional(arr):\n    if len(arr) <= 1:\n        return arr\n    \n    pivot = arr[len(arr) // 2]  # Wähle das mittlere Element als Pivot\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    \n    return quicksort_functional(left) + middle + quicksort_functional(right)\n```",
+        thought: "```python\ndef quicksort_functional(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quicksort_functional(left) + middle + quicksort_functional(right)\n```",
         isCorrect: true
       }
     ],
-    finalAnswer: "```python\n# Implementierung mit In-Place-Sortierung\ndef partition(arr, low, high):\n    pivot = arr[high]\n    i = low - 1\n    \n    for j in range(low, high):\n        if arr[j] <= pivot:\n            i += 1\n            arr[i], arr[j] = arr[j], arr[i]\n    \n    arr[i + 1], arr[high] = arr[high], arr[i + 1]\n    return i + 1\n\ndef quicksort(arr, low, high):\n    if low < high:\n        pi = partition(arr, low, high)\n        quicksort(arr, low, pi - 1)\n        quicksort(arr, pi + 1, high)\n\ndef sort_list(arr):\n    if not arr:\n        return []\n    arr_copy = arr.copy()  # Erstelle eine Kopie, um die Originalliste nicht zu verändern\n    quicksort(arr_copy, 0, len(arr_copy) - 1)\n    return arr_copy\n\n# Alternativ: Funktionale Implementierung (einfacher, aber speicherintensiver)\ndef quicksort_functional(arr):\n    if len(arr) <= 1:\n        return arr\n    \n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    \n    return quicksort_functional(left) + middle + quicksort_functional(right)\n\n# Beispiel:\n# numbers = [3, 6, 8, 10, 1, 2, 1]\n# sorted_numbers = sort_list(numbers)  # oder quicksort_functional(numbers)\n# print(sorted_numbers)  # [1, 1, 2, 3, 6, 8, 10]\n```",
-    directAnswer: "```python\ndef quicksort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quicksort(left) + middle + quicksort(right)\n```"
+    finalAnswer: "```python\n# Implementierung mit In-Place-Sortierung\n\ndef partition(arr, low, high):\n    pivot = arr[high]\n    i = low - 1\n    for j in range(low, high):\n        if arr[j] <= pivot:\n            i += 1\n            arr[i], arr[j] = arr[j], arr[i]\n    arr[i + 1], arr[high] = arr[high], arr[i + 1]\n    return i + 1\n\n\ndef quicksort(arr, low, high):\n    if low < high:\n        pi = partition(arr, low, high)\n        quicksort(arr, low, pi - 1)\n        quicksort(arr, pi + 1, high)\n\n\ndef sort_list(arr):\n    if (!arr):\n        return []\n    arr_copy = arr.slice()  // Erstelle eine Kopie der Liste\n    quicksort(arr_copy, 0, arr_copy.length - 1)\n    return arr_copy\n\n# Alternativ: Funktionale Implementierung\n\ndef quicksort_functional(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quicksort_functional(left) + middle + quicksort_functional(right)\n\n# Beispiel:\n# numbers = [3, 6, 8, 10, 1, 2, 1]\n# sorted_numbers = sort_list(numbers)\n# print(sorted_numbers)  # [1, 1, 2, 3, 6, 8, 10]\n```",
+    directAnswer: "```python\ndef quicksort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    right = [x for x in arr if x > pivot]\n    return quicksort(left) + [pivot] + quicksort(right)\n```"
   }
 ];
 
@@ -323,7 +319,12 @@ export const ThinkingSimulation = () => {
                 setCurrentStepIndex(currentStepIndex + 1);
                 setThinkingProgress(0);
               } else {
-                setShowFinalAnswer(true);
+                // Beim letzten Schritt: Zuerst den letzten Schritt komplett anzeigen
+                setCurrentStepIndex(currentStepIndex + 1);
+                // Anschließend, nach einer kurzen Pause, die finale Antwort anzeigen
+                setTimeout(() => {
+                  setShowFinalAnswer(true);
+                }, 500);
               }
             }, 500);
             return 100;
