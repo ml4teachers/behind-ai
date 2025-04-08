@@ -55,14 +55,14 @@ export default function TokenizationPage() {
             Teile eines Wortes oder auch nur einzelne Buchstaben.
           </p>
           
-          <div className="bg-violet-50 border border-violet-100 rounded-lg p-4 my-4 flex gap-3">
+          <div className="bg-violet-50 border border-violet-100 rounded-lg p-4 my-4 flex gap-3 items-start">
             <InfoCircledIcon className="w-6 h-6 text-violet-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium text-violet-800 mb-1">BPE: Byte Pair Encoding</p>
+              <p className="font-medium text-violet-800 mb-1">Nächster Schritt: Embeddings</p>
               <p className="text-sm text-violet-700">
-                Moderne Sprachmodelle verwenden einen Algorithmus namens BPE, der häufig zusammen vorkommende
-                Buchstabenpaare zu größeren Tokens zusammenfügt. So können längere Wörter 
-                effizient in wenige Tokens zerlegt werden!
+                Diese Tokens werden dann in spezielle Zahlenlisten, sogenannte <strong>Embeddings</strong>, umgewandelt.
+                Diese Embeddings helfen der KI, die Bedeutung der Wörter zu verstehen – ähnliche Wörter bekommen ähnliche Zahlenlisten.
+                Mehr dazu gibt es später in einer <Link href="/embeddings" className="underline hover:text-violet-900">eigenen Demo</Link>!
               </p>
             </div>
           </div>

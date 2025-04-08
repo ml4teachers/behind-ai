@@ -134,9 +134,9 @@ export default function ChainOfThoughtPage() {
             <span aria-hidden="true">←</span> Zurück
           </Button>
         </Link>
-        <Link href="/resources">
+        <Link href="/embeddings">
           <Button>
-            über diese Seite<span aria-hidden="true">→</span>
+            Weiter zu Embeddings <span aria-hidden="true">→</span>
           </Button>
         </Link>
       </div>

@@ -112,7 +112,7 @@ const problems: Problem[] = [
         isCorrect: true
       },
       {
-        thought: "Lass mich die Funktion mit ein paar Beispielen testen:\n- isPalindrome('Anna') sollte true zurückgeben\n- isPalindrome('Hallo') sollte false zurückgeben\n- isPalindrome('Ein Esel lese nie') sollte true zurückgeben, da es zu 'einesellesen' wird",
+        thought: "Lass mich die Funktion mit ein paar Beispielen testen:\n- isPalindrome('Anna') sollte true zurückgeben\n- isPalindrome('Hallo') sollte false zurückgeben\n- isPalindrome('Ein Esel lese nie') sollte true zurückgeben, da es zu 'einesellesenie' wird",
         isCorrect: true
       }
     ],

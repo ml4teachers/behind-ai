@@ -18,6 +18,7 @@ const navItems = [
   { name: 'RLHF', href: '/rlhf' },
   { name: 'RAG', href: '/rag' },
   { name: 'Chain-of-Thought', href: '/chain-of-thought' },
+  { name: 'Embeddings', href: '/embeddings' },
   { name: 'Ressourcen', href: '/resources' }
 ]
 

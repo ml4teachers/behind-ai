@@ -30,6 +30,8 @@
     "gpt-tokenizer": "^2.8.1",
     "lucide-react": "^0.476.0",
     "next": "^14.2.24",
+    "npyz": "^0.4.2",
+    "numpy-parser": "^1.2.3",
     "openai": "^4.85.4",
     "papaparse": "^5.5.2",
     "plotly.js-basic-dist-min": "^3.0.1",
