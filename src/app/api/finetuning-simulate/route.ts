@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
           'Authorization': `Bearer ${API_KEY}`
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini',
+          model: 'gpt-4.1-nano',
           messages: [
             { role: 'system', content: "Du bist ein hilfreicher Assistent. Beantworte die Frage direkt und präzise. Halte deine Antwort kurz und strukturiert." },
             { role: 'user', content: query }
