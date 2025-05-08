@@ -331,7 +331,7 @@ export const FinetuningSimulation = () => {
       
       <div className="p-2 bg-gray-100 rounded text-xs text-gray-500 text-center">
         Die Simulation verwendet echte KI-Modelle: Babbage-002 (nur vortrainiert) zeigt,
-        wie ein Sprachmodell vor dem Finetuning reagiert, während GPT-4o-mini das Verhalten
+        wie ein Sprachmodell vor dem Finetuning reagiert, während GPT-4.1-mini das Verhalten
         nach dem Finetuning demonstriert.
       </div>
     </div>

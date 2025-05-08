@@ -91,7 +91,7 @@ async function generateAnswer(prompt: string | null, quality: 'einfach' | 'detai
 
     try {
         // Wähle Modell und Parameter basierend auf Qualität
-        const model = quality === 'einfach' ? "gpt-4o-mini" : "gpt-4o";
+        const model = quality === 'einfach' ? "gpt-4.1-nano" : "gpt-4.1-mini";
         
         // Systemanweisung für jeweils einfache oder detaillierte Antworten
         const systemPrompt = quality === 'einfach' 
@@ -129,7 +129,7 @@ async function extractSensitiveData(promptText: string): Promise<any> {
     });
 
     const sensitiveDataResponse = await openai.responses.parse({
-      model: "gpt-4o",
+      model: "gpt-4.1-mini",
       input: [
         {
           role: "system",
@@ -157,7 +157,7 @@ async function generateAnonymizationDetails(promptText: string): Promise<any> {
   try {
     // Erst anonymisieren
     const anonymizationResponse = await openai.responses.parse({
-      model: "gpt-4o",
+      model: "gpt-4.1-mini",
       input: [
         { 
           role: "system", 
@@ -198,7 +198,7 @@ async function generateMetadataInfo(): Promise<any> {
     });
 
     const metadataResponse = await openai.responses.parse({
-      model: "gpt-4o",
+      model: "gpt-4.1-mini",
       input: [
         {
           role: "system",

@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       })
       
     } else {
-      // Verwende gpt-4o-mini für den Finetuning-Modus (Assistenz-Modell)
+      // Verwende gpt-4.1-nano für den Finetuning-Modus (Assistenz-Modell)
       response = await fetch(CHAT_API_URL, {
         method: 'POST',
         headers: {
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       
       if (!response.ok) {
         const errorData = await response.json()
-        console.error('API-Fehler (GPT-4o-mini):', errorData)
+        console.error('API-Fehler (GPT-4.1-mini):', errorData)
         return NextResponse.json(
           { error: `Fehler bei der Anfrage an die Chat API: ${response.status}` },
           { status: response.status }
