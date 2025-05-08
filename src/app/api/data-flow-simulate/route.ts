@@ -93,7 +93,7 @@ async function generateAnswer(prompt: string | null, quality: 'einfach' | 'detai
 
     try {
         // Wähle Modell und Parameter basierend auf Qualität
-        const model = quality === 'einfach' ? "gpt-4.1-nano" : "gpt-4.1-mini";
+        const model = quality === 'einfach' ? "gpt-4.1-mini" : "gpt-4.1";
         
         // Systemanweisung für jeweils einfache oder detaillierte Antworten
         const systemPrompt = quality === 'einfach' 
