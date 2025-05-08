@@ -3,6 +3,8 @@ import OpenAI from 'openai';
 import { z } from 'zod';
 import { zodTextFormat } from 'openai/helpers/zod';
 
+export const maxDuration = 60; // Setzt die maximale Ausführungsdauer auf 60 Sekunden
+
 const openai = new OpenAI({
   // Stelle sicher, dass dein API-Key hier konfiguriert ist,
   // z.B. über Umgebungsvariablen (process.env.OPENAI_API_KEY)
@@ -252,7 +254,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'promptText and a valid scenario (local, api, wrapper) are required' }, { status: 400 });
     }
 
-    // Extrahiere sensible Daten aus dem Prompt (für alle Szenarien)
+    // Extrahiere sensible Daten IMMER zuerst (wird für alle Szenarien benötigt)
     const sensitiveParts = await extractSensitiveData(promptText);
 
     // --- Lokales Szenario ---
@@ -285,41 +287,45 @@ export async function POST(request: Request) {
       return NextResponse.json(localResponse);
     }
 
-    // Metadaten-Informationen für API-Szenarien
-    const metadataInfo = await generateMetadataInfo();
+    // --- API- und Wrapper-Szenarien: Parallele Ausführung der unabhängigen Aufrufe ---
+    const metadataPromise = generateMetadataInfo();
+    let anonymizationPromise: Promise<any> | undefined = undefined;
+    if (scenario === 'wrapper') {
+      anonymizationPromise = generateAnonymizationDetails(promptText);
+    }
 
-    // --- API-Szenarien (Direkt / Wrapper) ---
     // Hole Basis-Metadaten (ohne LLM-Call, da dieser entfernt wurde)
     let baseResult = generateFallbackMeta(scenario, promptText);
 
-    // Anonymisierungsdetails für Wrapper-Szenario
+    // Warte auf parallele Aufrufe
+    const [metadataInfo, anonymizationResult] = await Promise.all([
+      metadataPromise,
+      scenario === 'wrapper' && anonymizationPromise ? anonymizationPromise : Promise.resolve(undefined)
+    ]);
+
+    // Prompt für die Antwortgenerierung bestimmen
+    let promptForAnswer = promptText;
     let anonymizationDetails = undefined;
-    if (scenario === 'wrapper') {
-      const anonResult = await generateAnonymizationDetails(promptText);
-      anonymizationDetails = anonResult.replacements;
-      baseResult.processedPromptForApi = anonResult.anonymizedText; // Update den Prompt im Fallback-Ergebnis
-      
-      // NEU: Speicherinfo für Wrapper (Schabi-orientiert)
+    if (scenario === 'wrapper' && anonymizationResult) {
+      baseResult.processedPromptForApi = anonymizationResult.anonymizedText;
+      promptForAnswer = anonymizationResult.anonymizedText;
+      anonymizationDetails = anonymizationResult.replacements;
+      // Speicherinfo & Training für Wrapper
       baseResult.dataStorageInfo = [
         { location: "Wrapper-Server (Schweiz/EU)", duration: "Bis Löschung durch Nutzer", purpose: "Verlauf für Nutzer" },
         { location: "Anbieter-Server (Azure EU)", duration: "Nur zur Verarbeitung (In-Memory)", purpose: "Antwortgenerierung" }
       ];
-      // NEU: Training für Wrapper
       baseResult.usedForTraining = false;
-
     } else if (scenario === 'api') {
-      // NEU: Speicherinfo für API (OpenAI Consumer)
+      // Speicherinfo & Training für API
       baseResult.dataStorageInfo = [
         { location: "OpenAI Server (USA/Global)", duration: "Bis zu 30 Tage (lt. Policy)", purpose: "Missbrauchserkennung, Qualitätskontrolle" }
       ];
-      // NEU: Training für API
       baseResult.usedForTraining = true;
     }
 
     // 2. API Call: Antwort generieren
     let simulatedAnswerContent: string | null = null;
-    const promptForAnswer = scenario === 'api' ? promptText : baseResult.processedPromptForApi;
-    
     if (promptForAnswer) {
       simulatedAnswerContent = await generateAnswer(promptForAnswer, "detailliert");
     } else {
