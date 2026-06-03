@@ -111,8 +111,8 @@
 - [ ] Preise/Modellnamen veraltet (`kosten`, `modell-typen`, `chain-of-thought`) — Refresh
 - [ ] `public/daten/assets` ggf. nach `public/data` verschieben (derzeit funktionsfähig, Fetch-Pfade zeigen noch auf `/daten/assets`)
 - [ ] `<html lang="de">` statisch — bei EN-Launch dynamisch machen
-- [ ] `.app.mdx` (alte Vibecoding-Notizen) — behalten oder bewusst entfernen?
 
 ## Changelog
 
 - **2026-06-03 — Thread 1:** Fundament & Shell. Branch `redesign` angelegt.
+- **2026-06-03 — Cleanup:** `.app.mdx` (Vibecoding-Artefakt) und ungenutzte create-next-app-SVGs (`file/globe/next/vercel/window.svg`) entfernt.
