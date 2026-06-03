@@ -6,11 +6,22 @@ import { Skeleton } from '@/components/ui/skeleton'
 import Papa from 'papaparse'
 import dynamic from 'next/dynamic'
 
-// React-Plotly with dynamic import to avoid SSR issues
-const PlotlyComponent = dynamic(() => import('react-plotly.js'), {
-  ssr: false,
-  loading: () => <p>Lädt Visualisierung...</p>
-})
+// React-Plotly dynamisch laden (SSR vermeiden). Wir nutzen die Factory mit dem
+// schlanken "plotly.js-basic-dist-min" statt des vollen "plotly.js" – Letzteres
+// ist nicht installiert und liess den Production-Build fehlschlagen.
+const PlotlyComponent = dynamic(
+  async () => {
+    const [plotlyMod, factoryMod] = await Promise.all([
+      import('plotly.js-basic-dist-min'),
+      import('react-plotly.js/factory'),
+    ]);
+    return factoryMod.default(plotlyMod.default);
+  },
+  {
+    ssr: false,
+    loading: () => <p>Lädt Visualisierung...</p>,
+  }
+)
 
 interface ClusterInfo {
   clusterId: number
