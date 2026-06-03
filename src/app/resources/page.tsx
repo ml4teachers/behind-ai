@@ -80,7 +80,7 @@ export default function ResourcesPage() {
         <h2 className="text-2xl font-semibold mb-4">Datenquellen & Inspiration</h2>
          <p className="mb-2">
           Die Seite
-            <Link href="/daten" className="text-blue-600 hover:underline font-medium"> Daten </Link>
+            <Link href="/data" className="text-blue-600 hover:underline font-medium"> Daten </Link>
           wurde inspiriert durch das zweite Video von Andrej Karpathy. Der Code sowie die Daten für die Visualisierung stammen von Huggingface:
         </p>
         <Link

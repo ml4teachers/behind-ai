@@ -3,7 +3,6 @@
 // Ungenutzte Imports entfernt
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { GuideCharacter } from '@/components/guide/guide-character'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import Link from 'next/link'
 import { DatensetCluster } from './datenset-cluster'
@@ -12,7 +11,6 @@ export default function DatenPage() {
   return (
     <div className="container mx-auto max-w-4xl py-8">
       <div className="flex items-start gap-6 mb-8">
-        <GuideCharacter emotion="thinking" />
         <div>
           <h1 className="text-3xl font-bold mb-2 text-violet-900">Wo kommen die Daten her?</h1>
           <p className="text-lg text-gray-600">

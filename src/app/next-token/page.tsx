@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { GuideCharacter } from '@/components/guide/guide-character'
 import { NextTokenPrediction } from '@/components/visualizations/next-token-prediction'
 import Link from 'next/link'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
@@ -28,7 +27,6 @@ export default function NextTokenPage() {
   return (
     <div className="container mx-auto max-w-4xl py-8">
       <div className="flex items-center gap-6 mb-8">
-        <GuideCharacter emotion="thinking" />
         <div>
           <h1 className="text-3xl font-bold mb-2 text-violet-900">Next-Token-Prediction: Das Herzstück des Modells</h1>
           <p className="text-lg text-gray-600">
@@ -143,7 +141,7 @@ export default function NextTokenPage() {
             <span aria-hidden="true">←</span> Zurück
           </Button>
         </Link>
-        <Link href="/daten">
+        <Link href="/data">
           <Button>
             Weiter: Wo kommen die Daten her? <span aria-hidden="true">→</span>
           </Button>

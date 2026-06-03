@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { GuideCharacter } from '@/components/guide/guide-character'
 import { TokenizationAnimation } from '@/components/animations/tokenization-animation'
 import Link from 'next/link'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
@@ -28,7 +27,6 @@ export default function TokenizationPage() {
   return (
     <div className="container mx-auto max-w-4xl py-8">
       <div className="flex items-start gap-6 mb-8">
-        <GuideCharacter emotion="explaining" />
         <div>
           <h1 className="text-3xl font-bold mb-2 text-violet-900">Tokenisierung: Text in Stücke zerlegen</h1>
           <p className="text-lg text-gray-600">

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { GuideCharacter } from '@/components/guide/guide-character'; // Pfad prüfen
 import { Info, Cloud, Laptop } from 'lucide-react'; // Info-Icon für die Infobox
 import { DataFlowSimulator } from '@/components/visualizations/data-flow-simulator'; // Pfad prüfen
 import Link from 'next/link'; // Falls du Navigation brauchst
@@ -14,7 +13,6 @@ export default function LokalVsCloudPage() {
     <div className="container mx-auto max-w-4xl py-8">
       {/* Titelbereich mit GuideCharacter */}
       <div className="flex items-center gap-6 mb-8">
-        <GuideCharacter emotion="thinking" /> {/* Emotion anpassen, z.B. thinking, explaining */}
         <div>
           <h1 className="text-3xl font-bold mb-2 text-blue-900">Lokal vs. Cloud: Wo arbeitet die KI?</h1>
           <p className="text-lg text-gray-600">

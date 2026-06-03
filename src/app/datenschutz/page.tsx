@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { GuideCharacter } from '@/components/guide/guide-character'; // Pfad prüfen
 import { Info, Lock, FileText, ShieldAlert, AlertTriangle, UserCheck, Trash2 } from 'lucide-react'; // Passende Icons
 import Link from 'next/link'; // Für Links zu anderen Seiten
 
@@ -18,7 +17,6 @@ export default function DataPrivacyPage() {
     <div className="container mx-auto max-w-4xl py-8">
       {/* Titelbereich */}
       <div className="flex items-center gap-6 mb-8">
-        <GuideCharacter emotion="curious" /> {/* z.B. besorgt oder nachdenklich */}
         <div>
           <h1 className="text-3xl font-bold mb-2 text-red-900">Datenschutz im KI-Einsatz</h1>
           <p className="text-lg text-gray-600">

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { GuideCharacter } from '@/components/guide/guide-character'; // Pfad prüfen
 import { Info, HardDrive, Cloud, AlertTriangle, Wallet, Receipt } from 'lucide-react'; // Passende Icons
 import { ApiCostSimulator } from '@/components/visualizations/cost-calculator'; // Pfad zur neuen Komponente
 import Link from 'next/link'; // Für Links zu anderen Seiten
@@ -12,7 +11,6 @@ export default function CostsPage() {
     <div className="container mx-auto max-w-4xl py-8">
       {/* Titelbereich */}
       <div className="flex items-center gap-6 mb-8">
-        <GuideCharacter emotion="thinking" /> {/* z.B. nachdenklich */}
         <div>
           <h1 className="text-3xl font-bold mb-2 text-orange-900">Was kostet die KI?</h1>
           <p className="text-lg text-gray-600">

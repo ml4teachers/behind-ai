@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { GuideCharacter } from '@/components/guide/guide-character'
 import Link from 'next/link'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import { RAGSimulation } from '@/components/visualizations/rag-simulation'
@@ -22,7 +21,6 @@ export default function RAGPage() {
   return (
     <div className="container mx-auto max-w-4xl py-8">
       <div className="flex items-center gap-6 mb-8">
-        <GuideCharacter emotion="curious" />
         <div>
           <h1 className="text-3xl font-bold mb-2 text-violet-900">RAG: Retrieval-Augmented Generation</h1>
           <p className="text-lg text-gray-600">

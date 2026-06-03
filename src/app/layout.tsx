@@ -1,13 +1,15 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { Navigation } from '../components/nav/navigation'
+import { ThemeProvider } from '@/components/theme-provider'
+import { AppShell } from '@/components/layout/app-shell'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Behind ChatGPT - Wie funktionieren LLMs?',
-  description: 'Lerne auf einfache Weise, wie KI-Sprachmodelle funktionieren',
+  title: 'Behind AI – Wie funktionieren KI-Sprachmodelle?',
+  description:
+    'Interaktiv lernen, wie KI-Sprachmodelle funktionieren – mit echten Modell-Experimenten statt langer Texte.',
 }
 
 export default function RootLayout({
@@ -16,14 +18,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="de">
+    <html lang="de" suppressHydrationWarning>
       <body className={inter.className}>
-        <div className="min-h-screen flex flex-col">
-          <div className="flex flex-1 relative">
-            <Navigation />
-            <main className="flex-1 p-6 md:p-8 lg:p-10 bg-gray-50 w-full">{children}</main>
-          </div>
-        </div>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AppShell>{children}</AppShell>
+        </ThemeProvider>
       </body>
     </html>
   )

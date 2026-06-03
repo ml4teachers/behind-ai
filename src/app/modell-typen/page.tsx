@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { GuideCharacter } from '@/components/guide/guide-character'; // Pfad prüfen
 import { Info, MessageSquareText, Image as ImageIcon, Volume2, Sparkles, Cpu, Cloud } from 'lucide-react'; // Passende Icons (Sparkles für multimodal?)
 // import Link from 'next/link';
 // import { Button } from '@/components/ui/button';
@@ -12,7 +11,6 @@ export default function ModelCapabilitiesPage() { // Neuer Name für die Funktio
     <div className="container mx-auto max-w-4xl py-8">
       {/* Titelbereich */}
       <div className="flex items-center gap-6 mb-8">
-        <GuideCharacter emotion="explaining" />
         <div>
           {/* Neuer Titel */}
           <h1 className="text-3xl font-bold mb-2 text-purple-900">Text, Bild, Ton: Was KI heute alles kann</h1>

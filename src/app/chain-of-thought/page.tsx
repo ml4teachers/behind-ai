@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { GuideCharacter } from '@/components/guide/guide-character'
 import Link from 'next/link'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import { ThinkingSimulation } from '@/components/visualizations/thinking-simulation'
@@ -22,7 +21,6 @@ export default function ChainOfThoughtPage() {
   return (
     <div className="container mx-auto max-w-4xl py-8">
       <div className="flex items-center gap-6 mb-8">
-        <GuideCharacter emotion="thinking" />
         <div>
           <h1 className="text-3xl font-bold mb-2 text-violet-900">Chain-of-Thought: Wie KI denkt</h1>
           <p className="text-lg text-gray-600">

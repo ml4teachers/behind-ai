@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { GuideCharacter } from '@/components/guide/guide-character'; // Pfad prüfen
 import { Info, Cpu, MemoryStick, Scaling, Image as ImageIcon, Mic } from 'lucide-react'; // Zusätzliche Icons für Hinweis
 import { HardwareChecker } from '@/components/visualizations/hardware-checker'; // Pfad zur neuen Komponente
 
@@ -11,7 +10,6 @@ export default function HardwareCheckPage() {
     <div className="container mx-auto max-w-4xl py-8">
       {/* Titelbereich (unverändert) */}
       <div className="flex items-center gap-6 mb-8">
-        <GuideCharacter emotion="curious" />
         <div>
           <h1 className="text-3xl font-bold mb-2 text-teal-900">Braucht KI einen Supercomputer?</h1>
           <p className="text-lg text-gray-600">

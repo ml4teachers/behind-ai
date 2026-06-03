@@ -1,7 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { GuideCharacter } from '@/components/guide/guide-character' // Pfad prüfen
 import { Cpu, ShieldCheck } from 'lucide-react'; // Icons für die Bereiche
 
 export default function Home() {
@@ -9,7 +8,6 @@ export default function Home() {
     <div className="container mx-auto max-w-4xl py-8">
       {/* Titelbereich - Leicht angepasst */}
       <div className="flex items-center gap-6 mb-8">
-        <GuideCharacter emotion="happy" size="lg" />
         <div>
           {/* Breiterer Titel */}
           <h1 className="text-4xl font-bold mb-3 text-gray-900">KI verstehen: Von der Technik zur Praxis</h1>
