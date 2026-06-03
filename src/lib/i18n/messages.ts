@@ -50,7 +50,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nav.tokenization': 'Tokenisierung',
     'nav.nextToken': 'Next-Token-Prediction',
     'nav.data': 'Daten',
-    'nav.training': 'Training vs. Inferenz',
+    'nav.training': 'Training',
     'nav.finetuning': 'Finetuning',
     'nav.rlhf': 'RLHF',
     'nav.rag': 'RAG',
@@ -154,7 +154,21 @@ export const messages: Record<Locale, Record<string, string>> = {
       'Ungeplant heisst aber nicht ungefiltert: Aus dem rohen Web wird über 90 % wieder verworfen. Duplikate, Sprach-Müll und Boilerplate fliegen raus, und ein KI-Klassifikator bewertet den Bildungswert jedes Texts. Heute bewerten also KI-Systeme die Trainingsdaten der nächsten KI-Systeme. Welche Texte diesen Filter überleben, formt die Fähigkeiten, das Wissen und die blinden Flecken des Modells.',
     'data.moreP3':
       'Deshalb ist Datenauswahl ein zentraler Hebel beim Bau eines Modells – nicht nur die Menge zählt, sondern die Qualität und Zusammensetzung. An der Spitze gewichten Labs einzelne Quellen sogar bewusst (etwa mehr Code oder Bücher), um gezielt bestimmte Fähigkeiten zu stärken.',
-    'data.nextLabel': 'Weiter: Training vs. Inferenz',
+    'data.nextLabel': 'Weiter: Training',
+
+    // --- Training / Pretraining ---
+    'training.title': 'Training',
+    'training.subtitle':
+      'Hier lernt ein winziges Sprachmodell direkt in deinem Browser — von Grund auf. Drück auf Start und sieh zu, wie aus Zufall Sprache wird.',
+    'training.caption':
+      'Oben rechnet ein echtes neuronales Netz mit ein paar tausend Parametern — live in deinem Browser. Es sagt jeweils das nächste Zeichen voraus und korrigiert bei jedem Schritt seinen Fehler, genau wie grosse Modelle, nur millionenfach kleiner.',
+    'training.moreP1':
+      'Training und Anwendung sind zwei getrennte Phasen. Beim Training stellt das Modell eine Vorhersage an, vergleicht sie mit dem echten nächsten Zeichen und dreht seine Stellschrauben (die Parameter) ein kleines Stück nach. Bei der Inferenz — wenn du mit einer KI sprichst — steht alles fest: Das Modell wendet nur noch an, was es gelernt hat.',
+    'training.moreP2':
+      'Der Hebel beim Lernen ist der Fehler (Loss): Er misst, wie schlecht das Modell das richtige nächste Zeichen vorhergesagt hat. Aus diesem Fehler lässt sich für jede einzelne Zahl im Modell ausrechnen, in welche Richtung sie ihn kleiner macht — und genau dorthin wird sie ein winziges Stück verschoben. Millionenfach wiederholt wird die Vorhersage immer treffsicherer: Die Verteilung wird spitz, die Textproben werden plausibel.',
+    'training.moreP3':
+      'Echte Modelle arbeiten nach demselben Prinzip, nur grösser: nicht einzelne Buchstaben, sondern Wortteile (Tokens); nicht ein paar hundert Wörter, sondern Billionen; nicht Sekunden im Browser, sondern Wochen auf tausenden Grafikkarten. Dieses Lernen von Grund auf heisst Pretraining. Wie ein Modell danach für konkrete Aufgaben verfeinert wird, zeigt die nächste Station.',
+    'training.nextLabel': 'Weiter: Finetuning',
 
     'a11y.toggleTheme': 'Hell/Dunkel umschalten',
     'a11y.toggleSidebar': 'Navigation ein-/ausblenden',
@@ -202,7 +216,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nav.tokenization': 'Tokenization',
     'nav.nextToken': 'Next-token prediction',
     'nav.data': 'Data',
-    'nav.training': 'Training vs. inference',
+    'nav.training': 'Training',
     'nav.finetuning': 'Fine-tuning',
     'nav.rlhf': 'RLHF',
     'nav.rag': 'RAG',
@@ -304,7 +318,21 @@ export const messages: Record<Locale, Record<string, string>> = {
       'But unplanned does not mean unfiltered: over 90% of the raw web is thrown away. Duplicates, language junk and boilerplate are removed, and an AI classifier rates the educational value of every text. So today AI systems judge the training data of the next AI systems. Which texts survive this filter shapes the model’s abilities, knowledge and blind spots.',
     'data.moreP3':
       'That is why data selection is a central lever when building a model – not just quantity matters, but quality and composition. At the frontier, labs even deliberately weight individual sources (such as more code or books) to strengthen specific abilities.',
-    'data.nextLabel': 'Next: Training vs. inference',
+    'data.nextLabel': 'Next: Training',
+
+    // --- Training / pre-training ---
+    'training.title': 'Training',
+    'training.subtitle':
+      'Here a tiny language model learns right in your browser — from scratch. Press start and watch random noise turn into language.',
+    'training.caption':
+      'Above, a real neural network with a few thousand parameters is computing — live in your browser. It predicts the next character and corrects its error at every step, exactly like large models, just a million times smaller.',
+    'training.moreP1':
+      'Training and use are two separate phases. During training the model makes a prediction, compares it with the actual next character and nudges its dials (the parameters) a tiny bit. During inference — when you talk to an AI — everything is fixed: the model only applies what it has learned.',
+    'training.moreP2':
+      'The lever for learning is the error (loss): it measures how poorly the model predicted the correct next character. From that error you can compute, for every single number in the model, which direction makes it smaller — and that is exactly where each number is shifted, a tiny step at a time. Repeated millions of times, the prediction gets ever sharper: the distribution becomes peaked, the samples become plausible.',
+    'training.moreP3':
+      'Real models follow the very same principle, just bigger: not single letters but word pieces (tokens); not a few hundred words but trillions; not seconds in a browser but weeks on thousands of GPUs. This learning from scratch is called pre-training. How a model is then refined for concrete tasks is the next stop.',
+    'training.nextLabel': 'Next: Fine-tuning',
 
     'a11y.toggleTheme': 'Toggle light/dark',
     'a11y.toggleSidebar': 'Show/hide navigation',
