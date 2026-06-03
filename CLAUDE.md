@@ -1,10 +1,14 @@
-# KI-Erklaer-App Development Guide
+# behind-ai Development Guide
+
+## Package Manager
+- Use **pnpm** (v9). Do not use npm/yarn. There is no `package-lock.json` — only `pnpm-lock.yaml`.
 
 ## Commands
-- `npm run dev` - Start development server with Turbopack
-- `npm run build` - Build for production
-- `npm run start` - Run production build
-- `npm run lint` - Run ESLint
+- `pnpm dev` - Start development server
+- `pnpm dev:turbo` - Start development server with Turbopack
+- `pnpm build` - Build for production
+- `pnpm start` - Run production build
+- `pnpm lint` - Run ESLint
 
 ## Code Style
 - TypeScript with strict mode

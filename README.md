@@ -1,60 +1,68 @@
-# KI-Erklaer-App
+# behind-ai
 
-Eine interaktive Anwendung zur Erklärung von KI-Konzepten mit Visualisierungen und Simulationen.
+Eine interaktive Anwendung, die erklärt, wie KI-Sprachmodelle (LLMs) funktionieren – mit Visualisierungen und Live-Experimenten.
 
 ## Über das Projekt
 
-KI-Erklaer-App ist eine [Next.js](https://nextjs.org)-basierte Anwendung, die grundlegende KI-Konzepte wie Tokenisierung, Training, RAG, RLHF und mehr erklärt. Mit interaktiven Visualisierungen werden komplexe Themen verständlich dargestellt.
+behind-ai ist eine [Next.js](https://nextjs.org)-Anwendung (App Router), die grundlegende KI-Konzepte wie Tokenisierung, Next-Token-Prediction, Training, RAG und RLHF anschaulich macht. Komplexe Themen werden über interaktive Visualisierungen und echte Modell-Aufrufe verständlich dargestellt.
 
-## Getting Started
+## Voraussetzungen
 
-First, run the development server:
+- Node.js 20+
+- [pnpm](https://pnpm.io) 9 (per `corepack enable` aktivierbar)
+
+## Entwicklung
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Dann [http://localhost:3000](http://localhost:3000) im Browser öffnen.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Weitere Befehle:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm build   # Production-Build
+pnpm start   # Production-Build lokal starten
+pnpm lint    # ESLint
+```
+
+## Konfiguration
+
+Umgebungsvariablen in `.env.local` setzen (siehe [`.env.example`](./.env.example) für alle Optionen).
+
+Die Seite **Next-Token-Prediction** nutzt Gemini-Logprobs über **Vertex AI** und benötigt ein Dienstkonto:
+
+- **Lokal:** `GOOGLE_APPLICATION_CREDENTIALS` = Pfad zur Dienstkonto-JSON.
+- **Deployment (Vercel):** `GCP_SERVICE_ACCOUNT_KEY` = JSON-Inhalt oder dessen Base64.
+
+Das Dienstkonto braucht die Rolle *Vertex AI User*. Details und optionale Variablen (Region, Modell) stehen in `.env.example`.
 
 ## Features
 
-- Interaktive Visualisierungen zu KI-Konzepten
-- Tokenisierungssimulation
-- Training-Visualisierung
-- RAG (Retrieval Augmented Generation) Demonstration
-- RLHF (Reinforcement Learning from Human Feedback) Simulation
-- Chain-of-Thought Visualisierung
-- Next-Token-Prediction Experimente
+- Tokenisierung (interaktiv)
+- Next-Token-Prediction mit echten Logprobs (Gemini via Vertex AI)
+- Training vs. Inferenz, Finetuning
+- RAG (Retrieval Augmented Generation)
+- RLHF (Reinforcement Learning from Human Feedback)
+- Chain-of-Thought, Embeddings und mehr
 
 ## Technologien
 
-- Next.js App Router
-- TypeScript
-- Tailwind CSS
-- shadcn/ui Komponenten
-- Zustand für State Management
+- Next.js (App Router) & TypeScript
+- Tailwind CSS & shadcn/ui
+- Zustand (State Management)
+- D3 / Plotly / Recharts (Visualisierungen)
+- Google Vertex AI (Gemini) für Next-Token-Logprobs
 
 ## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new) from the creators of Next.js.
-
-Check out [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployment über [Vercel](https://vercel.com/new). Vercel installiert mit `pnpm` (`pnpm-lock.yaml`) und baut mit `next build`. Die oben genannten Umgebungsvariablen müssen in den Project Settings hinterlegt sein.
 
 ## Lizenz
 
-MIT License
-
-Copyright (c) 2025 KI-Erklaer-App
+MIT License – Copyright (c) 2025 behind-ai
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

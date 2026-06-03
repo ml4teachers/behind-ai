@@ -1,7 +1,8 @@
 {
-  "name": "ki-erklaer-app",
+  "name": "behind-ai",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
