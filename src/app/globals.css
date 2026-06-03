@@ -21,8 +21,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 225 9% 14%;
 
-    /* Akzent (Google-Blau) */
-    --primary: 214 82% 51%;
+    /* Akzent — Default „Sky". Zur Laufzeit über AccentProvider umschaltbar
+       (siehe src/lib/accents.ts). Hier nur der SSR-Default. */
+    --primary: 200 98% 39%;
     --primary-foreground: 0 0% 100%;
 
     /* Ruhige Sekundärflächen */
@@ -40,7 +41,7 @@
 
     --border: 220 13% 88%;
     --input: 220 13% 88%;
-    --ring: 214 82% 51%;
+    --ring: 200 98% 39%;
 
     /* Datenvisualisierung — freundliche, gut unterscheidbare Palette */
     --chart-1: 214 82% 51%;
@@ -48,6 +49,9 @@
     --chart-3: 38 92% 50%;
     --chart-4: 280 60% 60%;
     --chart-5: 340 72% 56%;
+    --chart-6: 186 72% 38%;
+    --chart-7: 92 52% 38%;
+    --chart-8: 2 72% 52%;
 
     --radius: 0.75rem;
   }
@@ -62,8 +66,8 @@
     --popover: 224 7% 14%;
     --popover-foreground: 210 14% 92%;
 
-    --primary: 214 90% 77%;
-    --primary-foreground: 224 30% 12%;
+    --primary: 199 95% 74%;
+    --primary-foreground: 222 47% 11%;
 
     --secondary: 222 6% 20%;
     --secondary-foreground: 210 14% 92%;
@@ -79,13 +83,16 @@
 
     --border: 220 6% 26%;
     --input: 220 6% 26%;
-    --ring: 214 90% 77%;
+    --ring: 199 95% 74%;
 
     --chart-1: 214 90% 72%;
     --chart-2: 160 55% 55%;
     --chart-3: 38 90% 62%;
     --chart-4: 280 60% 72%;
     --chart-5: 340 75% 70%;
+    --chart-6: 186 65% 56%;
+    --chart-7: 92 50% 58%;
+    --chart-8: 2 78% 67%;
   }
 }
 

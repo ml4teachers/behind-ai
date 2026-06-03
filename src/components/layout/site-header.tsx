@@ -5,6 +5,7 @@ import { Menu, PanelLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { LanguageToggle } from '@/components/language-toggle'
+import { AccentToggle } from '@/components/accent-toggle'
 import { useTranslations } from '@/lib/i18n/use-translations'
 
 interface SiteHeaderProps {
@@ -47,6 +48,7 @@ export function SiteHeader({ onToggleSidebar, onOpenMobileNav }: SiteHeaderProps
       </Link>
 
       <div className="ml-auto flex items-center gap-0.5">
+        <AccentToggle />
         <LanguageToggle />
         <ThemeToggle />
       </div>

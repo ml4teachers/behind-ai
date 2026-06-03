@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from "@/components/ui/button"
-import { Progress } from '@/components/ui/progress'
+import { Slider } from '@/components/ui/slider'
 import { Skeleton } from "@/components/ui/skeleton"
 import { ChevronRightIcon, ShuffleIcon, ReloadIcon } from "@radix-ui/react-icons"
 
@@ -17,6 +17,46 @@ interface TokenProbability {
   probability: number
 }
 
+// Temperatur auf eine gegebene Verteilung anwenden (rein clientseitig).
+// Mathematisch entspricht das Logits/T -> Softmax; mit Wahrscheinlichkeiten p
+// ist das p^(1/T), neu normiert. Die "Rest"-Tokens (Long Tail) behandeln wir
+// als EINEN Bucket, damit auch der Long-Tail-Balken auf die Temperatur reagiert.
+function applyTemperature(
+  tokens: TokenProbability[],
+  remaining: number,
+  temperature: number,
+): { tokens: TokenProbability[]; remaining: number } {
+  if (tokens.length === 0) return { tokens, remaining }
+
+  // T = 1: exakt das, was das Modell liefert.
+  if (Math.abs(temperature - 1) < 1e-3) {
+    return { tokens, remaining }
+  }
+
+  // T -> 0: greedy. Der grösste Bucket bekommt die gesamte Masse.
+  // (topTokens kommen absteigend sortiert, tokens[0] ist also der grösste.)
+  if (temperature <= 1e-3) {
+    const restIsLargest = remaining > tokens[0].probability
+    return {
+      tokens: tokens.map((tk, i) => ({
+        ...tk,
+        probability: !restIsLargest && i === 0 ? 1 : 0,
+      })),
+      remaining: restIsLargest ? 1 : 0,
+    }
+  }
+
+  const invT = 1 / temperature
+  const weighted = tokens.map((tk) => Math.pow(tk.probability, invT))
+  const weightedRest = Math.pow(Math.max(remaining, 0), invT)
+  const z = weighted.reduce((a, b) => a + b, 0) + weightedRest
+  if (z === 0) return { tokens, remaining }
+  return {
+    tokens: tokens.map((tk, i) => ({ ...tk, probability: weighted[i] / z })),
+    remaining: weightedRest / z,
+  }
+}
+
 export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPredictionProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -26,27 +66,34 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
   const [currentText, setCurrentText] = useState(text)
   const [predictionHistory, setPredictionHistory] = useState<string[]>([])
   const [apiNotice, setApiNotice] = useState<string | null>(null)
+  const [temperature, setTemperature] = useState(1)
+
+  // Temperatur-angepasste Verteilung für Anzeige & Sampling.
+  const { tokens: displayTokens, remaining: displayRemaining } = useMemo(
+    () => applyTemperature(topTokens, remainingProbability, temperature),
+    [topTokens, remainingProbability, temperature],
+  )
 
   const fetchNextTokenPrediction = async (inputText: string) => {
     setLoading(true)
     setError(null)
     setSelectedToken(null)
-    
+
     try {
       // Direkt simulierte Daten liefern, wenn Simulationsmodus aktiv ist
       if (useSimulation) {
         await new Promise(resolve => setTimeout(resolve, 800)); // Verzögerung für besseres UX
-        
+
         // Simulierte Daten basierend auf Eingabetext generieren
         const simulatedResponse = getSimulatedPredictions(inputText);
-        
+
         setTopTokens(simulatedResponse.topTokens);
         setRemainingProbability(simulatedResponse.remainingProbability);
         setApiNotice("Simulationsmodus aktiv - keine echte API verwendet");
         setLoading(false);
         return;
       }
-      
+
       const response = await fetch('/api/predict-next', {
         method: 'POST',
         headers: {
@@ -54,27 +101,27 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
         },
         body: JSON.stringify({ text: inputText }),
       })
-      
-      
+
+
       if (!response.ok) {
         throw new Error(`API-Anfrage fehlgeschlagen: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
+
       if (data.error) {
         throw new Error(data.error);
       }
-      
+
       // API-Hinweis setzen, falls vorhanden
       if (data.apiNotice) {
         setApiNotice(data.apiNotice);
       } else {
         setApiNotice(null);
       }
-      
+
       setTopTokens(data.topTokens || []);
-      
+
       setRemainingProbability(data.remainingProbability || 0);
 
       // Wenn keine Tokens zurückgegeben wurden, aber auch kein Fehler vorliegt,
@@ -93,7 +140,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
   // Funktion für simulierte Daten
   const getSimulatedPredictions = (text: string) => {
     const lowercaseText = text.toLowerCase();
-    
+
     let topTokens;
     if (lowercaseText.includes('sonne scheint')) {
       topTokens = [
@@ -133,11 +180,11 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
         { token: ' die', probability: 0.06 },
       ];
     }
-    
+
     // Summe der Wahrscheinlichkeiten berechnen
     const sum = topTokens.reduce((acc, token) => acc + token.probability, 0);
     const remainingProbability = Math.max(0, 1 - sum);
-    
+
     return {
       topTokens,
       remainingProbability,
@@ -151,37 +198,41 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
     fetchNextTokenPrediction(text)
   }, [text, useSimulation]);
 
-  // Zufälligen Token basierend auf Wahrscheinlichkeiten auswählen
+  // Zufälligen Token basierend auf der (temperatur-angepassten) Verteilung
+  // auswählen. Gesampelt wird über die sichtbaren Top-Tokens.
   const selectRandomToken = () => {
-    if (topTokens.length === 0) return
-    
-    // Zufallszahl zwischen 0 und 1 generieren
-    const random = Math.random()
+    if (displayTokens.length === 0) return
+
+    const total = displayTokens.reduce((acc, t) => acc + t.probability, 0)
+    if (total <= 0) {
+      selectToken(displayTokens[0].token)
+      return
+    }
+
+    const random = Math.random() * total
     let cumulativeProbability = 0
-    
-    // Durch die Tokens iterieren und basierend auf Wahrscheinlichkeit auswählen
-    for (const tokenData of topTokens) {
+    for (const tokenData of displayTokens) {
       cumulativeProbability += tokenData.probability
       if (random <= cumulativeProbability) {
         selectToken(tokenData.token)
         return
       }
     }
-    
-    // Fallback: ersten Token nehmen, falls alle anderen nicht ausgewählt wurden
-    selectToken(topTokens[0].token)
+
+    // Fallback: letztes Token, falls Rundung alle Schwellen knapp verfehlt.
+    selectToken(displayTokens[displayTokens.length - 1].token)
   }
 
   // Token auswählen und zum Text hinzufügen
   const selectToken = (token: string) => {
     setSelectedToken(token)
-    
+
     // Kurz warten, damit Animation sichtbar ist
     setTimeout(() => {
       const newText = currentText + token
       setCurrentText(newText)
       setPredictionHistory([...predictionHistory, token])
-      
+
       // Neue Vorhersage für den ergänzten Text
       fetchNextTokenPrediction(newText)
     }, 800)
@@ -194,29 +245,36 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
     fetchNextTokenPrediction(text)
   }
 
+  const temperatureHint =
+    temperature <= 0.3
+      ? 'Niedrig: fast immer das wahrscheinlichste Token – verlässlich, aber vorhersehbar.'
+      : temperature >= 1.4
+        ? 'Hoch: die Verteilung wird flach – auch unwahrscheinlichere Tokens kommen zum Zug.'
+        : 'Mittel: nahe an dem, was das Modell wirklich rechnet (1.0).'
+
   return (
     <div className="w-full h-full flex flex-col">
       {/* Der aktuelle Text und Generierungs-Historie */}
-      <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
-        <div className="font-medium mb-1 text-sm text-gray-600">Aktueller Text:</div>
+      <div className="mb-4 p-3 bg-muted/50 rounded-lg border">
+        <div className="font-medium mb-1 text-sm text-muted-foreground">Aktueller Text:</div>
         <p className="font-medium">
           {text}
           {predictionHistory.map((token, i) => (
-            <span key={i} className="text-green-600 font-bold">{token}</span>
+            <span key={i} className="font-bold text-[hsl(var(--chart-2))]">{token}</span>
           ))}
         </p>
-        
+
         {predictionHistory.length > 0 && (
-          <div className="mt-2 pt-2 border-t border-gray-200 flex gap-2 items-center flex-wrap">
-            <span className="text-xs text-gray-500">Token-Kette:</span>
+          <div className="mt-2 pt-2 border-t flex gap-2 items-center flex-wrap">
+            <span className="text-xs text-muted-foreground">Token-Kette:</span>
             {predictionHistory.map((token, i) => (
-              <span key={i} className="px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded">
+              <span key={i} className="px-2 py-0.5 bg-[hsl(var(--chart-2)/0.15)] text-[hsl(var(--chart-2))] text-xs rounded">
                 {token.replace(/ /g, '␣')}
               </span>
             ))}
-            
-            <Button 
-              variant="ghost" 
+
+            <Button
+              variant="ghost"
               size="sm"
               className="ml-auto text-xs h-7"
               onClick={resetToOriginal}
@@ -226,7 +284,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
           </div>
         )}
       </div>
-      
+
       {/* Loading-Zustand */}
       {loading && (
         <div className="flex-1 flex flex-col items-center justify-center space-y-4">
@@ -240,16 +298,16 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
           </div>
         </div>
       )}
-      
+
       {/* Fehlerzustand */}
       {!loading && error && (
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-red-500 text-center p-6 bg-red-50 rounded-lg">
+          <div className="text-destructive text-center p-6 bg-destructive/10 rounded-lg">
             <p className="font-bold mb-2">Fehler bei der Token-Vorhersage:</p>
             <p>{error}</p>
-            <Button 
-              variant="outline" 
-              className="mt-4" 
+            <Button
+              variant="outline"
+              className="mt-4"
               onClick={() => fetchNextTokenPrediction(currentText)}
             >
               <ReloadIcon className="mr-2 h-4 w-4" />
@@ -258,21 +316,38 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
           </div>
         </div>
       )}
-      
+
       {/* Erfolgsfall - Wahrscheinlichkeiten und Auswahlmöglichkeiten */}
-      {!loading && !error && topTokens.length > 0 && (
+      {!loading && !error && displayTokens.length > 0 && (
         <div className="flex-1 flex flex-col">
           {/* API-Hinweis, falls vorhanden */}
           {apiNotice && (
-            <div className="mb-4 p-2 bg-amber-50 border border-amber-200 rounded text-sm text-amber-800">
+            <div className="mb-4 p-2 bg-[hsl(var(--chart-3)/0.12)] border border-[hsl(var(--chart-3)/0.45)] rounded text-sm text-foreground">
               <strong>Hinweis:</strong> {apiNotice}
             </div>
           )}
-          
+
+          {/* Temperatur-Regler: formt die Verteilung live um */}
+          <div className="mb-4 rounded-lg border bg-muted/40 p-3">
+            <div className="mb-2 flex items-center justify-between">
+              <label className="text-sm font-medium">Temperatur</label>
+              <span className="font-mono text-sm tabular-nums">{temperature.toFixed(1)}</span>
+            </div>
+            <Slider
+              value={[temperature]}
+              onValueChange={([v]) => setTemperature(v)}
+              min={0}
+              max={2}
+              step={0.1}
+              aria-label="Temperatur"
+            />
+            <p className="mt-2 text-xs text-muted-foreground">{temperatureHint}</p>
+          </div>
+
           <div className="mb-4">
             <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
               <h3 className="font-medium">Top Wahrscheinlichkeiten für den nächsten Token</h3>
-              
+
               <Button
                 variant="secondary"
                 size="sm"
@@ -284,68 +359,69 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
                 <span>Zufälliger Token</span>
               </Button>
             </div>
-            
-            <div className="space-y-2 mb-6">
-              {topTokens.map((token, index) => (
-                <motion.div
-                  key={`${token.token}-${index}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`flex items-center gap-2 ${
-                    selectedToken === token.token ? 'bg-green-50 rounded-lg p-2 ring-1 ring-green-200' : ''
-                  }`}
-                >
-                  <div className="w-16 text-right font-mono text-sm">
-                    {(token.probability * 100).toFixed(1)}%
-                  </div>
-                  
-                  <Progress 
-                    value={token.probability * 100} 
-                    className={`h-6 ${
-                      selectedToken === token.token ? 'bg-green-100' : ''
-                    }`}
-                  />
-                  
-                  <div className="font-semibold min-w-20 px-2">
-                    &quot;{token.token.replace(/ /g, '␣')}&quot;
-                  </div>
-                  
-                  <Button
-                    variant="outline"
-                    size="sm"
+
+            <div className="space-y-1.5 mb-2">
+              {displayTokens.map((token, index) => {
+                const pct = token.probability * 100
+                const isSelected = selectedToken === token.token
+                return (
+                  <motion.button
+                    key={`${token.token}-${index}`}
+                    type="button"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
                     onClick={() => selectToken(token.token)}
                     disabled={!!selectedToken}
-                    className="ml-auto"
+                    className={`flex w-full items-center gap-3 rounded-lg px-2 py-1.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed ${
+                      isSelected
+                        ? 'bg-[hsl(var(--chart-2)/0.12)] ring-1 ring-[hsl(var(--chart-2)/0.4)]'
+                        : 'hover:bg-muted'
+                    }`}
                   >
-                    Wählen
-                  </Button>
-                </motion.div>
-              ))}
-              
-              {/* Visualisierung der "Long Tail" - alle anderen möglichen Tokens */}
+                    <span className="w-32 shrink-0 truncate font-mono text-sm font-semibold">
+                      {token.token.replace(/ /g, '␣')}
+                    </span>
+                    <span className="relative h-6 flex-1 overflow-hidden rounded bg-muted">
+                      <span
+                        className="absolute inset-y-0 left-0 rounded bg-primary transition-[width] duration-300"
+                        style={{ width: `${Math.max(pct, 1.5)}%` }}
+                      />
+                    </span>
+                    <span className="w-14 shrink-0 text-right font-mono text-sm tabular-nums text-muted-foreground">
+                      {pct.toFixed(1)}%
+                    </span>
+                  </motion.button>
+                )
+              })}
+
+              {/* Long Tail — alle übrigen Tokens als ein Balken */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: topTokens.length * 0.1 }}
-                className="flex items-center gap-2 opacity-70"
+                transition={{ delay: displayTokens.length * 0.05 }}
+                className="flex items-center gap-3 px-2 py-1.5 opacity-70"
               >
-                <div className="w-16 text-right font-mono text-sm text-gray-500">
-                  {(remainingProbability * 100).toFixed(1)}%
-                </div>
-                
-                <Progress 
-                  value={remainingProbability * 100} 
-                  className="h-6 bg-gray-100"
-                />
-                
-                <div className="font-medium text-gray-600 px-2">
-                  Tausende weitere mögliche Tokens...
-                </div>
+                <span className="w-32 shrink-0 truncate font-mono text-sm text-muted-foreground">
+                  …
+                </span>
+                <span className="relative h-6 flex-1 overflow-hidden rounded bg-muted">
+                  <span
+                    className="absolute inset-y-0 left-0 rounded bg-muted-foreground/40"
+                    style={{ width: `${Math.max(displayRemaining * 100, 1.5)}%` }}
+                  />
+                </span>
+                <span className="w-14 shrink-0 text-right font-mono text-sm tabular-nums text-muted-foreground">
+                  {(displayRemaining * 100).toFixed(1)}%
+                </span>
               </motion.div>
             </div>
+
+            <p className="mb-6 px-2 text-xs text-muted-foreground">
+              Der Rest verteilt sich auf tausende weitere, jeweils sehr unwahrscheinliche Tokens.
+            </p>
           </div>
-          
+
           {/* Ausgewählter Token */}
           <AnimatePresence>
             {selectedToken && (
@@ -353,13 +429,13 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="border-t border-gray-200 pt-4 text-center"
+                className="border-t pt-4 text-center"
               >
                 <p className="mb-2">Ausgewählter nächster Token:</p>
-                <div className="text-xl font-bold bg-green-100 px-4 py-2 rounded-lg inline-block">
+                <div className="text-xl font-bold bg-[hsl(var(--chart-2)/0.15)] text-[hsl(var(--chart-2))] px-4 py-2 rounded-lg inline-block">
                   {selectedToken.replace(/ /g, '␣')}
                 </div>
-                <div className="mt-4 text-sm text-gray-600 flex items-center justify-center gap-2">
+                <div className="mt-4 text-sm text-muted-foreground flex items-center justify-center gap-2">
                   <span>Füge Token zum Text hinzu</span>
                   <ChevronRightIcon className="animate-pulse" />
                 </div>
@@ -368,12 +444,12 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
           </AnimatePresence>
         </div>
       )}
-      
+
       {/* Fallback, wenn keine Tokens geladen wurden */}
-      {!loading && !error && topTokens.length === 0 && (
+      {!loading && !error && displayTokens.length === 0 && (
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center p-6 bg-gray-50 rounded-lg max-w-md">
-            <p className="mb-4 text-gray-700">
+          <div className="text-center p-6 bg-muted rounded-lg max-w-md">
+            <p className="mb-4 text-foreground">
               {apiNotice || "Keine Token-Vorhersagen vom Modell erhalten."}
             </p>
             <div className="flex justify-center gap-2">

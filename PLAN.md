@@ -12,10 +12,11 @@
 - **Zeitlos & flach:** weniger verschachtelte Cards/farbige Boxen. Pro Seite *ein* starkes Interaktiv-Element zuoberst, knappe Caption, optionales „Mehr dazu" zum Aufklappen.
 - **Zweisprachig denken:** Texte beim Neuschreiben direkt in die i18n-Schicht (DE füllen, EN folgt in Thread 9).
 - **Echt statt simuliert**, wo machbar.
+- **Positiv formulieren:** Nutzen benennen, nicht Defizite — **keine Negativbeschriebe** („statt langer Texte", „kein …"). Sagen, was die Seite *bietet*.
 
 ## Harte Constraints
 
-- **Alle bestehenden URLs bleiben** (viele externe Verweise). Einzige Ausnahme: `/daten` → Redirect auf `/data` (erledigt).
+- **Alle bestehenden URLs bleiben** (aufgrund bestehender externer Verweise).
 - **Production läuft von `main`** (Vercel). `main` bleibt bis zum bewussten Merge **unangetastet** — gesamte Redesign-Arbeit auf Branch **`redesign`**.
 - **Keine Secrets committen** (`.env.local`, `gcp-service-account.json` sind gitignored).
 
@@ -28,8 +29,9 @@
 ## Architektur-Konventionen (ab Thread 1 verbindlich)
 
 - **Farben nur als semantische Tokens:** `bg-background`, `text-foreground`, `text-muted-foreground`, `bg-card`, `border`, `bg-primary`, … — **keine** hartcodierten Farben (`bg-violet-50`, `text-gray-600` …). Nur so funktioniert Dark-Mode automatisch.
+- **Akzentfarbe** ist die einzige „bunte" Farbe = `--primary` / `--primary-foreground` / `--ring`. Im Header umschaltbar ([`accent-toggle.tsx`](src/components/accent-toggle.tsx)); [`accent-provider.tsx`](src/components/accent-provider.tsx) injiziert die CSS-Vars (Light **und** Dark getrennt) aus der Tailwind-Palette in [`accents.ts`](src/lib/accents.ts). **Default „Sky"** (globals.css hält denselben SSR-Default → kein Flackern). Wer `bg-primary`/`text-primary` nutzt, erbt die Akzentfarbe automatisch.
 - **Texte über i18n:** `const t = useTranslations(); t('key')`. Strings in [`src/lib/i18n/messages.ts`](src/lib/i18n/messages.ts) (DE füllen; EN darf bis Thread 9 auf DE zurückfallen).
-- **UI-State** (locale, sidebar) in [`src/lib/store.ts`](src/lib/store.ts) (`useUIStore`). `useMounted` gegen Hydration-Mismatch.
+- **UI-State** (locale, accent, sidebar) in [`src/lib/store.ts`](src/lib/store.ts) (`useUIStore`, persistiert). `useMounted` gegen Hydration-Mismatch.
 - **Shell:** [`src/components/layout/app-shell.tsx`](src/components/layout/app-shell.tsx), [`site-header.tsx`](src/components/layout/site-header.tsx). **Nav:** [`src/components/nav/navigation.tsx`](src/components/nav/navigation.tsx) + [`nav-items.ts`](src/components/nav/nav-items.ts).
 
 ---
@@ -47,18 +49,23 @@
 - [x] i18n-Gerüst (`messages`, `useTranslations`, `useUIStore`) — URLs unverändert
 - [x] Build grün, Shell visuell & funktional verifiziert (Dark-Mode, Sprach-Toggle, Collapse persistieren)
 
-### Thread 2 — Startseite & Informationsarchitektur
-- [ ] Home neu: „ausprobieren statt lesen" (Textwände raus, ggf. Mini-Demo)
-- [ ] Sektions-Labels & Reihenfolge final (Embeddings nach vorn; Lern-Bogen festlegen)
-- [ ] Home auf semantische Tokens + neue Copy (Dark-Mode korrekt)
-- [ ] Home-Texte nach `messages.ts` (DE), EN-Keys anlegen
-- [ ] Reste alter Copy / „Behind ChatGPT" bereinigen
+### Thread 2 — Startseite & Informationsarchitektur ✅ erledigt
+- [x] Home neu: „ausprobieren statt lesen" — knapper Hero + **echte Next-Token-Mini-Demo** zuoberst (Token-Klick hängt an & rechnet neu), Textwände raus
+- [x] Sektions-Labels & Reihenfolge final: Lern-Bogen **Tokenisierung → Embeddings → Next-Token → Daten → Training → Finetuning → RLHF → CoT → RAG** (Embeddings nach vorn). Begründung in `nav-items.ts`
+- [x] Home auf semantische Tokens + neue Copy (Light/Dark im Preview verifiziert)
+- [x] Home-Texte nach `messages.ts` (DE **und** EN gefüllt, `home.*`)
+- [x] Reste alter Copy bereinigt: alte Home-Copy ersetzt; kein „Behind ChatGPT"-Branding mehr im Code (nur legitime ChatGPT-Produktbeispiele)
+- [x] **Akzentfarben-Picker** im Header (16 Tailwind-Farben mit Swatches, persistiert, Light+Dark). **Neuer Default „Sky"** statt Blau. Siehe Architektur-Konventionen oben
+- [x] Feedback umgesetzt: Negativbeschriebe raus (Hero-Subtitle + SEO-Description); „Zur ganzen Seite" → **„Zur Erklärung"**
 
-### Thread 3 — Flaggschiff-Seiten (schon „echt")
-- [ ] `next-token`: Tokens + Copy + Dark-Mode; **Temperatur-/Sampling-Slider** (interaktiv)
-- [ ] `tokenization`: Tokens + Copy + Dark-Mode (Vorbereitung Multimodal-Hinweis)
-- [ ] `embeddings`: Tokens + Copy + Dark-Mode
-- [ ] **Seiten-Pattern etablieren** (Hero-Interaktiv zuerst, knappe Caption, optional „Mehr dazu")
+### Thread 3 — Flaggschiff-Seiten (schon „echt") ✅ erledigt
+- [x] `next-token`: Tokens + Copy + Dark-Mode; **Temperatur-Slider** (clientseitig: `p^(1/T)` über Top-K **und** Long-Tail-Bucket, neu normiert; Zufalls-Sampling aus der temperatur-angepassten Verteilung). Light+Dark im Preview verifiziert (T 1.0→1.9→0: 88%→60%→100%)
+- [x] `tokenization`: Tokens + Copy + Dark-Mode + **Multimodal-Hinweis** (Brücke zu Modell-Typen). Token-Chips (Primary) vs. ID-Chips (Secondary) im Dark-Mode unterscheidbar
+- [x] `embeddings`: Tokens + Copy + Dark-Mode; **stark umstrukturiert** (4 Text-Cards → Tool zuoberst + Caption + „Mehr dazu"). **Komplett neu (Nachtrag, s. Changelog 2026-06-03): Backend OpenAI → `gemini-embedding-2` (Vertex `global`), neue „Bedeutungs-Landkarte"-Viz statt Ähnlichkeits-Heatmap.**
+- [x] **Seiten-Pattern etabliert**: Header → Interaktiv (flach, `rounded-xl border bg-card`) → knappe Caption → `Accordion` „Mehr dazu" → Prev/Next. Seiten-Copy in `messages.ts` (DE+EN, `nextToken.*`/`tokenization.*`/`embeddings.*`/`common.*`)
+- [x] Prev/Next aller drei Seiten auf neuen Lern-Bogen (Thread 2) ausgerichtet: Tokenisierung → Embeddings → Next-Token → Daten
+- [x] `next-token` Feedback: **Beispiel-Pool** (8 Satzanfänge DE+EN, `nextToken.ex1..ex8`) — pro Seitenaufruf werden **zwei zufällig** gezeigt; der Button zeigt den ganzen Satzanfang. Würfeln im `useEffect` nach Mount (SSR/erster Render = [0,1]) → kein Hydration-Mismatch. EN im Preview verifiziert
+- ℹ️ Viz-Komponenten (`next-token-prediction`, `tokenization-visualization`, `embeddings-visualization`) auf semantische Tokens umgestellt; interne DE-Strings bleiben inline (Ganz-Migration in Thread 9) — **Ausnahme: `tokenization-visualization` ist bereits vollständig i18n (DE+EN, `tokenization.viz.*`)**. Kompatibel mit Thread-2-Akzentsystem: `bg-primary`/`text-primary` erben die Akzentfarbe; grün/amber bleiben `--chart-2`/`--chart-3` (legitime Data-Viz-Ausnahme)
 
 ### Thread 4 — Training echt machen (R&D-Spike)
 - [ ] Prototyp: **winziges Modell live im Browser trainieren** (Loss fällt, Verteilung wird spitz, Text wird plausibel)
@@ -116,3 +123,9 @@
 
 - **2026-06-03 — Thread 1:** Fundament & Shell. Branch `redesign` angelegt.
 - **2026-06-03 — Cleanup:** `.app.mdx` (Vibecoding-Artefakt) und ungenutzte create-next-app-SVGs (`file/globe/next/vercel/window.svg`) entfernt.
+- **2026-06-03 — Thread 2:** Startseite & Informationsarchitektur. Neue Home (Hero + echte Next-Token-Mini-Demo + Zwei-Pfade-Karten aus `navSections` + optionales „Mehr dazu"-Accordion), semantische Tokens, DE+EN-Copy (`home.*`). Lern-Bogen finalisiert (Embeddings nach vorn). Neue Komponente `next-token-mini.tsx`.
+- **2026-06-03 — Thread 3:** Flaggschiff-Seiten `next-token`, `tokenization`, `embeddings` neu im Seiten-Pattern (Interaktiv zuoberst, flach, Caption, „Mehr dazu"-Accordion), semantische Tokens (Light+Dark im Preview verifiziert), DE+EN-Copy. **Next-Token: Temperatur-Slider** (clientseitige Umformung der Verteilung + temperaturbasiertes Sampling). **Tokenisierung: Multimodal-Hinweis.** **Embeddings: Tool nach vorn** statt 4 Text-Cards. Prev/Next auf den Thread-2-Lern-Bogen ausgerichtet. Viz-Komponenten dark-mode-fähig (interne Strings → Thread 9). `pnpm exec tsc --noEmit` grün.
+- **2026-06-03 — Thread 3 (Nachtrag, User-Feedback „Tokenisierung zu voll"):** Viz `animations/tokenization-animation.tsx` → `visualizations/tokenization-visualization.tsx` (`TokenizationVisualization`) verschoben/umbenannt → einheitlich mit den übrigen Visualisierungen; `animations/`-Ordner entfernt. **Vereinfacht:** redundante Doppelung („So sieht das Modell den Text" + „Tokens") zu **einer** Token-Ansicht zusammengeführt, **Token-IDs** behalten, **rekonstruierten Text**, die zweite BPE-Erklärbox, den Original-Block und die Kontextfenster-Box entfernt. Mehrstufige Timer-Animation raus → schlanke gestufte CSS-Einblendung (Tokens → IDs). Framer-Motion-Eintrittsanimation entfernt (war rAF-abhängig → im Hintergrund-Tab/Reduced-Motion unsichtbar); Ruhezustand jetzt garantiert sichtbar. Whitespace in Token-Chips sichtbar (führendes Leerzeichen → `·`). Hover-Linking Token↔ID erhalten. **Interne Strings vollständig nach i18n migriert (DE+EN, `tokenization.viz.*`)** — die Komponente ist damit zweisprachig (Zähl-Zeile aus Wort-Teilen komponiert, da `t()` keine Interpolation kann). Light/Dark **und DE/EN** im Preview verifiziert (Token-Chips Akzent vs. ID-Chips neutral unterscheidbar; Labels wechseln korrekt mit der Sprache), `tsc` grün.
+- **2026-06-03 — Thread 3 (Nachtrag, `embeddings` komplett neu):** **Backend OpenAI `text-embedding-3-small` → Google `gemini-embedding-2`** über Vertex AI. Wichtig: gemini-embedding-2 ist (in diesem Projekt) nur über die Vertex-Region **`global`** + `…:embedContent` erreichbar (regionale Endpunkte wie `us-central1` → 404; `:predict` im global → 404). Auth = dasselbe Dienstkonto wie Next-Token (kein neuer API-Key). `output_dimensionality:768`. `api/embeddings/route.ts` neu (Bare-Response `{ embedding, model, dim }`); `api/embeddings/terms` + `public/embeddings.json` (2,1 MB Roget-Begriffe) **entfernt**. **Neue Viz „Bedeutungs-Landkarte"** (`visualizations/embeddings-map.tsx`) statt Ähnlichkeits-Heatmap: ~80 deutsche Alltagswörter in 5 Kategorien (chart-1..5), platziert per **SMACOF/metrischem MDS** über echte Cosinus-Distanzen (Bildschirm-Distanz ≈ Bedeutungs-Distanz; Cluster-Trennung zwischen/innerhalb ≈ 2×). **Token-Brücke:** Wort/kurzer Satz eingeben → jedes Wort wird **live** embedded und per ähnlichkeitsgewichtetem Nachbar-Schwerpunkt platziert (fällt zu seinen Nachbarn); Klick/Tap auf einen Punkt → **Nachbar-Panel** mit echter Cosinus-Ähnlichkeit (Balken) + Linien zu Top-3. Akzentfarbe = Nutzer-Wörter. **Mobile:** nur farbige Cluster, Labels beim Tap (kein Hover). Daten via Build-Script `scripts/gen-embeddings-map.mjs` → `public/embeddings-map.json` (448 KB, gerundete Vektoren). **Modell + 768-Dim müssen zwischen Route und Script identisch bleiben** (sonst liegt das Live-Wort in einem anderen Raum als die Karte). Wort-Arithmetik (König−Mann+Frau→Königin ✓, aber Hauptstadt-Analogien unzuverlässig) verworfen. Interne Viz-Strings bleiben DE (Konvention → Thread 9). Light/Dark/Mobile im Preview verifiziert, `tsc` grün.
+- **2026-06-03 — `embeddings` Iteration 2 (User-Feedback):** (1) **8 Kategorien à 18 Wörter** (144 statt 80) — neu: Sport, Musik, Fahrzeuge; dafür `--chart-6/7/8` (Teal/Lime/Rot) in globals.css ergänzt (Light+Dark). (2) **Mehr Spread:** Layout-Normalisierung im Script von uniformer Max-Radius- auf **per-Achse-Perzentil-Streckung** (5–95 % → ±0.92) → Karte nutzt die ganze Fläche. (3) **Single-Embedding statt Satz-Zerlegung:** Eingabe (Wort *oder* Satz) wird als EIN Vektor gerechnet; Scaffolding „Wort eingeben", `maxLength 30`. (4) **Kategorie-Filter:** Legende ist klickbar → Kategorie aus-/einblenden (durchgestrichen/ausgegraut; gefiltert in Render + Nachbar-Pool) für Übersichtlichkeit. Außerdem: Label-Lesbarkeit von Hintergrund-Chip auf **Text-Halo** (`textShadow` in `--background`) umgestellt (im Dark-Mode kein graues Kästchen-Rauschen mehr); langes Wort-Label gekürzt. Light/Dark/Mobile + Toggle + Live-Embedding im Preview verifiziert, `tsc` grün.
+- **2026-06-03 — Thread 2 (Nachtrag, User-Feedback):** **Akzentfarben-Picker** im Header (`accents.ts` + `accent-provider.tsx` + `accent-toggle.tsx`, 16 Tailwind-Farben, persistiert, Light/Dark getrennt), **Default auf „Sky"** (globals.css + Store). Copy-Regel „keine Negativbeschriebe" ergänzt; „statt langer Texte" aus Hero & SEO-Description entfernt; Demo-Link „Zur ganzen Seite" → „Zur Erklärung". Im Preview verifiziert (Picker, Persistenz, Light/Dark), `tsc` grün.

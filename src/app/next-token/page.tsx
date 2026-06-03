@@ -1,152 +1,138 @@
 'use client'
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 import { NextTokenPrediction } from '@/components/visualizations/next-token-prediction'
+import { useTranslations } from '@/lib/i18n/use-translations'
 import Link from 'next/link'
-import { InfoCircledIcon } from '@radix-ui/react-icons'
+
+// Pool an Beispiel-Satzanfängen (i18n-Keys; Texte je DE/EN in messages.ts).
+// Auf der Seite werden daraus zufällig zwei gezeigt.
+const EXAMPLE_KEYS = [
+  'nextToken.ex1',
+  'nextToken.ex2',
+  'nextToken.ex3',
+  'nextToken.ex4',
+  'nextToken.ex5',
+  'nextToken.ex6',
+  'nextToken.ex7',
+  'nextToken.ex8',
+] as const
+
+// Zwei verschiedene zufällige Indizes aus [0, n).
+function pickTwo(n: number): [number, number] {
+  const a = Math.floor(Math.random() * n)
+  let b = Math.floor(Math.random() * (n - 1))
+  if (b >= a) b += 1
+  return [a, b]
+}
 
 export default function NextTokenPage() {
+  const t = useTranslations()
   const [inputText, setInputText] = useState('Gelb ist eine')
   const [showPrediction, setShowPrediction] = useState(false)
+  const [examples, setExamples] = useState<[number, number]>([0, 1])
 
-  const handlePredictClick = () => {
-    setShowPrediction(true)
-  }
-  
-  // Nur zurücksetzen, wenn sich der Text ändert
+  // Bei jedem Seitenaufruf zwei zufällige Beispiele zeigen. Erst nach dem Mount
+  // würfeln (Server + erster Client-Render nutzen [0, 1]) — kein Hydration-Mismatch.
+  useEffect(() => {
+    setExamples(pickTwo(EXAMPLE_KEYS.length))
+  }, [])
+
+  // Vorhersage nur zurücksetzen, wenn sich der Text wirklich ändert.
   const handleTextChange = (newText: string) => {
     if (newText !== inputText) {
       setInputText(newText)
-      setShowPrediction(false) // Vorhersage zurücksetzen, wenn sich der Text ändert
+      setShowPrediction(false)
     }
   }
 
   return (
-    <div className="container mx-auto max-w-4xl py-8">
-      <div className="flex items-center gap-6 mb-8">
-        <div>
-          <h1 className="text-3xl font-bold mb-2 text-violet-900">Next-Token-Prediction: Das Herzstück des Modells</h1>
-          <p className="text-lg text-gray-600">
-            Wie Sprachmodelle das nächste Wort vorhersagen
-          </p>
-        </div>
-      </div>
+    <div className="container mx-auto max-w-4xl px-4 py-8 space-y-10">
+      <header className="space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">{t('nextToken.title')}</h1>
+        <p className="text-lg text-muted-foreground">{t('nextToken.subtitle')}</p>
+      </header>
 
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Wie funktioniert die Vorhersage?</CardTitle>
-          <CardDescription>
-            Das KI-Modell berechnet Wahrscheinlichkeiten für jedes mögliche nächste Wort
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="mb-4">
-            Das Kernstück eines Sprachmodells ist seine Fähigkeit, das nächste Wort in einer Sequenz 
-            vorherzusagen. Es berechnet für jeden möglichen Token eine Wahrscheinlichkeit.
-          </p>
-          
-          <div className="bg-violet-50 border border-violet-100 rounded-lg p-4 my-4 flex gap-3">
-            <InfoCircledIcon className="w-6 h-6 text-violet-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-medium text-violet-800 mb-1">Wahrscheinlichkeitsverteilung</p>
-              <p className="text-sm text-violet-700">
-                Das Modell berechnet Wahrscheinlichkeiten für <strong>alle</strong> möglichen nächsten Tokens 
-                (über 50.000!), aber nur wenige davon haben eine hohe Wahrscheinlichkeit. Die meisten 
-                Tokens haben eine Wahrscheinlichkeit nahe Null.
-              </p>
-            </div>
-          </div>
-          
-          <p>
-            Das Modell kann deterministisch den wahrscheinlichsten Token auswählen oder
-            zufällig einen Token basierend auf seiner Wahrscheinlichkeit auswählen. Bei höherer Zufälligkeit 
-            (Temperatur) werden auch weniger wahrscheinliche Tokens manchmal ausgewählt.
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Probiere es aus!</CardTitle>
-          <CardDescription>
-            Schreibe den Anfang eines Satzes und beobachte echte KI-Vorhersagen
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4">
-            <Input
-              value={inputText}
-              onChange={(e) => handleTextChange(e.target.value)}
-              placeholder="Gib den Anfang eines Satzes ein..."
-              className="mb-4"
-            />
-            <div className="flex gap-2 flex-wrap">
-              <Button 
-                onClick={handlePredictClick} 
-                disabled={!inputText.trim()}
-              >
-                Nächsten Token vorhersagen
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => handleTextChange("Der beste Freund des Menschen ist der")}
-              >
-                Beispiel 1
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => handleTextChange("Es war einmal eine")}
-              >
-                Beispiel 2
-              </Button>
-              
-              {showPrediction && (
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowPrediction(false)}
+      {/* Interaktiv zuoberst */}
+      <section className="space-y-4">
+        <div className="space-y-3">
+          <Input
+            value={inputText}
+            onChange={(e) => handleTextChange(e.target.value)}
+            placeholder={t('nextToken.placeholder')}
+          />
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={() => setShowPrediction(true)} disabled={!inputText.trim()}>
+              {t('nextToken.predict')}
+            </Button>
+            {examples.map((idx) => {
+              const seed = t(EXAMPLE_KEYS[idx])
+              return (
+                <Button
+                  key={EXAMPLE_KEYS[idx]}
+                  variant="outline"
+                  onClick={() => handleTextChange(seed)}
                 >
-                  Zurücksetzen
+                  {seed}
                 </Button>
-              )}
-            </div>
-          </div>
-
-          <div className="border rounded-lg p-4 bg-white min-h-[420px]">
-            {showPrediction ? (
-              <NextTokenPrediction text={inputText} />
-            ) : (
-              <div className="text-gray-500 text-center h-full flex flex-col justify-center items-center">
-                <p className="mb-2">
-                  Klicke auf &quot;Nächsten Token vorhersagen&quot;, um echte KI-Vorhersagen zu sehen.
-                </p>
-                <p className="text-sm max-w-md">
-                  Du kannst einzelne Tokens auswählen, um zu sehen, wie das Modell 
-                  Schritt für Schritt Text generiert. Oder wähle &quot;Zufälliger Token&quot; für 
-                  eine wahrscheinlichkeitsbasierte Auswahl.
-                </p>
-              </div>
+              )
+            })}
+            {showPrediction && (
+              <Button variant="ghost" onClick={() => setShowPrediction(false)}>
+                {t('common.reset')}
+              </Button>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <div className="flex justify-between">
-        <Link href="/tokenization">
+        <div className="flex min-h-[420px] flex-col rounded-xl border bg-card p-4 sm:p-6">
+          {showPrediction ? (
+            <NextTokenPrediction text={inputText} />
+          ) : (
+            <div className="flex flex-1 flex-col items-center justify-center text-center text-muted-foreground">
+              <p className="mb-2 max-w-md">{t('nextToken.emptyTitle')}</p>
+              <p className="max-w-md text-sm">{t('nextToken.emptyBody')}</p>
+            </div>
+          )}
+        </div>
+
+        <p className="text-sm text-muted-foreground">{t('nextToken.caption')}</p>
+      </section>
+
+      {/* Mehr dazu (optional aufklappbar) */}
+      <div className="border-t">
+        <Accordion type="single" collapsible>
+          <AccordionItem value="more" className="border-b-0">
+            <AccordionTrigger className="text-base">{t('common.moreAbout')}</AccordionTrigger>
+            <AccordionContent className="space-y-4 text-base leading-relaxed text-muted-foreground">
+              <p>{t('nextToken.moreP1')}</p>
+              <p>{t('nextToken.moreP2')}</p>
+              <p>{t('nextToken.moreP3')}</p>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+
+      <nav className="flex justify-between border-t pt-6">
+        <Link href="/embeddings">
           <Button variant="outline">
-            <span aria-hidden="true">←</span> Zurück
+            <span aria-hidden="true">←</span> {t('common.back')}
           </Button>
         </Link>
         <Link href="/data">
           <Button>
-            Weiter: Wo kommen die Daten her? <span aria-hidden="true">→</span>
+            {t('nextToken.nextLabel')} <span aria-hidden="true">→</span>
           </Button>
         </Link>
-      </div>
+      </nav>
     </div>
   )
 }
