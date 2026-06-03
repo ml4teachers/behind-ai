@@ -142,6 +142,20 @@ export const messages: Record<Locale, Record<string, string>> = {
       'Embeddings sind ein Grundbaustein vieler KI-Anwendungen: semantische Suche, Empfehlungssysteme, Übersetzung und vor allem RAG, wo passende Dokumente gefunden werden, um Antworten mit echtem Wissen zu unterfüttern.',
     'embeddings.nextLabel': 'Weiter: Next-Token-Prediction',
 
+    // --- Daten / Pretraining ---
+    'data.title': 'Wo kommen die Daten her?',
+    'data.subtitle':
+      'Ein Sprachmodell kennt nur, was in seinen Trainingsdaten steht. Diese Daten sind ein riesiger, ungeordneter Querschnitt des Webs – und genau die Auswahl daraus prägt, was das Modell kann.',
+    'data.caption':
+      'Echte Dokumente aus dem FineWeb-Datensatz (CommonCrawl-Webtexte, ins Deutsche übersetzt) – eine winzige Stichprobe von gut 950 aus 15 Billionen Tokens. Den Bildungswert hat ein KI-Bewerter vergeben; der echte Filter (FineWeb-Edu) behält nur Texte mit Score 3 oder höher.',
+    'data.moreP1':
+      'Pretraining-Daten sind kein Lehrbuch, sondern ein Schnappschuss dessen, was Menschen zufällig ins Netz geschrieben haben: Ratgeber neben Werbung, Fachartikel neben Geplauder. Niemand plant die Themen-Mischung – sie ist einfach das, was online steht. Genau darum ist der rohe Querschnitt so heterogen.',
+    'data.moreP2':
+      'Ungeplant heisst aber nicht ungefiltert: Aus dem rohen Web wird über 90 % wieder verworfen. Duplikate, Sprach-Müll und Boilerplate fliegen raus, und ein KI-Klassifikator bewertet den Bildungswert jedes Texts. Heute bewerten also KI-Systeme die Trainingsdaten der nächsten KI-Systeme. Welche Texte diesen Filter überleben, formt die Fähigkeiten, das Wissen und die blinden Flecken des Modells.',
+    'data.moreP3':
+      'Deshalb ist Datenauswahl ein zentraler Hebel beim Bau eines Modells – nicht nur die Menge zählt, sondern die Qualität und Zusammensetzung. An der Spitze gewichten Labs einzelne Quellen sogar bewusst (etwa mehr Code oder Bücher), um gezielt bestimmte Fähigkeiten zu stärken.',
+    'data.nextLabel': 'Weiter: Training vs. Inferenz',
+
     'a11y.toggleTheme': 'Hell/Dunkel umschalten',
     'a11y.toggleSidebar': 'Navigation ein-/ausblenden',
     'a11y.toggleLanguage': 'Sprache wechseln',
@@ -277,6 +291,20 @@ export const messages: Record<Locale, Record<string, string>> = {
     'embeddings.moreP3':
       'Embeddings are a foundational building block of many AI applications: semantic search, recommendation systems, translation and above all RAG, where matching documents are retrieved to ground answers in real knowledge.',
     'embeddings.nextLabel': 'Next: Next-token prediction',
+
+    // --- Data / pre-training ---
+    'data.title': 'Where does the data come from?',
+    'data.subtitle':
+      'A language model only knows what is in its training data. That data is a vast, unordered cross-section of the web – and the selection from it shapes what the model can do.',
+    'data.caption':
+      'Real documents from the FineWeb dataset (CommonCrawl web texts, machine-translated into German) – a tiny sample of just over 950 out of 15 trillion tokens. The educational score was assigned by an AI rater; the real filter (FineWeb-Edu) keeps only texts scoring 3 or higher.',
+    'data.moreP1':
+      'Pre-training data is not a textbook but a snapshot of what people happened to write online: how-tos next to ads, research articles next to small talk. Nobody plans the topic mix – it is simply whatever is out there. That is exactly why the raw cross-section is so heterogeneous.',
+    'data.moreP2':
+      'But unplanned does not mean unfiltered: over 90% of the raw web is thrown away. Duplicates, language junk and boilerplate are removed, and an AI classifier rates the educational value of every text. So today AI systems judge the training data of the next AI systems. Which texts survive this filter shapes the model’s abilities, knowledge and blind spots.',
+    'data.moreP3':
+      'That is why data selection is a central lever when building a model – not just quantity matters, but quality and composition. At the frontier, labs even deliberately weight individual sources (such as more code or books) to strengthen specific abilities.',
+    'data.nextLabel': 'Next: Training vs. inference',
 
     'a11y.toggleTheme': 'Toggle light/dark',
     'a11y.toggleSidebar': 'Show/hide navigation',
