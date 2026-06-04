@@ -20,6 +20,7 @@ import { Slider } from '@/components/ui/slider'
 import { Textarea } from '@/components/ui/textarea'
 import { PlayIcon, PauseIcon, ReloadIcon, ShuffleIcon, PlusIcon, CheckIcon } from '@radix-ui/react-icons'
 import { useMounted } from '@/lib/use-mounted'
+import { useTranslations } from '@/lib/i18n/use-translations'
 import { type Corpus, CORPORA, corpusWords, buildCustomCorpus } from '@/lib/mini-llm/corpora'
 import { type Distribution, type EmbeddingPoint, type ExampleProbe, Trainer } from '@/lib/mini-llm/trainer'
 
@@ -31,7 +32,6 @@ const UI_MS = 90
 const SAMPLE_N = 8
 
 type Speed = 'slow' | 'normal' | 'turbo'
-const SPEED_LABEL: Record<Speed, string> = { slow: 'Zeitlupe', normal: 'Normal', turbo: 'Turbo' }
 const INCREMENTS = [50, 500] as const
 const VOWELS = new Set('aeiouäöü'.split(''))
 
@@ -86,6 +86,7 @@ function deriveExample(words: string[]): Example {
 }
 
 export function MiniTraining() {
+  const t = useTranslations()
   const mounted = useMounted()
 
   const trainerRef = useRef<Trainer | null>(null)
@@ -286,14 +287,14 @@ export function MiniTraining() {
   }
 
   const status = running
-    ? 'Lernt … es dreht bei jedem Schritt an seinen Stellschrauben.'
+    ? t('miniTraining.statusRunning')
     : step > 0
-      ? 'Pausiert — du kannst weitertrainieren.'
-      : 'Noch untrainiert: reiner Zufall. Drück „Trainieren" oder „+500".'
+      ? t('miniTraining.statusPaused')
+      : t('miniTraining.statusIdle')
   const learned = uniformLoss > 0 ? Math.max(0, Math.min(1, (uniformLoss - currentLoss) / (uniformLoss - 0.8))) : 0
   const novelCount = samples.filter((w) => w && !wordSet.has(w)).length
   const tempHint =
-    temperature <= 0.5 ? 'brav: meist häufige Wörter' : temperature >= 1.2 ? 'wild: auch seltene Buchstaben' : 'ausgewogen'
+    temperature <= 0.5 ? t('miniTraining.tempLow') : temperature >= 1.2 ? t('miniTraining.tempHigh') : t('miniTraining.tempMid')
 
   return (
     <div className="space-y-6">
@@ -301,9 +302,9 @@ export function MiniTraining() {
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Lerndaten:</span>
+            <span className="text-sm text-muted-foreground">{t('miniTraining.trainingData')}</span>
             <div className="inline-flex rounded-lg border p-0.5">
-              {[...CORPORA, { key: 'eigene', label: 'Eigene' }].map((c) => (
+              {[...CORPORA, { key: 'eigene', label: t('miniTraining.customLabel') }].map((c) => (
                 <button
                   key={c.key}
                   type="button"
@@ -321,7 +322,7 @@ export function MiniTraining() {
           </div>
 
           <div className="flex items-center gap-2 sm:ml-auto">
-            <span className="text-sm text-muted-foreground">Tempo:</span>
+            <span className="text-sm text-muted-foreground">{t('miniTraining.speed')}</span>
             <div className="inline-flex rounded-lg border p-0.5">
               {(['slow', 'normal', 'turbo'] as Speed[]).map((s) => (
                 <button
@@ -332,7 +333,7 @@ export function MiniTraining() {
                     s === speed ? 'bg-secondary text-secondary-foreground' : 'text-muted-foreground hover:bg-muted'
                   }`}
                 >
-                  {SPEED_LABEL[s]}
+                  {t(`miniTraining.speed${s.charAt(0).toUpperCase() + s.slice(1)}` as 'miniTraining.speedSlow' | 'miniTraining.speedNormal' | 'miniTraining.speedTurbo')}
                 </button>
               ))}
             </div>
@@ -343,8 +344,7 @@ export function MiniTraining() {
         {corpusKey === 'eigene' && (
           <div className="rounded-lg border bg-background/40 p-3">
             <p className="mb-2 text-xs text-muted-foreground">
-              Gib eigene Wörter ein (durch Leerzeichen getrennt) — das Modell lernt nur daraus. Probier Tiernamen,
-              Städte oder Fantasiewörter.
+              {t('miniTraining.customHint')}
             </p>
             <Textarea
               value={customText}
@@ -355,10 +355,10 @@ export function MiniTraining() {
             />
             <div className="mt-2 flex items-center gap-2">
               <Button onClick={applyCustom} size="sm">
-                Übernehmen &amp; neu starten
+                {t('miniTraining.customApply')}
               </Button>
               <span className="text-xs text-muted-foreground">
-                {buildCustomCorpus(customText).text.split(' ').filter(Boolean).length} Wörter
+                {buildCustomCorpus(customText).text.split(' ').filter(Boolean).length} {t('miniTraining.customWords')}
               </span>
             </div>
           </div>
@@ -367,11 +367,11 @@ export function MiniTraining() {
         <div className="flex flex-wrap items-center gap-2">
           {running ? (
             <Button onClick={pause} variant="secondary" className="gap-1.5">
-              <PauseIcon /> Pause
+              <PauseIcon /> {t('miniTraining.pause')}
             </Button>
           ) : (
             <Button onClick={play} className="gap-1.5">
-              <PlayIcon /> {step > 0 ? 'Weiter' : 'Trainieren'}
+              <PlayIcon /> {step > 0 ? t('miniTraining.continue') : t('miniTraining.train')}
             </Button>
           )}
           {INCREMENTS.map((n) => (
@@ -380,7 +380,7 @@ export function MiniTraining() {
               {n}
             </Button>
           ))}
-          <Button onClick={reset} variant="ghost" size="icon" aria-label="Zurücksetzen" title="Zurücksetzen">
+          <Button onClick={reset} variant="ghost" size="icon" aria-label={t('miniTraining.resetLabel')} title={t('miniTraining.resetLabel')}>
             <ReloadIcon />
           </Button>
         </div>
@@ -396,20 +396,20 @@ export function MiniTraining() {
         </div>
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>{status}</span>
-          <span className="tabular-nums">Schritt {step.toLocaleString('de-CH')}</span>
+          <span className="tabular-nums">{t('miniTraining.stepLabel')} {step.toLocaleString('de-CH')}</span>
         </div>
       </div>
 
       {/* ---- Textproben (der Aha-Moment) ---- */}
       <section className="rounded-lg border bg-background/40 p-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <h3 className="text-sm font-semibold">Was das Modell gerade schreibt</h3>
+          <h3 className="text-sm font-semibold">{t('miniTraining.samplesTitle')}</h3>
           <div className="flex items-center gap-1">
             <Button onClick={() => setShowData((v) => !v)} variant="ghost" size="sm" className="h-7 gap-1 text-xs">
-              {showData ? 'Lerndaten ausblenden' : 'Lerndaten ansehen'}
+              {showData ? t('miniTraining.hideData') : t('miniTraining.showData')}
             </Button>
             <Button onClick={resample} variant="ghost" size="sm" className="h-7 gap-1 text-xs">
-              <ShuffleIcon className="h-3 w-3" /> Neu würfeln
+              <ShuffleIcon className="h-3 w-3" /> {t('miniTraining.resample')}
             </Button>
           </div>
         </div>
@@ -431,14 +431,14 @@ export function MiniTraining() {
 
         {/* Temperatur */}
         <div className="mt-4 flex items-center gap-3">
-          <span className="shrink-0 text-xs text-muted-foreground">Temperatur</span>
+          <span className="shrink-0 text-xs text-muted-foreground">{t('miniTraining.temperature')}</span>
           <Slider
             value={[temperature]}
             onValueChange={([v]) => changeTemperature(v)}
             min={0.3}
             max={1.5}
             step={0.1}
-            aria-label="Temperatur"
+            aria-label={t('miniTraining.temperature')}
             className="max-w-[200px]"
           />
           <span className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground">
@@ -447,20 +447,20 @@ export function MiniTraining() {
         </div>
 
         <p className="mt-3 text-xs text-muted-foreground">
-          Frisch aus dem Modell gezogen — Zeichen für Zeichen.{' '}
+          {t('miniTraining.samplesNote')}{' '}
           {novelCount > 0 ? (
             <>
-              <span className="text-primary">Blau</span> = nicht in den Lerndaten, also selbst zusammengesetzt.
+              <span className="text-primary">{t('miniTraining.samplesNovel')}</span> {t('miniTraining.samplesNovelDesc')}
             </>
           ) : (
-            'Anfangs Kauderwelsch, dann tauchen echte Wörter auf.'
+            t('miniTraining.samplesInit')
           )}
         </p>
 
         {showData && (
           <div className="mt-3 border-t pt-3">
             <p className="mb-2 text-xs text-muted-foreground">
-              Das Modell hat nur diese {words.length.toLocaleString('de-CH')} {corpus.label} gesehen:
+              {t('miniTraining.dataLabel')} {words.length.toLocaleString('de-CH')} {corpus.label} {t('miniTraining.dataLabelSuffix')}
             </p>
             <div className="flex max-h-40 flex-wrap gap-x-2 gap-y-1 overflow-y-auto rounded-md bg-muted/40 p-2">
               {words.map((w, i) => (
@@ -477,18 +477,18 @@ export function MiniTraining() {
       <div className="grid gap-5 lg:grid-cols-2">
         <section className="rounded-lg border bg-background/40 p-4">
           <div className="mb-2 flex items-baseline justify-between">
-            <h3 className="text-sm font-semibold">Fehler (Loss)</h3>
+            <h3 className="text-sm font-semibold">{t('miniTraining.lossTitle')}</h3>
             <span className="font-mono text-sm tabular-nums text-primary">{currentLoss.toFixed(2)}</span>
           </div>
           <LossCurve points={lossCurve} xMax={Math.max(2000, step)} uniformLoss={uniformLoss} />
           <p className="mt-2 text-xs text-muted-foreground">
-            Der Fehler misst, wie schlecht das nächste Zeichen vorhergesagt wird. Beim blossen Raten läge er bei{' '}
-            {uniformLoss.toFixed(2)} und sinkt, während das Modell lernt.
+            {t('miniTraining.lossNote')}{' '}
+            {uniformLoss.toFixed(2)} {t('miniTraining.lossNoteSuffix')}
           </p>
         </section>
 
         <section className="rounded-lg border bg-background/40 p-4">
-          <h3 className="mb-2 text-sm font-semibold">Vorhersage fürs nächste Zeichen</h3>
+          <h3 className="mb-2 text-sm font-semibold">{t('miniTraining.distTitle')}</h3>
           <div className="mb-3 flex flex-wrap gap-1.5">
             {corpus.prefixes.map((p) => (
               <button
@@ -499,14 +499,13 @@ export function MiniTraining() {
                   p === prefix ? 'border-primary bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted'
                 }`}
               >
-                {p === '' ? 'Wortanfang' : `nach „${p}"`}
+                {p === '' ? t('miniTraining.distWordStart') : `${t('miniTraining.distAfter')} „${p}"`}
               </button>
             ))}
           </div>
           <DistributionBars dist={dist} />
           <p className="mt-2 text-xs text-muted-foreground">
-            Dieselbe Idee wie auf der Next-Token-Seite — nur fürs nächste <em>Zeichen</em>. Anfangs flach (alles gleich
-            wahrscheinlich), nach dem Training spitz.
+            {t('miniTraining.distNote')}
           </p>
         </section>
       </div>
@@ -518,28 +517,25 @@ export function MiniTraining() {
           onClick={toggleMore}
           className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium"
         >
-          <span>Mehr Einblicke {showMore ? '' : '— für Interessierte'}</span>
+          <span>{t('miniTraining.moreTitle')} {showMore ? '' : t('miniTraining.moreSuffix')}</span>
           <span className="text-muted-foreground">{showMore ? '–' : '+'}</span>
         </button>
         {showMore && (
           <div className="grid gap-5 border-t p-4 lg:grid-cols-2">
             {/* Zeichen-Embeddings */}
             <div>
-              <h3 className="mb-2 text-sm font-semibold">Die Embeddings der Buchstaben</h3>
+              <h3 className="mb-2 text-sm font-semibold">{t('miniTraining.embTitle')}</h3>
               <EmbeddingMap points={embPts} />
               <p className="mt-2 text-xs text-muted-foreground">
-                Jeder Buchstabe bekommt eine eigene Zahlenliste — hier in 2D. Während des Trainings ordnen sie sich;{' '}
-                <span className="text-[hsl(var(--chart-2))]">Vokale</span> wandern oft zusammen. Genau das sind
-                Embeddings, eine Station vorher.
+                {t('miniTraining.embNote')}
               </p>
             </div>
             {/* Ein Trainingsbeispiel */}
             <div>
-              <h3 className="mb-2 text-sm font-semibold">Ein Trainingsbeispiel</h3>
-              <ExamplePanel probe={probe} example={example} />
+              <h3 className="mb-2 text-sm font-semibold">{t('miniTraining.exTitle')}</h3>
+              <ExamplePanel probe={probe} example={example} t={t} />
               <p className="mt-2 text-xs text-muted-foreground">
-                So lernt das Modell: aus „{example.context}" soll „{example.target}" werden. Es vergleicht seine
-                Vorhersage mit der Wahrheit und rückt die Wahrscheinlichkeit Schritt für Schritt höher.
+                {t('miniTraining.exNote')} „{example.context}" {t('miniTraining.exNoteMid')} „{example.target}" {t('miniTraining.exNoteSuffix')}
               </p>
             </div>
           </div>
@@ -566,7 +562,7 @@ function LossCurve({ points, xMax, uniformLoss }: { points: CurvePoint[]; xMax: 
   const yRate = sy(uniformLoss)
 
   return (
-    <svg viewBox={`0 0 ${W} ${Hgt}`} className="h-32 w-full" preserveAspectRatio="none" role="img" aria-label="Lernkurve">
+    <svg viewBox={`0 0 ${W} ${Hgt}`} className="h-32 w-full" preserveAspectRatio="none" role="img" aria-label="Learning curve">
       <line
         x1={pad}
         x2={W - pad}
@@ -595,7 +591,9 @@ function LossCurve({ points, xMax, uniformLoss }: { points: CurvePoint[]; xMax: 
 
 // --- Verteilungs-Balken (Bildsprache der Next-Token-Seite) ------------------
 function DistributionBars({ dist }: { dist: Distribution }) {
-  const label = (ch: string) => (ch === '.' ? 'Ende' : ch === ' ' ? '␣' : ch)
+  // Note: 'Ende'/'End' handled via t() if needed, but DistributionBars is a pure sub-component.
+  // Using a static label here; this is purely a symbol display.
+  const label = (ch: string) => (ch === '.' ? '·' : ch === ' ' ? '␣' : ch)
   return (
     <div className="space-y-1">
       {dist.top.map((d, i) => {
@@ -640,7 +638,7 @@ function EmbeddingMap({ points }: { points: EmbeddingPoint[] }) {
   const sx = (x: number) => pad + ((x + 1) / 2) * (S - 2 * pad)
   const sy = (y: number) => pad + ((1 - y) / 2) * (S - 2 * pad)
   return (
-    <svg viewBox={`0 0 ${S} ${S}`} className="h-44 w-full" role="img" aria-label="Zeichen-Embeddings">
+    <svg viewBox={`0 0 ${S} ${S}`} className="h-44 w-full" role="img" aria-label="Character embeddings">
       {points.map((p) =>
         p.char === '.' ? null : (
           <text
@@ -661,7 +659,7 @@ function EmbeddingMap({ points }: { points: EmbeddingPoint[] }) {
 }
 
 // --- Ein konkretes Trainingsbeispiel: Vorhersage vs. Wahrheit ---------------
-function ExamplePanel({ probe, example }: { probe: ExampleProbe | null; example: Example }) {
+function ExamplePanel({ probe, example, t }: { probe: ExampleProbe | null; example: Example; t: (k: string) => string }) {
   const pct = probe ? probe.pTarget * 100 : 0
   return (
     <div className="space-y-3">
@@ -672,7 +670,7 @@ function ExamplePanel({ probe, example }: { probe: ExampleProbe | null; example:
           {example.target || '?'}
         </span>
         <span className="ml-auto text-xs text-muted-foreground">
-          tippt auf{' '}
+          {t('miniTraining.exGuesses')}{' '}
           <span className={`font-semibold ${probe?.correct ? 'text-[hsl(var(--chart-2))]' : 'text-foreground'}`}>
             „{probe?.topChar ?? '…'}"
           </span>
@@ -682,7 +680,7 @@ function ExamplePanel({ probe, example }: { probe: ExampleProbe | null; example:
       <div>
         <div className="mb-1 flex justify-between text-xs text-muted-foreground">
           <span>
-            Wahrscheinlichkeit für „{example.target}"
+            {t('miniTraining.exProbLabel')} „{example.target}"
           </span>
           <span className="font-mono tabular-nums">{pct.toFixed(0)}%</span>
         </div>

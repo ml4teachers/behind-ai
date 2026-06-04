@@ -1,216 +1,313 @@
-import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { FileText } from 'lucide-react'; // Icon für Dokumente
+'use client'
 
-// Definiere das Zitat und den Link für das PDF
-const pdfSource = {
-    title: "Rechtliche Auslegeordnung zur Entwicklung und Nutzung von KI im Bildungsraum Schweiz",
-    authors: "Thouvenin/Volz", // Optional: Autoren für Anzeige
-    year: 2024, // Optional: Jahr für Anzeige
-    url: "https://www.educa.ch/sites/default/files/2024-08/KI%20im%20Bildungsbereich_Rechtliche%20Auslegeordnung_2.pdf",
-};
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { FileText, Github, Youtube, Sparkles, ExternalLink } from 'lucide-react'
+import { useTranslations } from '@/lib/i18n/use-translations'
+
+// Rechtliche Auslegeordnung KI im Bildungsraum Schweiz (Thouvenin/Volz, 2024).
+const legalSource = {
+  title:
+    'Rechtliche Auslegeordnung zur Entwicklung und Nutzung von KI im Bildungsraum Schweiz',
+  authors: 'Thouvenin/Volz',
+  year: 2024,
+  url: 'https://www.educa.ch/sites/default/files/2024-08/KI%20im%20Bildungsbereich_Rechtliche%20Auslegeordnung_2.pdf',
+}
+
+// Weiterführende, frei zugängliche Erklärungen (visuell, für Einsteiger geeignet).
+const furtherResources = [
+  {
+    title: '3Blue1Brown – „But what is a GPT?"',
+    desc: 'Visuelle Einführung in Transformer und Attention. Ruhig erklärt, mit Animationen.',
+    url: 'https://www.3blue1brown.com/lessons/gpt',
+  },
+  {
+    title: 'LLM Visualization (Brendan Bycroft)',
+    desc: 'Ein 3D-Rundgang durch ein GPT-Modell – jeder Schritt der Berechnung wird sichtbar.',
+    url: 'https://bbycroft.net/llm',
+  },
+  {
+    title: 'Financial Times – „Generative AI exists because of the transformer"',
+    desc: 'Ein scroll-basierter, visueller Erklärer, wie Sprachmodelle das nächste Wort vorhersagen.',
+    url: 'https://ig.ft.com/generative-ai/',
+  },
+]
 
 export default function ResourcesPage() {
+  const t = useTranslations()
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6">Ressourcen und Hintergrund</h1>
+    <div className="container mx-auto max-w-4xl px-4 py-8 space-y-12">
+      <header className="space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">{t('resources.title')}</h1>
+        <p className="text-lg text-muted-foreground">
+          {t('resources.subtitle')}
+        </p>
+      </header>
 
-      {/* Über diese Webseite - Aktualisiert */}
-      <section className="mb-10">
+      {/* Über diese Webseite: Ziel + Entstehung + ehrliche Einordnung */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold tracking-tight">{t('resources.aboutTitle')}</h2>
+        <p className="leading-relaxed text-muted-foreground">{t('resources.aboutP1')}</p>
+        <p className="leading-relaxed text-muted-foreground">{t('resources.aboutP2')}</p>
+
+        {/* Vibe Coding – Zitat + ehrliche Einordnung */}
+        <div className="rounded-xl border bg-muted/40 p-4 sm:p-5 space-y-3">
+          <h3 className="text-sm font-semibold">{t('resources.vibeTitle')}</h3>
+          <blockquote className="border-l-4 border-primary/50 pl-4 text-sm italic text-muted-foreground">
+            „There&apos;s a new kind of coding I call &lsquo;vibe coding&rsquo;, where you fully
+            give in to the vibes … I &lsquo;Accept All&rsquo; always, I don&apos;t read the diffs
+            anymore … it&apos;s not really coding – I just see stuff, say stuff, run stuff, and
+            copy-paste stuff, and it mostly works."
+            <span className="mt-1 block text-xs not-italic">
+              —{' '}
+              <a
+                href="https://x.com/karpathy/status/1886192184808149383"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-foreground"
+              >
+                Andrej Karpathy (2025)
+              </a>
+            </span>
+          </blockquote>
+          <p className="text-sm leading-relaxed text-muted-foreground">{t('resources.vibeP1')}</p>
+          <p className="text-sm leading-relaxed text-muted-foreground">{t('resources.vibeP2')}</p>
+          <blockquote className="border-l-4 border-primary/50 pl-4 text-sm italic text-muted-foreground">
+            „The hottest new programming language is English"
+            <span className="mt-1 block text-xs not-italic">
+              —{' '}
+              <a
+                href="https://x.com/karpathy/status/1617979122625712128"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-foreground"
+              >
+                Andrej Karpathy
+              </a>
+            </span>
+          </blockquote>
+        </div>
+
+        <p className="text-sm text-muted-foreground">
+          {t('resources.sourceLabel')}{' '}
+          <a
+            href="https://github.com/ml4teachers/behind-ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 underline hover:text-foreground"
+          >
+            <Github className="h-3.5 w-3.5" /> ml4teachers/behind-ai
+          </a>
+          .{' '}
+          <Link href="/impressum" className="underline hover:text-foreground">
+            {t('resources.impressumLink')}
+          </Link>
+          .
+        </p>
+      </section>
+
+      <Separator />
+
+      {/* Andrej Karpathy Videos */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold tracking-tight">{t('resources.karpathyTitle')}</h2>
+        <p className="leading-relaxed text-muted-foreground">{t('resources.karpathyIntro')}</p>
+        <div className="grid gap-6 md:grid-cols-2">
+          <figure className="space-y-2">
+            <div className="aspect-video">
+              <iframe
+                className="h-full w-full rounded-lg border"
+                src="https://www.youtube.com/embed/7xTGNNLPyMI"
+                title="Deep Dive into LLMs like ChatGPT"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <figcaption className="text-sm text-muted-foreground">{t('resources.video1Caption')}</figcaption>
+          </figure>
+          <figure className="space-y-2">
+            <div className="aspect-video">
+              <iframe
+                className="h-full w-full rounded-lg border"
+                src="https://www.youtube.com/embed/EWvNQjAaOHw"
+                title="How I use LLMs"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <figcaption className="text-sm text-muted-foreground">{t('resources.video2Caption')}</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <Separator />
+
+      {/* Weitere Lernressourcen */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold tracking-tight">{t('resources.furtherTitle')}</h2>
+        <p className="leading-relaxed text-muted-foreground">{t('resources.furtherIntro')}</p>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {furtherResources.map((r) => (
+            <a
+              key={r.url}
+              href={r.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group rounded-xl border bg-card p-4 transition-colors hover:border-primary/50"
+            >
+              <div className="mb-1.5 flex items-center gap-2 font-medium text-primary">
+                <Sparkles className="h-4 w-4 shrink-0" />
+                <ExternalLink className="ml-auto h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
+              <div className="mb-1 text-sm font-medium text-foreground">{r.title}</div>
+              <p className="text-sm text-muted-foreground">{r.desc}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <Separator />
+
+      {/* Datenquellen & Inspiration */}
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold tracking-tight">{t('resources.dataSourceTitle')}</h2>
+        <p className="leading-relaxed text-muted-foreground">{t('resources.dataSourceP')}</p>
+      </section>
+
+      <Separator />
+
+      {/* Rechtliche Grundlagen */}
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold tracking-tight">{t('resources.legalTitle')}</h2>
         <Card>
-          <CardHeader>
-            <CardTitle>Über diese Webseite</CardTitle>
-            <CardDescription>Entstehung, Werkzeuge und Hintergrund</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              Diese Webseite startete als Experiment mit dem damals neuen "Code Claude"-Tool von Anthropic (März 2025, Initial Commit: 1. März 2025). Seither wurde sie mithilfe verschiedener KI-Assistenten wie GitHub Copilot, Cursor und insbesondere <strong className="font-semibold">Gemini 2.5 Pro</strong> (genutzt via VS Code und der Gemini Advanced App, Stand April 2025) im <Link href="#vibe-coding" className="text-blue-600 hover:underline font-medium">Vibe Coding</Link>-Stil weiterentwickelt.
-            </p>
-            <p>
-              Der Fokus liegt darauf, komplexe KI-Themen – sowohl die Technik dahinter als auch die praktischen Nutzungsaspekte wie Datenschutz und Kosten – interaktiv und möglichst einfach verständlich aufzubereiten, insbesondere für Lehrpersonen.
-            </p>
+          <CardContent className="pt-6">
+            <div className="flex items-start gap-3">
+              <FileText className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+              <div>
+                <a
+                  href={legalSource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-primary underline-offset-2 hover:underline"
+                >
+                  {t('resources.legalSource')}
+                </a>
+                <p className="text-sm text-muted-foreground">
+                  {t('resources.legalAuthors')}, {t('resources.legalYear')}
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </section>
 
-      {/* Andrej Karpathy Videos */}
-      <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-4">Andrej Karpathy: LLMs erklärt</h2>
-        <p className="mb-4">
-          Diese Webseite kratzt nur an der Oberfläche der beiden äusserst sehenswerten Videos von Andrej Karpathy, einem führenden KI-Forscher. Sie bieten tiefere technische Einblicke.
-        </p>
-        {/* Video 1 */}
-        <div className="mb-6">
-          <div className="aspect-video">
-            <iframe
-              className="w-full h-full rounded-lg shadow-md"
-              src="https://www.youtube.com/embed/7xTGNNLPyMI"
-              title="ChatGPT & LLMs: A Complete Introduction"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-          <p className="mt-2 text-sm text-gray-600">
-            Dieses Video dauert drei Stunden und geht zu jeder Erklärung auf dieser Seite noch viel stärker ins technische Detail.
-            Es ist ein umfassender Einblick in die LLM-Technologie, die ChatGPT und verwandte Produkte antreibt.
-          </p>
-        </div>
-        {/* Video 2 */}
-        <div className="mb-6">
-          <div className="aspect-video">
-            <iframe
-              className="w-full h-full rounded-lg shadow-md"
-              src="https://www.youtube.com/embed/EWvNQjAaOHw"
-              title="How I use ChatGPT"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-          <p className="mt-2 text-sm text-gray-600">
-            Der Titel &quot;How I use LLMs&quot; täuscht, da auch hier wieder sehr viel über die Nützlichkeit und Funktionsweise von LLMs erzählt wird.
-            Zum Beispiel betont er, wie präsent Halluzinationen immer noch sind auch in den modernsten, grössten und
-            teilweise sehr teuren KI-Tool-Abos.
-          </p>
+      <Separator />
+
+      {/* Über den Autor */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold tracking-tight">{t('resources.authorTitle')}</h2>
+        <p className="leading-relaxed text-muted-foreground">{t('resources.authorP')}</p>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <AuthorLink
+            label="PH Zug"
+            sub="Profil & Kontakt"
+            href="https://www.zg.ch/behoerden/direktion-fur-bildung-und-kultur/phzg/kontakte/zurfluh-thomas?searchterm=thomas+zurfluh"
+          />
+          <AuthorLink
+            label="YouTube"
+            sub="@thomaszurfluh453"
+            href="https://youtube.com/@thomaszurfluh453"
+            icon={<Youtube className="h-4 w-4" />}
+          />
+          <AuthorLink
+            label="LinkedIn"
+            sub="Thomas Zurfluh"
+            href="https://www.linkedin.com/in/thomas-zurfluh-b6720b203/"
+          />
         </div>
       </section>
 
-      {/* Datenquellen - Aktualisiert */}
-      <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-4">Datenquellen & Inspiration</h2>
-         <p className="mb-2">
-          Die Seite
-            <Link href="/data" className="text-blue-600 hover:underline font-medium"> Daten </Link>
-          wurde inspiriert durch das zweite Video von Andrej Karpathy. Der Code sowie die Daten für die Visualisierung stammen von Huggingface:
-        </p>
-        <Link
-          href="https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1"
-          className="text-blue-600 hover:underline font-medium"
-          target="_blank"
-          rel="noopener noreferrer">
-          HuggingFace FineWeb Demo
+      <Separator />
+
+      {/* Update-Geschichte */}
+      <section className="space-y-4" id="geschichte">
+        <h2 className="text-xl font-semibold tracking-tight">{t('resources.historyTitle')}</h2>
+        <ol className="space-y-5 border-l pl-5">
+          <TimelineItem date={t('resources.history1Date')} title={t('resources.history1Title')}>
+            {t('resources.history1Body')}
+          </TimelineItem>
+          <TimelineItem date={t('resources.history2Date')} title={t('resources.history2Title')}>
+            {t('resources.history2Body')}
+          </TimelineItem>
+          <TimelineItem date={t('resources.history3Date')} title={t('resources.history3Title')}>
+            {t('resources.history3Body')}
+          </TimelineItem>
+        </ol>
+      </section>
+
+      <nav className="border-t pt-6">
+        <Link href="/">
+          <Button variant="outline">
+            <span aria-hidden="true">←</span> {t('resources.backBtn')}
+          </Button>
         </Link>
-         <p className="mt-4 text-sm text-gray-600">
-         Die deutsche Übersetzung der FineWeb-Daten wurden mit Hilfe von Google's kleinstem LLM "gemini-2.0-flash-lite" kostenlos per API übersetzt.
-        </p>
-      </section>
-
-      {/* Prozess - Aktualisiert */}
-      <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-4">Entstehungsprozess</h2>
-        <p>
-          Der Entstehungsprozess dieser Webseite ist ein Beispiel für <a href="#vibe-coding" className="text-blue-600 hover:underline font-medium">Vibe Coding</a>. Es ist faszinierend, wie schnell heute interaktive Webseiten mithilfe von KI-Assistenten erstellt werden können, auch ohne tiefgreifende Webentwicklungs-Kenntnisse. Der Quellcode der Webseite ist auf Github verfügbar: {" "}
-          <a href="https://github.com/ml4teachers/behind-ai" className="text-violet-600 hover:underline font-medium" target="_blank" rel="noopener noreferrer">ml4teachers/behind-ai</a>.
-          Ob die Webseite weiter aktualisiert wird, ist offen – es ist ein Projekt, das in meiner Freizeit entstanden ist.
-        </p>
-      </section>
-
-      <Separator className="my-8" />
-
-      {/* Über den Autor - Aktualisiert */}
-      <section className="mb-10" id="author">
-        <h2 className="text-2xl font-semibold mb-4">Über den Autor</h2>
-        <p className="mb-4">
-          Ich arbeite an der PH Zug als Dozent für die Fachdidaktik Medienbildung und Informatik. Meine Arbeitsschwerpunkte sind Künstliche Intelligenz in der Lehrpersonenbildung und Digitalisierung im Unterricht.
-        </p>
-
-        {/* Links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">PH Zug</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Link 
-                href="https://www.zg.ch/behoerden/direktion-fur-bildung-und-kultur/phzg/kontakte/zurfluh-thomas?searchterm=thomas+zurfluh" 
-                className="text-violet-600 hover:underline" 
-                target="_blank" 
-                rel="noopener noreferrer">
-                Profil an der PH Zug
-              </Link>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">YouTube</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Link 
-                href="http://youtube.com/@thomaszurfluh453" 
-                className="text-violet-600 hover:underline" 
-                target="_blank" 
-                rel="noopener noreferrer">
-                YouTube Kanal
-              </Link>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">LinkedIn</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Link 
-                href="https://www.linkedin.com/in/thomas-zurfluh-b6720b203/" 
-                className="text-violet-600 hover:underline" 
-                target="_blank" 
-                rel="noopener noreferrer">
-                LinkedIn Profil
-              </Link>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="mt-6">
-          <p className="mb-4">
-            Ich habe einen Master in Fachdidaktik Medien und Informatik (PH Schwyz) und dabei Grundlagen des Programmierens gelernt. Vieles im Bereich Webentwicklung ist aber über die Jahre und vor allem durch die Zusammenarbeit mit KI-Tools entstanden – ganz im Sinne des "Vibe Coding". Aktuell (April 2025) nutze ich für solche Projekte am liebsten Gemini 2.5 Pro, sowohl in VS Code als auch über die Gemini Advanced App.
-          </p>
-
-          {/* Vibe Coding Zitat */}
-          <div id="vibe-coding" className="space-y-6 mt-6 scroll-mt-20"> {/* ID für Link, scroll-mt für Offset */}
-            <div className="bg-white p-4 rounded-lg border">
-                 <h3 className="font-medium mb-2">Vibe Coding</h3>
-                <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700">
-                    <p>"There's a new kind of coding I call "vibe coding", where you fully give in to the vibes... I "Accept All" always, I don't read the diffs anymore... The code grows beyond my usual comprehension... it's not really coding - I just see stuff, say stuff, run stuff, and copy paste stuff, and it mostly works."</p>
-                </blockquote>
-                <div className="mt-2 text-sm"><a href="https://x.com/karpathy/status/1886192184808149383" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">— Andrej Karpathy auf X</a></div>
-            </div>
-             <p className="mt-6 text-sm">
-                Obwohl ich den Code meist verstehe, habe ich an dieser Seite wenig von Hand geändert, sondern primär in natürlicher Sprache beschrieben, was die KI-Assistenten umsetzen sollen. Ich möchte alle Lesenden ermutigen, sich dem Vibe Coding einmal anzunehmen. Dank LLMs ist die Hürde zum Programmiereinstieg massiv gesunken.
-            </p>
-             {/* ... Zitat "English" ... */}
-             <div className="bg-white p-4 rounded-lg border">
-                <h3 className="font-medium mb-2">Programmieren mit natürlicher Sprache</h3>
-                <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700">
-                    <p>"The hottest new programming language is English"</p>
-                </blockquote>
-                <div className="mt-2 text-sm"><a href="https://x.com/karpathy/status/1617979122625712128" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">— Andrej Karpathy auf X</a></div>
-              </div>
-          </div>
-
-        </div>
-      </section>
-
-            {/* Neue Sektion: Wichtige Ressourcen */}
-            <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-4">Wichtige Ressourcen</h2>
-         <Card>
-            <CardHeader>
-                <CardTitle className="text-lg">Rechtliche Grundlagen (Schweiz)</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="flex items-start gap-3">
-                    <FileText className="w-5 h-5 text-gray-500 flex-shrink-0 mt-1" />
-                    <div>
-                        <a href={pdfSource.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">
-                            {pdfSource.title}
-                        </a>
-                        <p className="text-sm text-gray-600">({pdfSource.authors}, {pdfSource.year}) – Eine zentrale Quelle für die Datenschutzseite dieser Webseite.</p>
-                    </div>
-                 </div>
-            </CardContent>
-         </Card>
-      </section>
-
+      </nav>
     </div>
+  )
+}
+
+function AuthorLink({
+  label,
+  sub,
+  href,
+  icon,
+}: {
+  label: string
+  sub: string
+  href: string
+  icon?: React.ReactNode
+}) {
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-base">
+          {icon}
+          {label}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-primary underline-offset-2 hover:underline"
+        >
+          {sub}
+        </a>
+      </CardContent>
+    </Card>
+  )
+}
+
+function TimelineItem({
+  date,
+  title,
+  children,
+}: {
+  date: string
+  title: string
+  children: React.ReactNode
+}) {
+  return (
+    <li className="relative">
+      <span className="absolute -left-[1.42rem] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-background bg-primary" />
+      <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        {date}
+      </div>
+      <div className="font-medium">{title}</div>
+      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{children}</p>
+    </li>
   )
 }

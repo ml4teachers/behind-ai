@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useTranslations } from '@/lib/i18n/use-translations'
 
 // ---------------------------------------------------------------------------
 // Bedeutungs-Landkarte: ~80 deutsche Alltagswörter, platziert nach echter
@@ -57,16 +58,7 @@ const CAT_COLOR: Record<string, string> = {
   fahrzeuge: 'var(--chart-8)',
 }
 
-const CAT_LABEL: Record<string, string> = {
-  tiere: 'Tiere',
-  essen: 'Lebensmittel',
-  orte: 'Länder & Städte',
-  gefuehle: 'Gefühle',
-  berufe: 'Berufe',
-  sport: 'Sport',
-  musik: 'Musik',
-  fahrzeuge: 'Fahrzeuge',
-}
+// CAT_LABEL is built dynamically inside EmbeddingsMap using t()
 
 const EXAMPLES = ['Pizza', 'Australien', 'Eifersucht', 'Astronaut', 'Roboter', 'Sushi']
 
@@ -98,6 +90,17 @@ const toPctX = (x: number) => INSET + ((clamp(x, -1.1, 1.1) + 1.1) / 2.2) * (100
 const toPctY = (y: number) => INSET + ((1.1 - clamp(y, -1.1, 1.1)) / 2.2) * (100 - 2 * INSET)
 
 export function EmbeddingsMap() {
+  const t = useTranslations()
+  const CAT_LABEL: Record<string, string> = {
+    tiere: t('embMap.catTiere'),
+    essen: t('embMap.catEssen'),
+    orte: t('embMap.catOrte'),
+    gefuehle: t('embMap.catGefuehle'),
+    berufe: t('embMap.catBerufe'),
+    sport: t('embMap.catSport'),
+    musik: t('embMap.catMusik'),
+    fahrzeuge: t('embMap.catFahrzeuge'),
+  }
   const [refPoints, setRefPoints] = useState<Point[]>([])
   const [addedPoints, setAddedPoints] = useState<Point[]>([])
   const [loading, setLoading] = useState(true)
@@ -261,19 +264,19 @@ export function EmbeddingsMap() {
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Wort eingeben – z. B. Tiger, Vulkan, Glück …"
+          placeholder={t('embMap.inputPlaceholder')}
           maxLength={MAX_INPUT}
           className="flex-grow"
           disabled={loading}
         />
         <Button type="submit" disabled={pending || loading || !input.trim()}>
-          {pending ? 'Bette ein …' : 'Auf die Karte'}
+          {pending ? t('embMap.embeddingBtn') : t('embMap.embedBtn')}
         </Button>
       </form>
 
       {/* Beispiele */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs text-muted-foreground">Beispiele:</span>
+        <span className="text-xs text-muted-foreground">{t('embMap.examplesLabel')}</span>
         {EXAMPLES.map((ex) => (
           <button
             key={ex}
@@ -291,7 +294,7 @@ export function EmbeddingsMap() {
             onClick={reset}
             className="ml-auto rounded-full px-2.5 py-1 text-xs text-muted-foreground underline-offset-2 hover:underline"
           >
-            Karte zurücksetzen
+            {t('embMap.resetMap')}
           </button>
         )}
       </div>
@@ -308,7 +311,7 @@ export function EmbeddingsMap() {
               aria-pressed={!hidden}
               className="flex items-center gap-1.5 text-xs transition-colors hover:text-foreground"
               style={{ color: hidden ? 'hsl(var(--muted-foreground))' : 'hsl(var(--foreground))' }}
-              title={hidden ? `${CAT_LABEL[cat]} einblenden` : `${CAT_LABEL[cat]} ausblenden`}
+              title={CAT_LABEL[cat]}
             >
               <span
                 className="inline-block h-2.5 w-2.5 rounded-full transition-opacity"
@@ -323,7 +326,7 @@ export function EmbeddingsMap() {
             className="inline-block h-2.5 w-2.5 rounded-full ring-2 ring-offset-1 ring-offset-background"
             style={{ backgroundColor: colorOf(null), ['--tw-ring-color' as string]: colorOf(null) }}
           />
-          dein Wort
+          {t('embMap.yourWord')}
         </span>
       </div>
 
@@ -443,7 +446,7 @@ export function EmbeddingsMap() {
                 style={{ backgroundColor: colorOf(selected.category) }}
               />
               <h4 className="text-sm font-semibold">
-                Nächste Nachbarn von „{selected.term}“
+                {`${t('embMap.neighborsOf')} “${selected.term}”`}
               </h4>
               {selected.category && (
                 <span className="text-xs text-muted-foreground">{CAT_LABEL[selected.category]}</span>
@@ -481,8 +484,7 @@ export function EmbeddingsMap() {
           </motion.div>
         ) : (
           <p className="text-center text-sm text-muted-foreground">
-            Tipp ein Wort ein oder klick einen Punkt – dann erscheinen hier die nächsten Nachbarn mit
-            ihrer Ähnlichkeit.
+            {t('embMap.noSelection')}
           </p>
         )}
       </AnimatePresence>

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useTranslations } from '@/lib/i18n/use-translations'
 
 // ---------------------------------------------------------------------------
 // Daten-Explorer: ein echter Querschnitt aus FineWeb (CommonCrawl-Webtexte,
@@ -65,6 +66,7 @@ const INSET = 4
 const toVB = (n: number) => INSET + n * (100 - 2 * INSET)
 
 export function DataExplorer() {
+  const t = useTranslations()
   const [data, setData] = useState<SampleData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -168,19 +170,19 @@ export function DataExplorer() {
   }
 
   const VIEWS: { key: View; label: string; count: number }[] = [
-    { key: 'raw', label: 'Roh', count: data.total },
-    { key: 'mine', label: 'Deine Auswahl', count: keptCount },
-    { key: 'curated', label: 'Musterlösung', count: data.survivors },
+    { key: 'raw', label: t('dataExplorer.viewRaw'), count: data.total },
+    { key: 'mine', label: t('dataExplorer.viewMine'), count: keptCount },
+    { key: 'curated', label: t('dataExplorer.viewCurated'), count: data.survivors },
   ]
 
   const viewCaption =
     view === 'raw'
-      ? 'Ein roher Querschnitt aus dem Web. Klick einen Punkt und lies, was wirklich drinsteht – Banales neben Wertvollem, kein Lehrplan.'
+      ? t('dataExplorer.captionRaw')
       : view === 'mine'
         ? keptCount === 0
-          ? 'Öffne ein Dokument und entscheide „Behalten" oder „Raus". Was du behältst, bildet hier deinen eigenen Datensatz.'
-          : `Dein Datensatz: ${keptCount} von ${data.total} Dokumenten behalten.`
-        : `Was der echte Qualitätsfilter behält: nur Texte mit hohem Bildungswert – ${data.survivors} von ${data.total} (≈ 6 %). Den Rest wirft die Pipeline weg.`
+          ? t('dataExplorer.captionMineEmpty')
+          : `${t('dataExplorer.captionMineCount')} ${keptCount} ${t('dataExplorer.von')} ${data.total} ${t('dataExplorer.captionMineCountSuffix')}`
+        : `${t('dataExplorer.captionCurated')} ${data.survivors} ${t('dataExplorer.von')} ${data.total} ${t('dataExplorer.captionCuratedSuffix')}`
 
   return (
     <div className="space-y-4">
@@ -215,7 +217,7 @@ export function DataExplorer() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={pickRandom}>
-            Zufälliges Dokument
+            {t('dataExplorer.randomDoc')}
           </Button>
           {(decisions.size > 0 || hiddenGroups.size > 0 || view !== 'raw') && (
             <button
@@ -223,7 +225,7 @@ export function DataExplorer() {
               onClick={reset}
               className="text-xs text-muted-foreground underline-offset-2 hover:underline"
             >
-              Zurücksetzen
+              {t('dataExplorer.reset')}
             </button>
           )}
         </div>
@@ -238,7 +240,7 @@ export function DataExplorer() {
           preserveAspectRatio="none"
           className="h-full w-full"
           role="img"
-          aria-label="Karte von Trainingsdaten-Dokumenten, nach Thema gefärbt"
+          aria-label={t('dataExplorer.svgLabel')}
         >
           {data.docs.map((d) => {
             const active = isActive(d)
@@ -303,6 +305,7 @@ export function DataExplorer() {
         threshold={data.threshold}
         decision={selected ? decisions.get(selected.id) ?? null : null}
         onDecide={decide}
+        t={t}
       />
     </div>
   )
@@ -316,6 +319,7 @@ function DocPanel({
   threshold,
   decision,
   onDecide,
+  t,
 }: {
   doc: Doc | null
   groupLabel: string
@@ -323,11 +327,12 @@ function DocPanel({
   threshold: number
   decision: Decision | null
   onDecide: (id: number, d: Decision) => void
+  t: (k: string) => string
 }) {
   if (!doc) {
     return (
       <p className="rounded-lg border border-dashed bg-card/40 p-4 text-center text-sm text-muted-foreground">
-        Klick einen Punkt auf der Karte – dann erscheint hier ein echtes Dokument aus den Trainingsdaten.
+        {t('dataExplorer.docEmpty')}
       </p>
     )
   }
@@ -348,7 +353,7 @@ function DocPanel({
 
       {/* Entscheidung (optional) */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="mr-1 text-sm text-muted-foreground">Ins Training?</span>
+        <span className="mr-1 text-sm text-muted-foreground">{t('dataExplorer.docDecide')}</span>
         <button
           type="button"
           onClick={() => onDecide(doc.id, 'keep')}
@@ -359,7 +364,7 @@ function DocPanel({
               : 'hover:bg-accent hover:text-accent-foreground'
           }`}
         >
-          ✓ Behalten
+          {t('dataExplorer.docKeep')}
         </button>
         <button
           type="button"
@@ -371,7 +376,7 @@ function DocPanel({
               : 'hover:bg-accent hover:text-accent-foreground'
           }`}
         >
-          ✗ Raus
+          {t('dataExplorer.docDiscard')}
         </button>
       </div>
 
@@ -379,7 +384,7 @@ function DocPanel({
       {revealed && (
         <div className="mt-4 border-t pt-3">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="text-sm text-muted-foreground">Bildungswert (KI-Bewerter):</span>
+            <span className="text-sm text-muted-foreground">{t('dataExplorer.docEduScore')}</span>
             <span className="flex items-center gap-0.5" aria-label={`${doc.edu} von 5`}>
               {[0, 1, 2, 3, 4].map((i) => (
                 <span
@@ -395,12 +400,12 @@ function DocPanel({
           </div>
           <p className="mt-1.5 text-sm">
             {filterKeeps ? (
-              <span className="text-[hsl(var(--chart-2))]">Der echte Filter behält diesen Text.</span>
+              <span className="text-[hsl(var(--chart-2))]">{t('dataExplorer.docFilterKeeps')}</span>
             ) : (
-              <span className="text-destructive">Der echte Filter sortiert diesen Text aus.</span>
+              <span className="text-destructive">{t('dataExplorer.docFilterDiscards')}</span>
             )}{' '}
             <span className="text-muted-foreground">
-              {agree ? 'Ihr seid euch einig.' : 'Der Filter entscheidet anders als du.'}
+              {agree ? t('dataExplorer.docAgree') : t('dataExplorer.docDisagree')}
             </span>
           </p>
         </div>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Slider } from '@/components/ui/slider'
 import { Skeleton } from "@/components/ui/skeleton"
 import { ChevronRightIcon, ShuffleIcon, ReloadIcon } from "@radix-ui/react-icons"
+import { useTranslations } from '@/lib/i18n/use-translations'
 
 interface NextTokenPredictionProps {
   text: string
@@ -58,6 +59,7 @@ function applyTemperature(
 }
 
 export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPredictionProps) {
+  const t = useTranslations()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [topTokens, setTopTokens] = useState<TokenProbability[]>([])
@@ -247,16 +249,16 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
 
   const temperatureHint =
     temperature <= 0.3
-      ? 'Niedrig: fast immer das wahrscheinlichste Token – verlässlich, aber vorhersehbar.'
+      ? t('nextTokenPred.tempLow')
       : temperature >= 1.4
-        ? 'Hoch: die Verteilung wird flach – auch unwahrscheinlichere Tokens kommen zum Zug.'
-        : 'Mittel: nahe an dem, was das Modell wirklich rechnet (1.0).'
+        ? t('nextTokenPred.tempHigh')
+        : t('nextTokenPred.tempMid')
 
   return (
     <div className="w-full h-full flex flex-col">
       {/* Der aktuelle Text und Generierungs-Historie */}
       <div className="mb-4 p-3 bg-muted/50 rounded-lg border">
-        <div className="font-medium mb-1 text-sm text-muted-foreground">Aktueller Text:</div>
+        <div className="font-medium mb-1 text-sm text-muted-foreground">{t('nextTokenPred.currentText')}</div>
         <p className="font-medium">
           {text}
           {predictionHistory.map((token, i) => (
@@ -266,7 +268,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
 
         {predictionHistory.length > 0 && (
           <div className="mt-2 pt-2 border-t flex gap-2 items-center flex-wrap">
-            <span className="text-xs text-muted-foreground">Token-Kette:</span>
+            <span className="text-xs text-muted-foreground">{t('nextTokenPred.tokenChain')}</span>
             {predictionHistory.map((token, i) => (
               <span key={i} className="px-2 py-0.5 bg-[hsl(var(--chart-2)/0.15)] text-[hsl(var(--chart-2))] text-xs rounded">
                 {token.replace(/ /g, '␣')}
@@ -279,7 +281,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
               className="ml-auto text-xs h-7"
               onClick={resetToOriginal}
             >
-              Zurücksetzen
+              {t('nextTokenPred.reset')}
             </Button>
           </div>
         )}
@@ -288,7 +290,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
       {/* Loading-Zustand */}
       {loading && (
         <div className="flex-1 flex flex-col items-center justify-center space-y-4">
-          <p>Berechne Wahrscheinlichkeiten für den nächsten Token...</p>
+          <p>{t('nextTokenPred.computing')}</p>
           <div className="w-full max-w-md space-y-2">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-8 w-3/4" />
@@ -303,7 +305,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
       {!loading && error && (
         <div className="flex-1 flex items-center justify-center">
           <div className="text-destructive text-center p-6 bg-destructive/10 rounded-lg">
-            <p className="font-bold mb-2">Fehler bei der Token-Vorhersage:</p>
+            <p className="font-bold mb-2">{t('nextTokenPred.errorTitle')}</p>
             <p>{error}</p>
             <Button
               variant="outline"
@@ -311,7 +313,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
               onClick={() => fetchNextTokenPrediction(currentText)}
             >
               <ReloadIcon className="mr-2 h-4 w-4" />
-              Erneut versuchen
+              {t('nextTokenPred.retry')}
             </Button>
           </div>
         </div>
@@ -323,14 +325,14 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
           {/* API-Hinweis, falls vorhanden */}
           {apiNotice && (
             <div className="mb-4 p-2 bg-[hsl(var(--chart-3)/0.12)] border border-[hsl(var(--chart-3)/0.45)] rounded text-sm text-foreground">
-              <strong>Hinweis:</strong> {apiNotice}
+              <strong>{t('nextTokenPred.hint')}</strong> {apiNotice}
             </div>
           )}
 
           {/* Temperatur-Regler: formt die Verteilung live um */}
           <div className="mb-4 rounded-lg border bg-muted/40 p-3">
             <div className="mb-2 flex items-center justify-between">
-              <label className="text-sm font-medium">Temperatur</label>
+              <label className="text-sm font-medium">{t('nextTokenPred.temperature')}</label>
               <span className="font-mono text-sm tabular-nums">{temperature.toFixed(1)}</span>
             </div>
             <Slider
@@ -346,7 +348,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
 
           <div className="mb-4">
             <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
-              <h3 className="font-medium">Top Wahrscheinlichkeiten für den nächsten Token</h3>
+              <h3 className="font-medium">{t('nextTokenPred.topProbs')}</h3>
 
               <Button
                 variant="secondary"
@@ -356,7 +358,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
                 className="flex items-center gap-1"
               >
                 <ShuffleIcon className="w-3 h-3" />
-                <span>Zufälliger Token</span>
+                <span>{t('nextTokenPred.randomToken')}</span>
               </Button>
             </div>
 
@@ -418,7 +420,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
             </div>
 
             <p className="mb-6 px-2 text-xs text-muted-foreground">
-              Der Rest verteilt sich auf tausende weitere, jeweils sehr unwahrscheinliche Tokens.
+              {t('nextTokenPred.longTailNote')}
             </p>
           </div>
 
@@ -431,12 +433,12 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
                 exit={{ opacity: 0, height: 0 }}
                 className="border-t pt-4 text-center"
               >
-                <p className="mb-2">Ausgewählter nächster Token:</p>
+                <p className="mb-2">{t('nextTokenPred.selectedToken')}</p>
                 <div className="text-xl font-bold bg-[hsl(var(--chart-2)/0.15)] text-[hsl(var(--chart-2))] px-4 py-2 rounded-lg inline-block">
                   {selectedToken.replace(/ /g, '␣')}
                 </div>
                 <div className="mt-4 text-sm text-muted-foreground flex items-center justify-center gap-2">
-                  <span>Füge Token zum Text hinzu</span>
+                  <span>{t('nextTokenPred.addToText')}</span>
                   <ChevronRightIcon className="animate-pulse" />
                 </div>
               </motion.div>
@@ -458,7 +460,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
                 className="flex items-center gap-1"
               >
                 <ReloadIcon className="w-3 h-3" />
-                Erneut versuchen
+                {t('nextTokenPred.retry')}
               </Button>
               {!useSimulation && (
                 <Button
@@ -470,7 +472,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
                     setApiNotice("Verwende simulierte Daten statt API-Ergebnissen");
                   }}
                 >
-                  Simulation verwenden
+                  {t('nextTokenPred.useSimulation')}
                 </Button>
               )}
             </div>

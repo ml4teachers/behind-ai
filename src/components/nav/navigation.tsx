@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useTranslations } from '@/lib/i18n/use-translations'
-import { homeLink, navSections, resourcesLink, type NavLink } from './nav-items'
+import { homeLink, navSections, resourcesLink, impressumLink, type NavLink } from './nav-items'
 
 export function Navigation({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname()
@@ -47,6 +47,7 @@ export function Navigation({ onNavigate }: { onNavigate?: () => void }) {
 
       <div className="mt-5 border-t border-border pt-3">
         {renderLink(resourcesLink)}
+        {renderLink(impressumLink)}
       </div>
     </nav>
   )
