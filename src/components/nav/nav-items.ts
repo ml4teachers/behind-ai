@@ -21,7 +21,7 @@ export const impressumLink: NavLink = { key: 'nav.impressum', href: '/impressum'
  * Lern-Bogen:
  *   Daten:     Trainingsdaten → Tokenisierung → Embeddings → Bild & Ton
  *   Training:  Pretraining → Finetuning → RLHF → RLVR
- *   Inferenz:  Next-Token → Chain-of-Thought → RAG → Datenschutz
+ *   Inferenz:  Next-Token → Attention → Chain-of-Thought → RAG → Datenschutz
  *
  * Logik = was reingeht → wie es lernt → wie es genutzt wird. „Daten" bündelt
  * den Eingabe-/Repräsentations-Teil (woraus das Modell lernt und wie Text,
@@ -55,8 +55,10 @@ export const navSections: NavSection[] = [
     key: 'nav.section.inference',
     links: [
       { key: 'nav.nextToken', href: '/next-token' },
+      { key: 'nav.attention', href: '/attention' },
       { key: 'nav.cot', href: '/chain-of-thought' },
       { key: 'nav.rag', href: '/rag' },
+      { key: 'nav.agents', href: '/agents' },
       { key: 'nav.privacy', href: '/privacy' },
     ],
   },

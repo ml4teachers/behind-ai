@@ -44,7 +44,7 @@ export default function ChainOfThoughtPage() {
       </div>
 
       <nav className="flex justify-between border-t pt-6">
-        <Link href="/next-token">
+        <Link href="/attention">
           <Button variant="outline">
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>

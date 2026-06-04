@@ -127,7 +127,7 @@ export default function NextTokenPage() {
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>
         </Link>
-        <Link href="/chain-of-thought">
+        <Link href="/attention">
           <Button>
             {t('nextToken.nextLabel')} <span aria-hidden="true">→</span>
           </Button>

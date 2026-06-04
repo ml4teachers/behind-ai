@@ -80,7 +80,7 @@ export default function PrivacyPage() {
       </div>
 
       <nav className="border-t pt-6">
-        <Link href="/rag">
+        <Link href="/agents">
           <Button variant="outline">
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>

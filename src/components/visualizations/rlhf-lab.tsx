@@ -21,7 +21,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { CheckIcon, ReloadIcon, ThickArrowRightIcon } from '@radix-ui/react-icons'
+import { cn } from '@/lib/utils'
+import { CheckIcon, Cross2Icon, ReloadIcon, ThickArrowRightIcon } from '@radix-ui/react-icons'
 import { useMounted } from '@/lib/use-mounted'
 import { useTranslations } from '@/lib/i18n/use-translations'
 import {
@@ -455,6 +456,29 @@ function GeneralizeStage({
 }
 
 // === Station 4: Überlisten (Reward Hacking) ==================================
+// Kuratierte Auswahl statt abstraktem Scatter: Du tippst zuerst, welche Antwort
+// die höchste Belohnung holt – dann decken sich Belohnungs-Balken und Wahrheits-
+// marken (✓/✗) auf. So wird die „versteckte" Hilfe-Dimension zur verdeckten
+// Spalte, die sich aufdeckt, und der Blender sichtbar, der die Belohnung kapert.
+//
+// WICHTIG (Invariante): Reward Hacking greift nur, wenn der Belohnungs-Gewinner
+// ZWINGEND faktisch falsch ist – bei JEDEM Bewertungs-Muster des Nutzers. Es gibt nur
+// 2^6 = 64 mögliche Muster (6 Paare × {a,b}); dieses Set ist gegen ALLE 64 durchgerechnet,
+// Gewinner stets falsch. Nötig, weil „schwache Antworten bevorzugen" NEGATIVE Stil-Gewichte
+// trainiert – dann gewinnen knappe statt flashy Antworten, und reine Pareto-Dominanz
+// (nur für ≥0-Gewichte gültig) reicht NICHT (so kippte eine frühere Fassung: die knappe
+// korrekte „Canberra." gewann bei Anti-Stil-Geschmack).
+//
+// Tragende Idee: nur EINE korrekte Antwort zeigen (idx 1, reiche Canberra), und zwar eine
+// „mittige": nach oben gedeckt vom falsche-Autorität-Blender (idx 12), nach unten von den
+// knappen falschen (idx 4 „Sydney.", idx 6 „Hmm") – so kann sie in KEINER Geschmacks-
+// Richtung die Spitze holen (sie landet je nach Geschmack auf Platz 3–4). Jede ZWEITE
+// korrekte Antwort (idx 0, 5 …) ragt in irgendeiner Richtung heraus und gewinnt in einigen
+// der 64 Fälle → Lektion kaputt. Regeln: keine weitere korrekte Antwort ungeprüft ins Set
+// (immer alle 64 testen, siehe /tmp-Harness in der Memory), idx-12-Traits nicht abschwächen.
+// Indizes verweisen in HACK_CANDIDATES.
+const HACK_SHOWN = [1, 12, 2, 3, 6, 4]
+
 function HackStage({
   weights,
   hacked,
@@ -468,23 +492,33 @@ function HackStage({
   onReset: () => void
   t: (k: string) => string
 }) {
-  const scored = useMemo(
-    () => HACK_CANDIDATES.map((a) => ({ ans: a, r: reward(weights, a.traits) })),
+  const choices = useMemo(
+    () =>
+      HACK_SHOWN.map((idx) => {
+        const ans = HACK_CANDIDATES[idx]
+        return { ans, r: reward(weights, ans.traits), correct: ans.help >= 0.5 }
+      }),
     [weights],
   )
-  const pick = useMemo(() => scored.reduce((best, c) => (c.r > best.r ? c : best), scored[0]), [scored])
-  const bestHelp = useMemo(
-    () => HACK_CANDIDATES.reduce((best, a) => (a.help > best.help ? a : best), HACK_CANDIDATES[0]),
-    [],
+  const pickIdx = useMemo(
+    () => choices.reduce((best, c, i) => (c.r > choices[best].r ? i : best), 0),
+    [choices],
   )
+  const bestHelp = useMemo(
+    () => choices.reduce((best, c) => (c.ans.help > best.ans.help ? c : best), choices[0]).ans,
+    [choices],
+  )
+  const rMin = Math.min(...choices.map((c) => c.r))
+  const rMax = Math.max(...choices.map((c) => c.r))
+  const frac = (r: number) => 8 + 92 * ((r - rMin) / Math.max(0.001, rMax - rMin))
+
+  const [guess, setGuess] = useState<number | null>(null)
 
   return (
     <div className="space-y-4">
       <div>
         <h3 className="text-sm font-semibold">{t('rlhfLab.hackHeading')}</h3>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('rlhfLab.hackIntro')}
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">{t('rlhfLab.hackIntro')}</p>
       </div>
 
       <div className="rounded-lg border bg-background/40 p-3">
@@ -492,25 +526,53 @@ function HackStage({
         <p className="mt-0.5 font-medium">{HACK_PROMPT}</p>
       </div>
 
-      <HackScatter scored={scored} pick={pick} revealed={hacked} t={t} />
+      {!hacked && <p className="text-sm font-medium">{t('rlhfLab.hackGuess')}</p>}
+
+      <div className="space-y-2.5">
+        {choices.map((c, i) => (
+          <HackCard
+            key={i}
+            ans={c.ans}
+            correct={c.correct}
+            frac={frac(c.r)}
+            revealed={hacked}
+            isPick={i === pickIdx}
+            isGuess={guess === i}
+            onGuess={() => {
+              if (hacked) return
+              setGuess(i)
+              onHack()
+            }}
+            t={t}
+          />
+        ))}
+      </div>
 
       {!hacked ? (
-        <Button onClick={onHack} className="gap-1.5">
-          {t('rlhfLab.hackChoose')} <ThickArrowRightIcon />
-        </Button>
+        <button
+          type="button"
+          onClick={() => {
+            setGuess(null)
+            onHack()
+          }}
+          className="text-xs text-muted-foreground underline-offset-2 transition-colors hover:text-foreground hover:underline"
+        >
+          {t('rlhfLab.hackChoose')}
+        </button>
       ) : (
         <div className="space-y-3">
           <div className="rounded-lg border border-[hsl(var(--chart-3)/0.4)] bg-[hsl(var(--chart-3)/0.08)] p-4">
             <p className="text-xs font-medium uppercase tracking-wide text-[hsl(var(--chart-3))]">
               {t('rlhfLab.hackPickLabel')}
             </p>
-            <p className="mt-1.5 text-sm leading-relaxed">{pick.ans.text}</p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              {t('rlhfLab.hackPickNote')} <strong>{HACK_CORRECT}</strong>. {t('rlhfLab.hackPickNoteSuffix')}
+            <p className="mt-1.5 text-sm leading-relaxed">
+              {t('rlhfLab.hackPickNote')} <strong>{HACK_CORRECT}</strong>
+              {t('rlhfLab.hackPickNoteSuffix')}
             </p>
           </div>
           <p className="text-sm text-muted-foreground">
-            {t('rlhfLab.hackBetter')} <span className="font-medium text-[hsl(var(--chart-2))]">„{shorten(bestHelp.text)}"</span>{' '}
+            {t('rlhfLab.hackBetter')}{' '}
+            <span className="font-medium text-[hsl(var(--chart-2))]">„{shorten(bestHelp.text)}"</span>{' '}
             {t('rlhfLab.hackBetterSuffix')}
           </p>
           <Button onClick={onReset} variant="ghost" size="sm" className="gap-1.5">
@@ -522,93 +584,87 @@ function HackStage({
   )
 }
 
-function HackScatter({
-  scored,
-  pick,
+function HackCard({
+  ans,
+  correct,
+  frac,
   revealed,
+  isPick,
+  isGuess,
+  onGuess,
   t,
 }: {
-  scored: Array<{ ans: Answer; r: number }>
-  pick: { ans: Answer; r: number }
+  ans: Answer
+  correct: boolean
+  frac: number
   revealed: boolean
+  isPick: boolean
+  isGuess: boolean
+  onGuess: () => void
   t: (k: string) => string
 }) {
-  const W = 320
-  const H = 200
-  const pad = 30
-  const rs = scored.map((s) => s.r)
-  const rMin = Math.min(...rs)
-  const rMax = Math.max(...rs)
-  const sx = (r: number) => pad + ((r - rMin) / Math.max(0.001, rMax - rMin)) * (W - 1.4 * pad)
-  const sy = (help: number) => pad / 2 + (1 - help) * (H - 1.4 * pad)
-
   return (
-    <div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="mx-auto block w-full max-w-xl" role="img" aria-label={t('rlhfLab.svgLabel')}>
-        {/* Achsen */}
-        <line x1={pad} y1={H - pad} x2={W - 4} y2={H - pad} className="stroke-border" strokeWidth={1} />
-        <line x1={pad} y1={6} x2={pad} y2={H - pad} className="stroke-border" strokeWidth={1} />
-        <text x={W - 4} y={H - pad + 14} textAnchor="end" className="fill-muted-foreground" style={{ fontSize: 9 }}>
-          {t('rlhfLab.scatterAxisX')}
-        </text>
-        <text x={pad - 6} y={12} textAnchor="start" className="fill-muted-foreground" style={{ fontSize: 9 }}>
-          {t('rlhfLab.scatterAxisY')}
-        </text>
+    <button
+      type="button"
+      disabled={revealed}
+      onClick={onGuess}
+      className={cn(
+        'group block w-full rounded-lg border p-3 text-left transition-colors',
+        !revealed &&
+          'cursor-pointer hover:border-primary hover:bg-primary/[0.03] focus-visible:border-primary focus-visible:outline-none',
+        revealed && isPick && 'border-[hsl(var(--chart-3)/0.6)] bg-[hsl(var(--chart-3)/0.07)]',
+        revealed && !isPick && 'border-border',
+        revealed && isGuess && !isPick && 'ring-1 ring-primary/40',
+      )}
+    >
+      <p className="text-sm leading-relaxed">{ans.text}</p>
 
-        {/* Punkte */}
-        {scored.map((s, i) => {
-          const isPick = revealed && s === pick
-          return (
-            <circle
-              key={i}
-              cx={sx(s.r)}
-              cy={sy(s.ans.help)}
-              r={isPick ? 6 : 4}
-              className={
-                isPick
-                  ? 'fill-[hsl(var(--chart-3))]'
-                  : s.ans.help >= 0.7
-                    ? 'fill-[hsl(var(--chart-2))]'
-                    : 'fill-muted-foreground/50'
-              }
-            >
-              {isPick && (
-                <animate attributeName="r" from="4" to="6" dur="0.4s" />
-              )}
-            </circle>
-          )
-        })}
-
-        {/* Markierung der Policy-Wahl */}
-        {revealed && (
-          <g>
-            <circle cx={sx(pick.r)} cy={sy(pick.ans.help)} r={9} className="fill-none stroke-[hsl(var(--chart-3))]" strokeWidth={1.5} />
-            <text
-              x={Math.min(sx(pick.r) + 7, W - 2)}
-              y={sy(pick.ans.help) - 13}
-              textAnchor="end"
-              className="fill-[hsl(var(--chart-3))]"
-              style={{ fontSize: 9, fontWeight: 700 }}
-            >
-              {t('rlhfLab.scatterChosen')}
-            </text>
-          </g>
-        )}
-      </svg>
-      <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-[hsl(var(--chart-2))]" /> {t('rlhfLab.legendHelpful')}
+      <div className="mt-2.5 flex items-center gap-2">
+        <span className={cn('w-20 shrink-0 text-xs', revealed ? 'text-muted-foreground' : 'text-transparent')}>
+          {t('rlhfLab.hackRewardLabel')}
         </span>
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-muted-foreground/50" /> {t('rlhfLab.legendWeak')}
-        </span>
-        {revealed && (
-          <span className="flex items-center gap-1.5">
-            <span className="inline-block h-2.5 w-2.5 rounded-full bg-[hsl(var(--chart-3))]" /> {t('rlhfLab.legendChosen')}
+        <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-muted">
+          <div
+            className={cn(
+              'absolute inset-y-0 left-0 rounded-full transition-[width] duration-700 ease-out',
+              isPick ? 'bg-[hsl(var(--chart-3))]' : 'bg-primary/70',
+            )}
+            style={{ width: revealed ? `${frac.toFixed(0)}%` : '0%' }}
+          />
+        </div>
+        {!revealed && (
+          <span className="shrink-0 text-xs text-muted-foreground/60 transition-colors group-hover:text-primary">
+            {t('rlhfLab.hackGuessTap')}
           </span>
         )}
       </div>
-    </div>
+
+      {revealed && (
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          <span
+            className={cn(
+              'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs font-medium',
+              correct
+                ? 'bg-[hsl(var(--chart-2)/0.15)] text-[hsl(var(--chart-2))]'
+                : 'bg-[hsl(var(--chart-3)/0.15)] text-[hsl(var(--chart-3))]',
+            )}
+          >
+            {correct ? <CheckIcon className="h-3 w-3" /> : <Cross2Icon className="h-3 w-3" />}
+            {correct ? t('rlhfLab.hackTruthCorrect') : t('rlhfLab.hackTruthWrong')}
+          </span>
+          {isPick && (
+            <span className="inline-flex items-center gap-1 rounded border border-[hsl(var(--chart-3)/0.6)] px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-[hsl(var(--chart-3))]">
+              {t('rlhfLab.hackModelPick')}
+            </span>
+          )}
+          {isGuess && (
+            <span className="inline-flex items-center gap-1 rounded bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
+              {t('rlhfLab.hackYourGuess')}
+            </span>
+          )}
+        </div>
+      )}
+    </button>
   )
 }
 

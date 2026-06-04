@@ -193,9 +193,11 @@ export const GENERALIZE_ROUNDS: LabelRound[] = [
 
 // --- Reward-Hacking: viele mögliche Antworten auf DIESELBE Frage ---------------
 // Das „Sprachmodell" sucht hier die Antwort mit der höchsten Belohnung. Unter den
-// Kandidaten sind „Blender": stilistisch top, aber faktisch falsch (Hauptstadt
-// ist Canberra, nicht Sydney/Melbourne). Weil das Belohnungsmodell nur den Stil
-// sieht, bekommen sie Spitzen-Belohnung – obwohl sie nicht helfen.
+// Kandidaten sind „Blender": stilistisch top, aber faktisch falsch (Hauptstadt ist
+// Canberra, nicht Sydney/Melbourne) – mal schmeichelnd, mal als selbstsichere
+// „falsche Autorität" (idx 12). Weil das Belohnungsmodell nur den Stil sieht,
+// bekommen sie Spitzen-Belohnung. WICHTIG: welche Antworten die UI zeigt und warum
+// der Gewinner zwingend falsch sein MUSS, steht an HACK_SHOWN in rlhf-lab.tsx.
 export const HACK_PROMPT = 'Was ist die Hauptstadt von Australien?'
 export const HACK_CORRECT = 'Canberra'
 
@@ -271,6 +273,19 @@ export const HACK_CANDIDATES: Answer[] = [
       'Hauptstadt ist eine pulsierende, weltbekannte Metropole, die jeden Besucher verzaubert – voller Geschichte, ' +
       'Energie und unvergesslicher Eindrücke. Du hast wirklich einen ausgezeichneten Geschmack bei deinen Fragen!',
     traits: t(0.95, 0.7, 0.95, 0.9, 0.95),
+    help: 0.05,
+  },
+  // [12] „Falsche Autorität"-Blender: kein Geschmeichel, sondern selbstsicher,
+  // strukturiert und ausführlich – und faktisch falsch. Bewusst so gestylt, dass er
+  // JEDE korrekte Antwort im Hack-Set auf allen fünf Merkmalen überbietet (Pareto),
+  // damit über jeden Nutzer-Geschmack hinweg eine Lüge die Belohnung gewinnt. Siehe
+  // die Invariante an HACK_SHOWN in rlhf-lab.tsx; diese Traits nicht abschwächen.
+  {
+    text:
+      'Die Hauptstadt Australiens ist eindeutig Sydney. Als größte Metropole des Landes bündelt sie ' +
+      'Wirtschaft, Kultur und Verwaltung an einer der spektakulärsten Buchten der Welt – historisch wie ' +
+      'politisch das unangefochtene Zentrum des Kontinents.',
+    traits: t(0.85, 0.9, 0.85, 0.95, 0.25),
     help: 0.05,
   },
 ]

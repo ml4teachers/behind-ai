@@ -53,6 +53,7 @@ export const messages: Record<Locale, Record<string, string>> = {
 
     'nav.tokenization': 'Tokenisierung',
     'nav.nextToken': 'Next-Token-Prediction',
+    'nav.attention': 'Attention',
     'nav.data': 'Trainingsdaten',
     'nav.training': 'Pretraining',
     'nav.finetuning': 'Finetuning',
@@ -60,6 +61,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nav.rag': 'RAG',
     'nav.cot': 'Chain-of-Thought',
     'nav.rlvr': 'RLVR',
+    'nav.agents': 'Agenten',
     'nav.embeddings': 'Embeddings',
     'nav.multimodal': 'Bild & Ton',
     'nav.localVsCloud': 'Lokal vs. Cloud',
@@ -197,7 +199,51 @@ export const messages: Record<Locale, Record<string, string>> = {
       'Einen ganzen Text erzeugt das Modell durch Wiederholung: Token anhängen, neu rechnen, nächstes Token wählen. So entsteht Wort für Wort ein ganzer Satz.',
     'nextToken.moreP3':
       'Die Temperatur steuert, wie „mutig" gewählt wird. Niedrig: Das Modell nimmt fast immer das wahrscheinlichste Token – verlässlich, aber vorhersehbar. Hoch: Die Verteilung wird flacher, auch unwahrscheinlichere Tokens kommen zum Zug – der Text wird kreativer und unberechenbarer.',
-    'nextToken.nextLabel': 'Weiter: Chain-of-Thought',
+    'nextToken.nextLabel': 'Weiter: Attention',
+
+    // --- Attention ---
+    'attention.title': 'Attention: Worauf das Modell schaut',
+    'attention.subtitle':
+      'Damit ein Wort seinen Satz versteht, lässt das Modell jede Position über die bisherigen Wörter zurückschauen und gewichtet, was gerade zählt – worauf sich ein Wort wie „es" bezieht, welche Wörter zusammengehören, was als Nächstes folgt. Dieses Zurückschauen ist die Attention – das Herzstück des Transformers.',
+    'attention.caption':
+      'Die Gewichte stammen aus einem deutschen Sprachmodell. Tippe ein Wort an und wechsle die Aufgabe, um zu sehen, worauf das Modell jeweils zurückschaut.',
+    'attention.mechTitle': 'Mehr Einblicke – wie die Gewichte entstehen',
+    'attention.mechIntro':
+      'Woher kommen diese Gewichte? Jede Position stellt eine Anfrage (Query), jedes Wort hält einen Schlüssel (Key). Ihr Skalarprodukt ergibt die Relevanz, Softmax macht daraus Gewichte, und die Ausgabe ist die gewichtete Mischung der Werte (Values). Die Punkte sind die Schlüsselwörter des oben gewählten Satzes – du spielst die Anfrage: zieh sie und sieh zu:',
+    'attention.moreP1':
+      'Bisher hatte jedes Wort einen festen Vektor (siehe Embeddings). Attention macht daraus einen kontextabhängigen: Jede Position sammelt aus den früheren Wörtern das ein, was zu ihr passt – „es" wird so zu „es im Sinne von Kind". Erst dadurch trägt ein Wort die Bedeutung seines ganzen Satzes.',
+    'attention.moreP2':
+      'Solche Zurückschau-Aufgaben – in der Fachsprache „Köpfe" – laufen im Modell vielfach parallel, und jede achtet auf etwas anderes: eine auf den Zusammenhang, eine auf die Reihenfolge. Über viele Schichten gestapelt entsteht so Schritt für Schritt ein immer reicheres Verständnis des Satzes.',
+    'attention.moreP3':
+      'Die Query-, Key- und Value-Projektionen sind nicht eingebaut, sondern gelernt – im selben Training, das die Trainings-Seite zeigt. Und dieses Zurückschauen passiert an jeder Position, auch an der letzten: Genau dort entsteht die nächste Vorhersage.',
+    'attention.nextLabel': 'Weiter: Chain-of-Thought',
+    // Viz-interne Strings (zwei Sichten, Hinweise, Mechanik-Spielzeug) – DE+EN
+    'attention.viz.lensIntro':
+      'Dasselbe Zurückschauen erfüllt verschiedene Aufgaben – sieh dir zwei davon an:',
+    'attention.viz.head.relation': 'Zusammenhang',
+    'attention.viz.head.prev': 'Reihenfolge',
+    'attention.viz.hint.relation':
+      'Hier verbindet das Modell ein Wort mit dem früheren Wort, das dazugehört. Tippe ein Wort an und sieh, worauf es zurückschaut.',
+    'attention.viz.hint.prev':
+      'Hier schaut fast jedes Wort auf das Wort direkt davor – so behält das Modell die Reihenfolge im Blick.',
+    'attention.viz.looksPre': ' schaut vor allem auf ',
+    'attention.viz.looksPost': ' zurück',
+    'attention.viz.firstWord': ' (Das erste Wort kann noch nirgends hinschauen.)',
+    'attention.viz.tapHint': 'Tippe ein Wort an, um seine Rückschau zu sehen.',
+    'attention.viz.barsPre': 'Wohin „',
+    'attention.viz.barsPost': '" schaut – Gewichte (zusammen 100 %):',
+    'attention.viz.word': 'Wort ',
+    'attention.viz.selected': ' (ausgewählt)',
+    'attention.viz.query': 'Anfrage',
+    'attention.viz.dragPre': 'Ziehe die ',
+    'attention.viz.dragPost':
+      '. Je näher sie einem Wort kommt, desto grösser dessen Gewicht – und desto stärker fliesst es in die Mischung ein (gestrichelte Kontur = die neue, kontextabhängige Bedeutung).',
+    'attention.viz.pipeline': 'Query · Key → Softmax → gewichtete Summe',
+    'attention.viz.notePre':
+      'Die Spalte in der Mitte ist das Skalarprodukt (die Relevanz), rechts daraus das Softmax-Gewicht. In echten Modellen sind Query, Key und Value ',
+    'attention.viz.noteEm': 'gelernte',
+    'attention.viz.notePost':
+      ' Projektionen der Embeddings – hier zum Anfassen fest gewählt. Die Positionen sind schematisch: Es geht ums Prinzip, nicht um die genauen Gewichte von oben.',
 
     // --- Tokenisierung ---
     'tokenization.title': 'Tokenisierung',
@@ -343,7 +389,62 @@ export const messages: Record<Locale, Record<string, string>> = {
       'Das Herz von RAG ist sein erster Buchstabe, das Retrieval – und es ist genau die Ähnlichkeitssuche der Embeddings-Seite: Die Frage wird in einen Vektor übersetzt und mit jedem Dokument verglichen. Die ähnlichsten wandern als Kontext vor die Frage (das ist das „Augmented"), und daraus formuliert das Modell seine Antwort (das „Generation"). Drei Schritte: suchen, anreichern, antworten.',
     'rag.moreP3':
       'Darum ist RAG nur so gut wie das, was die Suche findet. Fehlt das richtige Dokument oder liegt ein ähnlich klingendes, aber falsches zuoberst, erdet sich die Antwort auf der falschen Quelle. Ein gutes System sagt dann ehrlich, dass die Unterlagen nichts hergeben, statt zu raten – gute Quellen und eine gute Suche zählen also so viel wie das Modell selbst. Nimm oben ein Dokument aus der Wissensbasis und sieh, wie die Antwort kippt.',
-    'rag.nextLabel': 'Weiter: Datenschutz',
+    'rag.nextLabel': 'Weiter: Agenten',
+
+    // --- Agenten ---
+    'agents.title': 'Agenten: ein Modell, das Werkzeuge benutzt',
+    'agents.subtitle':
+      'Ein Agent ist ein Sprachmodell in einer Schleife: Es sagt Text voraus, und wenn dieser Text ein Werkzeug-Aufruf ist, führt das Programm drumherum das Werkzeug aus und gibt das Ergebnis zurück. Stell hier einem Modell eine Aufgabe, die es allein nicht lösen kann – und sieh zu, wie es Schritt für Schritt Werkzeuge benutzt, um ans Ziel zu kommen.',
+    'agents.caption':
+      'Oben entscheidet ein Sprachmodell selbst, welches Werkzeug es ruft; die Werkzeuge laufen in deinem Browser und geben ihr Ergebnis zurück in den Kontext. Das Modell sagt weiterhin nur Text voraus – die Schleife darum herum macht daraus Handeln.',
+    'agents.moreP1':
+      'Ein „Agent" klingt nach Eigenständigkeit, ist mechanisch aber kein neues Modell: Es ist dasselbe Next-Token-Modell, nur in eine Schleife gestellt. Bei jedem Durchlauf sagt es über den ganzen bisherigen Verlauf das nächste Stück Text voraus. Manchmal ist dieses Stück eine Endantwort – manchmal ein Werkzeug-Aufruf.',
+    'agents.moreP2':
+      'Den Aufruf fängt das Gerüst um das Modell herum ab, führt das Werkzeug wirklich aus und schreibt das Ergebnis als neue Zeile in den Kontext. Dann fragt es das Modell erneut. Denken (Chain-of-Thought), Nachschlagen (RAG) und Handeln sind so betrachtet dasselbe: Es kommt immer nur Text in einen wachsenden Kontext, über den das Modell weiter vorhersagt. Die „Handlungsfähigkeit" steckt im Gerüst und in den Werkzeugen, nicht im Modell.',
+    'agents.moreP3':
+      'Echte Agenten haben mehr und mächtigere Werkzeuge – Websuche, Code ausführen, Dateien ändern, Nachrichten schreiben; die KI-Assistenten, die heute selbstständig recherchieren oder programmieren, sind genau solche Schleifen. Die Schleife bleibt dieselbe. Mit dieser Reichweite wird aber eine Frage dringend: Sobald ein Agent Werkzeuge benutzt, schickt er Teile deiner Eingabe an Dienste weiter und kann selbst etwas auslösen. Wohin diese Daten gehen und was man ihm erlaubt, ist das Thema der nächsten Seite.',
+    'agents.nextLabel': 'Weiter: Datenschutz',
+
+    // --- Agenten-Schleife (Viz) ---
+    'agentLoop.placeholder': 'Gib dem Agenten eine Aufgabe …',
+    'agentLoop.ask': 'Auftrag geben',
+    'agentLoop.ex1': 'Wie viele Tage sind es von heute bis zum 1. August – und wie viele Wochen und Tage?',
+    'agentLoop.ex2': 'Wie viele Tage bleiben bis zum 24. Dezember?',
+    'agentLoop.ex3': 'Wie viele Wochen und Tage sind es von heute bis zum 1. Januar 2027?',
+    'agentLoop.toolsTitle': 'Werkzeuge',
+    'agentLoop.toolsHint': 'Tippen schaltet ein Werkzeug ab oder zu',
+    'agentLoop.tool.heute.label': 'Kalender · heute',
+    'agentLoop.tool.heute.blurb': 'Gibt das heutige Datum zurück.',
+    'agentLoop.tool.tage_bis.label': 'Kalender · Tage zählen',
+    'agentLoop.tool.tage_bis.blurb': 'Zählt die Tage zwischen zwei Daten.',
+    'agentLoop.tool.rechner.label': 'Rechner',
+    'agentLoop.tool.rechner.blurb': 'Wertet einen Rechenausdruck exakt aus.',
+    'agentLoop.tool.teilen_mit_rest.label': 'Teilen mit Rest',
+    'agentLoop.tool.teilen_mit_rest.blurb': 'Teilt ganzzahlig: ganzer Teil und Rest.',
+    'agentLoop.toolsChanged': 'Werkzeuge geändert – starte neu, um den Unterschied zu sehen.',
+    'agentLoop.modeAuto': 'Automatisch',
+    'agentLoop.modeStep': 'Schritt für Schritt',
+    'agentLoop.nextStep': 'Nächster Schritt',
+    'agentLoop.restart': 'Neu starten',
+    'agentLoop.runOne': 'Durchlauf',
+    'agentLoop.runMany': 'Durchläufe',
+    'agentLoop.labelTask': 'Auftrag',
+    'agentLoop.labelModel': 'Modell',
+    'agentLoop.labelTool': 'Werkzeug',
+    'agentLoop.labelFinal': 'Endantwort',
+    'agentLoop.thinking': 'Das Modell sagt den nächsten Zug voraus …',
+    'agentLoop.readyHint': 'Bereit. Klicke „Nächster Schritt", um den ersten Zug des Modells zu sehen.',
+    'agentLoop.maxSteps': 'Maximale Schrittzahl erreicht – hier stoppt das Gerüst.',
+    'agentLoop.retry': 'Nochmal',
+    'agentLoop.noOutput': '(keine Ausgabe)',
+    'agentLoop.toolUnavailable': 'Werkzeug nicht verfügbar',
+    'agentLoop.legendModel': 'Modell – sagt Text voraus',
+    'agentLoop.legendTool': 'Werkzeug – läuft im Gerüst darum herum',
+    'agentLoop.contextTitle': 'Was das Modell gerade sieht',
+    'agentLoop.ctxExplain1': 'Alles steht in EINEM wachsenden Textstrom. Nur die mit ',
+    'agentLoop.ctxExplain2':
+      ' markierten Zeilen stammen vom Sprachmodell – alles andere fügt das Gerüst hinzu. Genau über diesen Strom sagt das Modell bei jedem Zug das nächste Stück voraus (wie auf der Next-Token-Seite).',
+    'agentLoop.calls': 'ruft',
 
     'a11y.toggleTheme': 'Hell/Dunkel umschalten',
     'a11y.toggleSidebar': 'Navigation ein-/ausblenden',
@@ -462,22 +563,22 @@ export const messages: Record<Locale, Record<string, string>> = {
     'rlhfLab.genAgreeSuffix': 'Klicks. Genau das macht RLHF praktikabel: ein paar tausend Vergleiche, und das Modell kann Millionen Antworten bewerten, ohne dass ein Mensch mitliest.',
     'rlhfLab.genNext': 'Wo es kippt',
     'rlhfLab.hackHeading': 'Jetzt dreht sich der Spieß um',
-    'rlhfLab.hackIntro': 'Beim eigentlichen RLHF schreibt das Sprachmodell die Antworten – und wird darauf trainiert, möglichst hohe Belohnung zu kassieren. Hier sind viele mögliche Antworten auf dieselbe Frage. Jeder Punkt ist eine davon.',
+    'rlhfLab.hackIntro': 'Beim eigentlichen RLHF schreibt das Sprachmodell die Antworten – und wird darauf trainiert, möglichst hohe Belohnung zu kassieren. Hier sind ein paar mögliche Antworten auf dieselbe Frage. Das Belohnungsmodell hat jede nach Stil bewertet – die Wahrheit kennt es nicht.',
     'rlhfLab.hackQuestion': 'Frage',
-    'rlhfLab.hackChoose': 'Das Sprachmodell die höchste Belohnung wählen lassen',
-    'rlhfLab.hackPickLabel': 'Die gewählte Antwort (höchste Belohnung)',
-    'rlhfLab.hackPickNote': 'Stilistisch ein Volltreffer – aber die Hauptstadt ist',
-    'rlhfLab.hackPickNoteSuffix': '. Das Belohnungsmodell sieht nur den Stil, nicht die Wahrheit, also fällt es darauf herein. Das nennt man Reward Hacking: Das Modell maximiert die Belohnung, statt wirklich zu helfen.',
+    'rlhfLab.hackGuess': 'Welche Antwort holt die höchste Belohnung? Tippe darauf.',
+    'rlhfLab.hackGuessTap': 'dein Tipp?',
+    'rlhfLab.hackChoose': 'Ich weiß nicht – das Sprachmodell wählen lassen',
+    'rlhfLab.hackRewardLabel': 'Belohnung',
+    'rlhfLab.hackYourGuess': 'dein Tipp',
+    'rlhfLab.hackModelPick': 'höchste Belohnung',
+    'rlhfLab.hackTruthCorrect': 'nennt Canberra – richtig',
+    'rlhfLab.hackTruthWrong': 'faktisch falsch',
+    'rlhfLab.hackPickLabel': 'Reward Hacking',
+    'rlhfLab.hackPickNote': 'Die Antwort mit der höchsten Belohnung ist faktisch falsch – die Hauptstadt ist',
+    'rlhfLab.hackPickNoteSuffix': '. Das Belohnungsmodell sieht nur den Stil, nicht die Wahrheit, also fällt es darauf herein – es maximiert die Belohnung, statt wirklich zu helfen.',
     'rlhfLab.hackBetter': 'Hilfreicher wäre',
-    'rlhfLab.hackBetterSuffix': 'gewesen – oben in der Grafik, aber nicht ganz rechts. Deshalb braucht echtes RLHF Sicherungen: die Vorlieben laufend nachschärfen, das Modell nicht zu weit vom Original wegdriften lassen – oder die Belohnung gar nicht raten, sondern prüfen. Bei Mathe oder Code lässt sich „richtig" echt verifizieren. Das treibt heutige Reasoning-Modelle an: die nächste Station.',
+    'rlhfLab.hackBetterSuffix': 'gewesen – gut geschrieben, aber nicht ganz oben bei der Belohnung. Deshalb braucht echtes RLHF Sicherungen: die Vorlieben laufend nachschärfen, das Modell nicht zu weit vom Original wegdriften lassen – oder die Belohnung gar nicht raten, sondern prüfen. Bei Mathe oder Code lässt sich „richtig" echt verifizieren. Das treibt heutige Reasoning-Modelle an: die nächste Station.',
     'rlhfLab.hackReset': 'Nochmal mit neuem Geschmack',
-    'rlhfLab.scatterAxisX': 'Belohnung →',
-    'rlhfLab.scatterAxisY': '↑ wie hilfreich (versteckt)',
-    'rlhfLab.scatterChosen': 'gewählt',
-    'rlhfLab.legendHelpful': 'wirklich hilfreich & richtig',
-    'rlhfLab.legendWeak': 'schwach oder falsch',
-    'rlhfLab.legendChosen': 'die Wahl des Modells',
-    'rlhfLab.svgLabel': 'Belohnung gegen tatsächliche Hilfe',
     'rlhfLab.svgLoss': 'Lernkurve',
 
     // --- rlvr-lab.tsx ---
@@ -790,6 +891,7 @@ export const messages: Record<Locale, Record<string, string>> = {
 
     'nav.tokenization': 'Tokenization',
     'nav.nextToken': 'Next-token prediction',
+    'nav.attention': 'Attention',
     'nav.data': 'Training data',
     'nav.training': 'Pre-training',
     'nav.finetuning': 'Fine-tuning',
@@ -797,6 +899,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nav.rag': 'RAG',
     'nav.cot': 'Chain-of-thought',
     'nav.rlvr': 'RLVR',
+    'nav.agents': 'Agents',
     'nav.embeddings': 'Embeddings',
     'nav.multimodal': 'Images & sound',
     'nav.localVsCloud': 'Local vs. cloud',
@@ -933,7 +1036,51 @@ export const messages: Record<Locale, Record<string, string>> = {
       'A whole text emerges through repetition: append a token, recompute, pick the next one. Word by word, a full sentence appears.',
     'nextToken.moreP3':
       'Temperature controls how “bold” the choice is. Low: the model almost always takes the most likely token – reliable but predictable. High: the distribution flattens and less likely tokens get picked too – the text becomes more creative and less predictable.',
-    'nextToken.nextLabel': 'Next: Chain-of-thought',
+    'nextToken.nextLabel': 'Next: Attention',
+
+    // --- Attention ---
+    'attention.title': 'Attention: what the model looks at',
+    'attention.subtitle':
+      'So that a word understands its sentence, the model lets every position look back over the words so far and weighs up what matters right now – what a word like “es” (it) refers to, which words belong together, what comes next. That looking back is attention – the heart of the transformer.',
+    'attention.caption':
+      'The weights come from a German language model. Tap a word and switch the task to see what the model looks back at.',
+    'attention.mechTitle': 'A closer look – how the weights arise',
+    'attention.mechIntro':
+      'Where do these weights come from? Every position sends a query; every word holds a key. Their dot product gives the relevance, softmax turns it into weights, and the output is the weighted mix of the values. The dots are the key words of the sentence you picked above – you play the query: drag it and watch:',
+    'attention.moreP1':
+      'Until now every word had a fixed vector (see embeddings). Attention turns it into a context-dependent one: each position gathers from the earlier words whatever fits it – “es” becomes “es in the sense of Kind”. Only then does a word carry the meaning of its whole sentence.',
+    'attention.moreP2':
+      'Such looking-back jobs – “heads” in the technical jargon – run many times in parallel, and each attends to something different: one to the connection, one to the order. Stacked over many layers, an ever richer understanding of the sentence emerges step by step.',
+    'attention.moreP3':
+      'The query, key and value projections are not built in but learned – in the same training the training page shows. And this looking back happens at every position, including the last: that is exactly where the next prediction is formed.',
+    'attention.nextLabel': 'Next: Chain-of-thought',
+    // Viz-internal strings (two lenses, hints, mechanism toy)
+    'attention.viz.lensIntro':
+      'The same looking back does different jobs – here are two of them:',
+    'attention.viz.head.relation': 'Connection',
+    'attention.viz.head.prev': 'Word order',
+    'attention.viz.hint.relation':
+      'Here the model links a word to the earlier word it belongs with. Tap a word and see what it looks back at.',
+    'attention.viz.hint.prev':
+      'Here almost every word looks at the word right before it – that is how the model keeps track of order.',
+    'attention.viz.looksPre': ' mostly looks back at ',
+    'attention.viz.looksPost': '',
+    'attention.viz.firstWord': ' (The first word has nothing earlier to look at yet.)',
+    'attention.viz.tapHint': 'Tap a word to see what it looks back at.',
+    'attention.viz.barsPre': 'Where „',
+    'attention.viz.barsPost': '" looks – weights (100 % in total):',
+    'attention.viz.word': 'Word ',
+    'attention.viz.selected': ' (selected)',
+    'attention.viz.query': 'query',
+    'attention.viz.dragPre': 'Drag the ',
+    'attention.viz.dragPost':
+      '. The closer it gets to a word, the larger that word’s weight – and the more strongly it flows into the mixture (dashed outline = the new, context-dependent meaning).',
+    'attention.viz.pipeline': 'Query · Key → Softmax → weighted sum',
+    'attention.viz.notePre':
+      'The middle column is the dot product (the relevance), and to its right the softmax weight. In real models, query, key and value are ',
+    'attention.viz.noteEm': 'learned',
+    'attention.viz.notePost':
+      ' projections of the embeddings – here fixed, to make them tangible. The positions are schematic: this shows the principle, not the exact weights from above.',
 
     // --- Tokenization ---
     'tokenization.title': 'Tokenization',
@@ -1078,7 +1225,62 @@ export const messages: Record<Locale, Record<string, string>> = {
       'The heart of RAG is its first letter, retrieval – and it is exactly the similarity search from the embeddings page: the question becomes a vector and is compared with every document. The most similar ones are placed before the question as context (that is the “augmented”), and from those the model writes its answer (the “generation”). Three steps: search, augment, answer.',
     'rag.moreP3':
       'That is why RAG is only as good as what the search finds. If the right document is missing, or a similar-sounding but wrong one sits on top, the answer grounds itself on the wrong source. A good system then says honestly that the documents don’t cover it instead of guessing – so good sources and good search matter as much as the model itself. Remove a document from the knowledge base above and watch the answer change.',
-    'rag.nextLabel': 'Next: Data protection',
+    'rag.nextLabel': 'Next: Agents',
+
+    // --- Agents ---
+    'agents.title': 'Agents: a model that uses tools',
+    'agents.subtitle':
+      'An agent is a language model in a loop: it predicts text, and when that text is a tool call, the program around it runs the tool and feeds the result back. Give a model a task here that it can’t solve on its own – and watch it use tools, step by step, to get there.',
+    'agents.caption':
+      'Above, a language model decides for itself which tool to call; the tools run in your browser and return their result into the context. The model still only predicts text – the loop around it turns that into action.',
+    'agents.moreP1':
+      'An “agent” sounds autonomous, but mechanically it is not a new kind of model: it is the same next-token model, just placed in a loop. On each pass it predicts the next piece of text over the whole transcript so far. Sometimes that piece is a final answer – sometimes it is a tool call.',
+    'agents.moreP2':
+      'The scaffold around the model catches that call, actually runs the tool and writes the result as a new line into the context. Then it asks the model again. Thinking (chain-of-thought), looking things up (RAG) and acting are, seen this way, the same: only text ever enters a growing context that the model keeps predicting over. The “agency” lives in the scaffold and the tools, not in the model.',
+    'agents.moreP3':
+      'Real agents have more and more powerful tools – web search, running code, editing files, writing messages; the AI assistants that research or program on their own today are exactly such loops. The loop stays the same. But that reach makes one question urgent: as soon as an agent uses tools, it passes parts of your input on to services and can trigger actions itself. Where that data goes, and what you let it do, is the topic of the next page.',
+    'agents.nextLabel': 'Next: Data protection',
+
+    // --- Agent loop (viz) ---
+    'agentLoop.placeholder': 'Give the agent a task …',
+    'agentLoop.ask': 'Send task',
+    'agentLoop.ex1': 'How many days are there from today until 1 August – and how many weeks and days is that?',
+    'agentLoop.ex2': 'How many days are left until 24 December?',
+    'agentLoop.ex3': 'How many weeks and days are there from today until 1 January 2027?',
+    'agentLoop.toolsTitle': 'Tools',
+    'agentLoop.toolsHint': 'Tap to switch a tool off or on',
+    'agentLoop.tool.heute.label': 'Calendar · today',
+    'agentLoop.tool.heute.blurb': 'Returns today’s date.',
+    'agentLoop.tool.tage_bis.label': 'Calendar · count days',
+    'agentLoop.tool.tage_bis.blurb': 'Counts the days between two dates.',
+    'agentLoop.tool.rechner.label': 'Calculator',
+    'agentLoop.tool.rechner.blurb': 'Evaluates an arithmetic expression exactly.',
+    'agentLoop.tool.teilen_mit_rest.label': 'Divide with remainder',
+    'agentLoop.tool.teilen_mit_rest.blurb': 'Integer division: whole part and remainder.',
+    'agentLoop.toolsChanged': 'Tools changed – restart to see the difference.',
+    'agentLoop.modeAuto': 'Automatic',
+    'agentLoop.modeStep': 'Step by step',
+    'agentLoop.nextStep': 'Next step',
+    'agentLoop.restart': 'Restart',
+    'agentLoop.runOne': 'pass',
+    'agentLoop.runMany': 'passes',
+    'agentLoop.labelTask': 'Task',
+    'agentLoop.labelModel': 'Model',
+    'agentLoop.labelTool': 'Tool',
+    'agentLoop.labelFinal': 'Final answer',
+    'agentLoop.thinking': 'The model is predicting the next move …',
+    'agentLoop.readyHint': 'Ready. Click “Next step” to see the model’s first move.',
+    'agentLoop.maxSteps': 'Maximum number of steps reached – the scaffold stops here.',
+    'agentLoop.retry': 'Try again',
+    'agentLoop.noOutput': '(no output)',
+    'agentLoop.toolUnavailable': 'tool not available',
+    'agentLoop.legendModel': 'Model – predicts text',
+    'agentLoop.legendTool': 'Tool – runs in the scaffold around it',
+    'agentLoop.contextTitle': 'What the model sees right now',
+    'agentLoop.ctxExplain1': 'Everything sits in ONE growing stream of text. Only the lines marked ',
+    'agentLoop.ctxExplain2':
+      ' come from the language model – everything else is added by the scaffold. It is over exactly this stream that the model predicts the next piece on each move (just like on the next-token page).',
+    'agentLoop.calls': 'calls',
 
     'a11y.toggleTheme': 'Toggle light/dark',
     'a11y.toggleSidebar': 'Show/hide navigation',
@@ -1197,22 +1399,22 @@ export const messages: Record<Locale, Record<string, string>> = {
     'rlhfLab.genAgreeSuffix': 'clicks. That is what makes RLHF practical: a few thousand comparisons and the model can rate millions of answers without a human reading each one.',
     'rlhfLab.genNext': 'Where it breaks',
     'rlhfLab.hackHeading': 'Now the tables turn',
-    'rlhfLab.hackIntro': 'In real RLHF the language model writes the answers – and is trained to get as high a reward as possible. Here are many possible answers to the same question. Every dot is one of them.',
+    'rlhfLab.hackIntro': 'In real RLHF the language model writes the answers – and is trained to earn as high a reward as possible. Here are a few possible answers to the same question. The reward model graded each one on style – it does not know the truth.',
     'rlhfLab.hackQuestion': 'Question',
-    'rlhfLab.hackChoose': 'Let the language model pick the highest reward',
-    'rlhfLab.hackPickLabel': 'The chosen answer (highest reward)',
-    'rlhfLab.hackPickNote': 'Stylistically a bull\'s-eye – but the capital is',
-    'rlhfLab.hackPickNoteSuffix': '. The reward model only sees style, not the truth, so it falls for it. That is reward hacking: the model maximises the reward instead of genuinely helping.',
+    'rlhfLab.hackGuess': 'Which answer earns the highest reward? Tap it.',
+    'rlhfLab.hackGuessTap': 'your guess?',
+    'rlhfLab.hackChoose': 'I don\'t know – let the model pick',
+    'rlhfLab.hackRewardLabel': 'Reward',
+    'rlhfLab.hackYourGuess': 'your guess',
+    'rlhfLab.hackModelPick': 'highest reward',
+    'rlhfLab.hackTruthCorrect': 'says Canberra – correct',
+    'rlhfLab.hackTruthWrong': 'factually wrong',
+    'rlhfLab.hackPickLabel': 'Reward hacking',
+    'rlhfLab.hackPickNote': 'The answer with the highest reward is factually wrong – the capital is',
+    'rlhfLab.hackPickNoteSuffix': '. The reward model only sees style, not the truth, so it falls for it – it maximises the reward instead of genuinely helping.',
     'rlhfLab.hackBetter': 'More helpful would have been',
-    'rlhfLab.hackBetterSuffix': '– high in the chart but not all the way right. That is why real RLHF needs safeguards: keep sharpening the preferences, don\'t let the model drift too far from the original – or don\'t guess the reward at all, but check it. For maths or code "correct" can actually be verified. That is what drives today\'s reasoning models: the next station.',
+    'rlhfLab.hackBetterSuffix': '– well written, but not quite at the top of the reward. That is why real RLHF needs safeguards: keep sharpening the preferences, don\'t let the model drift too far from the original – or don\'t guess the reward at all, but check it. For maths or code "correct" can actually be verified. That is what drives today\'s reasoning models: the next station.',
     'rlhfLab.hackReset': 'Try again with a different taste',
-    'rlhfLab.scatterAxisX': 'Reward →',
-    'rlhfLab.scatterAxisY': '↑ how helpful (hidden)',
-    'rlhfLab.scatterChosen': 'chosen',
-    'rlhfLab.legendHelpful': 'genuinely helpful & correct',
-    'rlhfLab.legendWeak': 'weak or wrong',
-    'rlhfLab.legendChosen': 'the model\'s choice',
-    'rlhfLab.svgLabel': 'Reward vs. actual helpfulness',
     'rlhfLab.svgLoss': 'Learning curve',
 
     // --- rlvr-lab.tsx ---
