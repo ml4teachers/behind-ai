@@ -5,7 +5,7 @@
 // echte Generierung. Drei Schritte werden sichtbar:
 //   1. Abrufen (Retrieval): die Frage wird live eingebettet (/api/embeddings,
 //      gemini-embedding-2), dann per Cosinus-Ähnlichkeit gegen alle Dokumente
-//      sortiert. Die k ähnlichsten kommen in den Kontext — mit sichtbaren Werten.
+//      sortiert. Die k ähnlichsten kommen in den Kontext – mit sichtbaren Werten.
 //   2. Anreichern (Augmentation): diese Dokumente werden vor die Frage gestellt.
 //   3. Antworten (Generation): dasselbe Modell antwortet einmal OHNE und einmal
 //      MIT diesem Kontext (/api/rag-answer, Gemini über Vertex AI).
@@ -38,7 +38,7 @@ import { rankDocs, unit, type RagDoc, type RagDocsFile, type ScoredDoc } from '@
 // Wie viele Dokumente in den Kontext wandern.
 const TOP_K = 3
 
-// Beispielfragen bewusst OHNE Schulname — der Bezug („die Schule") steht in der
+// Beispielfragen bewusst OHNE Schulname – der Bezug („die Schule") steht in der
 // Wissensbasis. So treibt das Thema die Suche, nicht der oft genannte Name; die
 // letzte Frage ist absichtlich themenfremd (zeigt: die Unterlagen geben nichts her).
 const EXAMPLES = [
@@ -84,7 +84,7 @@ export function RagExplorer() {
 
   const [input, setInput] = useState(DEFAULT_QUESTION)
   const [excluded, setExcluded] = useState<Set<string>>(new Set())
-  // Letzte eingebettete Frage (Text + Einheitsvektor) — daraus wird das Ranking
+  // Letzte eingebettete Frage (Text + Einheitsvektor) – daraus wird das Ranking
   // bei jedem Render frisch berechnet (auch nach dem Aus-/Einblenden von Docs).
   const [lastQuery, setLastQuery] = useState<{ text: string; vec: number[] } | null>(null)
   const [embedding, setEmbedding] = useState(false)
@@ -132,7 +132,7 @@ export function RagExplorer() {
         const data = await res.json()
         if (!res.ok || data.error) throw new Error(data.error || `Fehler ${res.status}`)
         const text = clean(data.answer || '')
-        set({ text, loading: false, error: text ? null : 'Keine Ausgabe — bitte nochmal versuchen.' })
+        set({ text, loading: false, error: text ? null : 'Keine Ausgabe – bitte nochmal versuchen.' })
       } catch (err) {
         set({ text: '', loading: false, error: err instanceof Error ? err.message : 'Unbekannter Fehler' })
       }
@@ -276,7 +276,7 @@ export function RagExplorer() {
         </div>
       </div>
 
-      {/* Schritt 1 — Abrufen (Retrieval) */}
+      {/* Schritt 1 – Abrufen (Retrieval) */}
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-3">
           <h3 className="flex items-center gap-2 text-sm font-semibold">
@@ -364,7 +364,7 @@ export function RagExplorer() {
         )}
       </section>
 
-      {/* Schritt 2 — Antworten (Generation) */}
+      {/* Schritt 2 – Antworten (Generation) */}
       <section className="space-y-3">
         <h3 className="flex items-center gap-2 text-sm font-semibold">
           <ChatBubbleIcon className="h-4 w-4 text-muted-foreground" />

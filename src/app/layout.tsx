@@ -7,10 +7,28 @@ import { AppShell } from '@/components/layout/app-shell'
 
 const inter = Inter({ subsets: ['latin'] })
 
+const SITE_TITLE = 'Behind AI – Wie funktionieren KI-Sprachmodelle?'
+const SITE_DESC =
+  'Interaktiv lernen, wie KI-Sprachmodelle funktionieren – mit Experimenten zum Ausprobieren und Selbermachen.'
+
 export const metadata: Metadata = {
-  title: 'Behind AI – Wie funktionieren KI-Sprachmodelle?',
-  description:
-    'Interaktiv lernen, wie KI-Sprachmodelle funktionieren – mit echten Modell-Experimenten zum Ausprobieren.',
+  metadataBase: new URL('https://behind-ai.ch'),
+  title: SITE_TITLE,
+  description: SITE_DESC,
+  applicationName: 'Behind AI',
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESC,
+    url: '/',
+    siteName: 'Behind AI',
+    locale: 'de_CH',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_TITLE,
+    description: SITE_DESC,
+  },
 }
 
 export default function RootLayout({

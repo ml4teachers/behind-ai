@@ -5,12 +5,12 @@ import { GoogleAuth } from 'google-auth-library';
 // Reasoning-Generierung für die Chain-of-Thought- und RLVR-Seiten.
 //
 // Dasselbe echte Modell (Gemini über Vertex), zwei Nutzungsarten:
-//   • mode 'direct' — SOFORT antworten, kein Rechenweg. Bei Mehrschritt-Aufgaben
+//   • mode 'direct' – SOFORT antworten, kein Rechenweg. Bei Mehrschritt-Aufgaben
 //     liegt es so oft daneben (eine Vorhersage ohne Notizblock).
-//   • mode 'cot'    — Schritt für Schritt, Rechenweg ausschreiben, mit einer
+//   • mode 'cot'    – Schritt für Schritt, Rechenweg ausschreiben, mit einer
 //     Zeile „Antwort: …" abschliessen. Die Zwischenschritte sind dabei nichts
 //     anderes als weitere vorhergesagte Tokens, die das Modell sich selbst als
-//     Kontext gibt — und genau das macht harte Aufgaben lösbar.
+//     Kontext gibt – und genau das macht harte Aufgaben lösbar.
 //
 // Beide Modi sind normaler Chat mit System-Anweisung; „thinking" ist AUS, damit
 // der sichtbare Rechenweg auch wirklich die Ausgabe ist (kein verborgenes Denken).
@@ -44,7 +44,7 @@ const COT_INSTRUCTION =
   'keine Rauten).';
 
 // 'sample' (für RLVR): eine SCHÄTZUNG aus dem Stegreif, ohne pedantisches
-// Durchbuchstabieren. Das ist Absicht — es bringt die natürliche Unsicherheit
+// Durchbuchstabieren. Das ist Absicht – es bringt die natürliche Unsicherheit
 // des Modells beim Buchstabenzählen zum Vorschein (es verzählt sich, weil es
 // Tokens sieht statt Buchstaben). Erst diese Streuung gibt dem Prüfer etwas zu
 // sortieren. Methodisches Durchzählen würde die Aufgabe trivialisieren (siehe

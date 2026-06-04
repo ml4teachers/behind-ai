@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Cpu, ShieldCheck, type LucideIcon } from 'lucide-react'
+import { ArrowRight, Database, GraduationCap, Sparkles, type LucideIcon } from 'lucide-react'
 import {
   Accordion,
   AccordionContent,
@@ -14,8 +14,9 @@ import { useTranslations } from '@/lib/i18n/use-translations'
 
 /** Icon + Kurzbeschreibung je Pfad. Reihenfolge & Links kommen aus navSections. */
 const sectionMeta: Record<string, { icon: LucideIcon; descKey: string }> = {
-  'nav.section.behindModels': { icon: Cpu, descKey: 'home.path.behindModels.desc' },
-  'nav.section.aiInUse': { icon: ShieldCheck, descKey: 'home.path.aiInUse.desc' },
+  'nav.section.data': { icon: Database, descKey: 'home.path.data.desc' },
+  'nav.section.training': { icon: GraduationCap, descKey: 'home.path.training.desc' },
+  'nav.section.inference': { icon: Sparkles, descKey: 'home.path.inference.desc' },
 }
 
 export default function Home() {
@@ -23,7 +24,7 @@ export default function Home() {
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-10 sm:py-12">
-      {/* Hero — knapp, kein Textwall */}
+      {/* Hero – knapp, kein Textwall */}
       <header className="mb-8">
         <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
           {t('home.hero.title')}
@@ -44,7 +45,7 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* Optionales „Mehr dazu" — Erklärtext bleibt eingeklappt */}
+      {/* Optionales „Mehr dazu" – Erklärtext bleibt eingeklappt */}
       <Accordion type="single" collapsible className="mb-10 mt-2 border-t border-border">
         <AccordionItem value="what-is-llm">
           <AccordionTrigger>{t('home.more.title')}</AccordionTrigger>
@@ -54,12 +55,12 @@ export default function Home() {
         </AccordionItem>
       </Accordion>
 
-      {/* Zwei Wege — Informationsarchitektur aus navSections */}
+      {/* Zwei Wege – Informationsarchitektur aus navSections */}
       <section>
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           {t('home.paths.heading')}
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {navSections.map((section) => {
             const meta = sectionMeta[section.key]
             const Icon = meta.icon

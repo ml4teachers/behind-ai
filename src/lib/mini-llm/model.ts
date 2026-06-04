@@ -1,12 +1,12 @@
 // ---------------------------------------------------------------------------
-// Ein winziges, echtes Sprachmodell auf Zeichen-Ebene — von Hand, ohne Framework.
+// Ein winziges, echtes Sprachmodell auf Zeichen-Ebene – von Hand, ohne Framework.
 //
 // Es ist bewusst klein genug, um live im Browser von Grund auf zu lernen, und
 // transparent genug, um es Zeile für Zeile zu verstehen. Architektur nach
 // Bengio (2003) / Karpathy „makemore": die letzten `C` Zeichen → Embedding →
 // eine tanh-Schicht → Wahrscheinlichkeit für JEDES mögliche nächste Zeichen
 // (Softmax). Trainiert wird per Gradientenabstieg (Backprop von Hand), genau
-// wie bei grossen Modellen — nur millionenfach kleiner.
+// wie bei grossen Modellen – nur millionenfach kleiner.
 //
 // Kein TensorFlow, kein WASM: ein paar tausend Zahlen in Float32-Arrays.
 // ---------------------------------------------------------------------------
@@ -181,7 +181,7 @@ export function trainStep(m: CharModel, ds: Dataset, idxs: Int32Array, lr: numbe
   }
   loss /= B
 
-  // BACKWARD — Gradienten akkumulieren
+  // BACKWARD – Gradienten akkumulieren
   const dW2 = new Float32Array(H * V)
   const db2 = new Float32Array(V)
   const dW1 = new Float32Array(CE * H)

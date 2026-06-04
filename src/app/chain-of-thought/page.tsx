@@ -44,12 +44,12 @@ export default function ChainOfThoughtPage() {
       </div>
 
       <nav className="flex justify-between border-t pt-6">
-        <Link href="/rlhf">
+        <Link href="/next-token">
           <Button variant="outline">
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>
         </Link>
-        <Link href="/rlvr">
+        <Link href="/rag">
           <Button>
             {t('cot.nextLabel')} <span aria-hidden="true">→</span>
           </Button>

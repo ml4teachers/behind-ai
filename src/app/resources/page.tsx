@@ -61,7 +61,7 @@ export default function ResourcesPage() {
             anymore … it&apos;s not really coding – I just see stuff, say stuff, run stuff, and
             copy-paste stuff, and it mostly works."
             <span className="mt-1 block text-xs not-italic">
-              —{' '}
+              –{' '}
               <a
                 href="https://x.com/karpathy/status/1886192184808149383"
                 target="_blank"
@@ -77,7 +77,7 @@ export default function ResourcesPage() {
           <blockquote className="border-l-4 border-primary/50 pl-4 text-sm italic text-muted-foreground">
             „The hottest new programming language is English"
             <span className="mt-1 block text-xs not-italic">
-              —{' '}
+              –{' '}
               <a
                 href="https://x.com/karpathy/status/1617979122625712128"
                 target="_blank"

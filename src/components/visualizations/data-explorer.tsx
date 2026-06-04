@@ -188,7 +188,7 @@ export function DataExplorer() {
     <div className="space-y-4">
       {/* Ansichts-Umschalter */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="inline-flex rounded-lg border bg-muted/40 p-1 text-sm">
+        <div className="inline-flex max-w-full overflow-x-auto rounded-lg border bg-muted/40 p-1 text-sm">
           {VIEWS.map((v) => {
             const activeView = view === v.key
             return (
@@ -197,7 +197,7 @@ export function DataExplorer() {
                 type="button"
                 onClick={() => setView(v.key)}
                 aria-pressed={activeView}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 transition-colors ${
+                className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-2.5 py-1.5 transition-colors sm:px-3 ${
                   activeView
                     ? 'bg-background font-medium text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'

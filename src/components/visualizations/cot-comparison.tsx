@@ -6,7 +6,7 @@
 //   • „Schritt für Schritt" (mode 'cot')      → schreibt den Rechenweg aus.
 // Bei Mehrschritt-Arithmetik liegt der Sofort-Modus zuverlässig daneben, der
 // Schritt-für-Schritt-Modus trifft. Ein echter JS-Prüfer rechnet jede Aufgabe
-// nach und fällt das Urteil ✓/✗ — der Falsch→Richtig-Flip IST die Lektion:
+// nach und fällt das Urteil ✓/✗ – der Falsch→Richtig-Flip IST die Lektion:
 // Mitdenken ist nichts Magisches, sondern weitere vorhergesagte Tokens, die das
 // Modell sich selbst als Kontext gibt; mehr Tokens = mehr Rechenschritte.
 //
@@ -76,7 +76,7 @@ export function CotComparison() {
         const text = clean(data.text || '')
         const answer = parseAnswer(text)
         const verdict: Verdict = truth === null ? null : isCorrect(answer, truth) ? 'correct' : 'wrong'
-        set({ answer, text, loading: false, error: text ? null : 'Keine Ausgabe — bitte nochmal.', verdict })
+        set({ answer, text, loading: false, error: text ? null : 'Keine Ausgabe – bitte nochmal.', verdict })
       } catch (err) {
         set({ ...IDLE, error: err instanceof Error ? err.message : 'Unbekannter Fehler' })
       }
@@ -232,7 +232,7 @@ function Panel({ icon, title, tag, accent, state, onRetry, note, loadingLabel, r
             {/* Result + verdict */}
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs text-muted-foreground">{resultLabel}</span>
-              <span className="font-mono text-base font-semibold">{shorten(state.answer) || '—'}</span>
+              <span className="font-mono text-base font-semibold">{shorten(state.answer) || '–'}</span>
               {verdict && <VerdictBadge verdict={verdict} correctLabel={correctLabel} wrongLabel={wrongLabel} />}
             </div>
             {/* Working / output */}

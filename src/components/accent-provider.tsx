@@ -5,7 +5,7 @@ import { useMounted } from '@/lib/use-mounted'
 import { accentByName, defaultAccent } from '@/lib/accents'
 
 /**
- * Injiziert die aktive Akzentfarbe als CSS-Variablen — getrennt für Light
+ * Injiziert die aktive Akzentfarbe als CSS-Variablen – getrennt für Light
  * (`:root`) und Dark (`.dark`), damit beide Modi den passenden Ton bekommen.
  * Vor dem Mount wird der Default (sky) gerendert, identisch zu globals.css:
  * so gibt es weder Hydration-Mismatch noch Farb-Flackern.

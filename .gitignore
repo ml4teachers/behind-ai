@@ -46,5 +46,5 @@ next-env.d.ts
 gcp-service-account.json
 *-service-account.json
 
-# Claude Code — lokale Einstellungen (launch.json darf committed werden)
+# Claude Code – lokale Einstellungen (launch.json darf committed werden)
 .claude/settings.local.json

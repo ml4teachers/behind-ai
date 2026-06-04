@@ -15,7 +15,7 @@ import { GoogleAuth } from 'google-auth-library';
 // - MIT Kontext: die per Embeddings gefundenen Dokumente werden vor die Frage
 //   gestellt, mit der Anweisung, AUSSCHLIESSLICH daraus zu antworten und ehrlich
 //   zu sagen, wenn die Unterlagen nichts hergeben. Genau so wird echtes RAG
-//   geprompptet — und genau das macht das Grounding sichtbar.
+//   geprompptet – und genau das macht das Grounding sichtbar.
 //
 // Auth = dasselbe Dienstkonto wie Next-Token/Embeddings/Finetuning (OAuth
 // Bearer Token), kein Plain-API-Key. Siehe api/predict-next/route.ts.
@@ -23,14 +23,16 @@ import { GoogleAuth } from 'google-auth-library';
 
 const LOCATION = process.env.GCP_LOCATION || 'us-central1';
 
-// Modell-Kandidaten mit Fallback bei 404 — identische Kette wie die anderen
+// Modell-Kandidaten mit Fallback bei 404 – identische Kette wie die anderen
 // Gemini-Routen, damit alle dasselbe Modell nutzen.
 const MODEL_CANDIDATES: string[] = Array.from(
   new Set(
     [
       process.env.GEMINI_MODEL,
-      'gemini-2.5-flash',
+      // flash-lite als Primär: günstiger; das Grounding/Verzicht-Verhalten
+      // dieser Route trägt es zuverlässig. flash bleibt als Fallback.
       'gemini-2.5-flash-lite',
+      'gemini-2.5-flash',
     ].filter((m): m is string => Boolean(m))
   )
 );

@@ -49,7 +49,7 @@ export default function RLHFPage() {
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>
         </Link>
-        <Link href="/chain-of-thought">
+        <Link href="/rlvr">
           <Button>
             {t('rlhf.nextLabel')} <span aria-hidden="true">→</span>
           </Button>

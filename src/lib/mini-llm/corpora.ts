@@ -3,18 +3,18 @@
 //
 // Bewusst klein und von Hand kuratiert (jugendfrei, klare Struktur), damit das
 // winzige Modell in ein paar Sekunden sichtbar Sprache lernt. Zwei Korpora zur
-// Auswahl — der Wechsel macht die Kernbotschaft der Daten-Seite erfahrbar:
+// Auswahl – der Wechsel macht die Kernbotschaft der Daten-Seite erfahrbar:
 // das Modell lernt NUR, was in den Daten steckt. Gleiche Mechanik, andere
 // Daten → andere „Sprache".
 //
-// Klein genug, um inline zu stehen (wenige KB) — anders als die grossen,
+// Klein genug, um inline zu stehen (wenige KB) – anders als die grossen,
 // vorberechneten Assets (embeddings-map, data-sample). Kleinschreibung hält das
 // Vokabular kompakt (~30 Zeichen inkl. Umlaute).
 // ---------------------------------------------------------------------------
 
 export interface Corpus {
   key: string
-  /** Anzeigename (Viz-intern DE, wie die übrigen Visualisierungen — Thread 9). */
+  /** Anzeigename (Viz-intern DE, wie die übrigen Visualisierungen – Thread 9). */
   label: string
   /** Leerzeichengetrennte Einträge. */
   text: string

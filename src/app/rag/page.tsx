@@ -44,12 +44,12 @@ export default function RAGPage() {
       </div>
 
       <nav className="flex justify-between border-t pt-6">
-        <Link href="/rlvr">
+        <Link href="/chain-of-thought">
           <Button variant="outline">
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>
         </Link>
-        <Link href="/multimodal">
+        <Link href="/privacy">
           <Button>
             {t('rag.nextLabel')} <span aria-hidden="true">→</span>
           </Button>

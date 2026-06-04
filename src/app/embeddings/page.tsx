@@ -49,7 +49,7 @@ export default function EmbeddingsPage() {
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>
         </Link>
-        <Link href="/next-token">
+        <Link href="/multimodal">
           <Button>
             {t('embeddings.nextLabel')} <span aria-hidden="true">→</span>
           </Button>

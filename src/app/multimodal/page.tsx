@@ -42,12 +42,12 @@ export default function MultimodalPage() {
       </div>
 
       <nav className="flex justify-between border-t pt-6">
-        <Link href="/rag">
+        <Link href="/embeddings">
           <Button variant="outline">
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>
         </Link>
-        <Link href="/privacy">
+        <Link href="/training">
           <Button>
             {t('multimodal.nextLabel')} <span aria-hidden="true">→</span>
           </Button>

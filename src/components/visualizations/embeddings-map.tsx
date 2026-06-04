@@ -60,7 +60,7 @@ const CAT_COLOR: Record<string, string> = {
 
 // CAT_LABEL is built dynamically inside EmbeddingsMap using t()
 
-const EXAMPLES = ['Pizza', 'Australien', 'Eifersucht', 'Astronaut', 'Roboter', 'Sushi']
+// EXAMPLES are built inside the component via t() so they switch with the locale
 
 // Eingabe begrenzen: ein Wort (oder kurzer Satz) wird als EIN Embedding gerechnet.
 const MAX_INPUT = 30
@@ -91,6 +91,14 @@ const toPctY = (y: number) => INSET + ((1.1 - clamp(y, -1.1, 1.1)) / 2.2) * (100
 
 export function EmbeddingsMap() {
   const t = useTranslations()
+  const EXAMPLES = [
+    t('embMap.ex1'),
+    t('embMap.ex2'),
+    t('embMap.ex3'),
+    t('embMap.ex4'),
+    t('embMap.ex5'),
+    t('embMap.ex6'),
+  ]
   const CAT_LABEL: Record<string, string> = {
     tiere: t('embMap.catTiere'),
     essen: t('embMap.catEssen'),
@@ -118,7 +126,7 @@ export function EmbeddingsMap() {
     ;(async () => {
       try {
         const res = await fetch('/embeddings-map.json')
-        if (!res.ok) throw new Error(`Landkarte konnte nicht geladen werden (${res.status})`)
+        if (!res.ok) throw new Error(`${t('embMap.errLoad')} (${res.status})`)
         const data: MapData = await res.json()
         if (cancelled) return
         setRefPoints(
@@ -150,7 +158,7 @@ export function EmbeddingsMap() {
   ]
   const pointById = (id: string | null) => (id ? allPoints.find((p) => p.id === id) ?? null : null)
 
-  // Nächste Nachbarn eines Punkts (echte Kosinus-Ähnlichkeit, ganzer Raum) —
+  // Nächste Nachbarn eines Punkts (echte Kosinus-Ähnlichkeit, ganzer Raum) –
   // nur unter den aktuell sichtbaren Kategorien.
   const neighborsOf = useCallback(
     (p: Point, k = 6): Neighbor[] =>
@@ -235,17 +243,17 @@ export function EmbeddingsMap() {
     setPending(true)
     setError(null)
     try {
-      // Die ganze Eingabe wird als EIN Vektor gerechnet — ob Wort oder Satz.
+      // Die ganze Eingabe wird als EIN Vektor gerechnet – ob Wort oder Satz.
       const p = await embedWord(term)
       if (p) {
         setAddedPoints((prev) => [...prev, p])
         setSelectedId(p.id)
         setInput('')
       } else {
-        setError(`Für „${term}“ konnte kein Embedding berechnet werden.`)
+        setError(`${t('embMap.errEmbedPre')}${term}${t('embMap.errEmbedPost')}`)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Embedding konnte nicht berechnet werden.')
+      setError(err instanceof Error ? err.message : t('embMap.errEmbedGeneric'))
     } finally {
       setPending(false)
     }
@@ -378,7 +386,7 @@ export function EmbeddingsMap() {
               <button
                 key={p.id}
                 type="button"
-                onClick={() => setSelectedId(p.id)}
+                onClick={() => setSelectedId((cur) => (cur === p.id ? null : p.id))}
                 onMouseEnter={() => setHoveredId(p.id)}
                 onMouseLeave={() => setHoveredId(null)}
                 className="absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded px-0.5 outline-none focus-visible:ring-2 focus-visible:ring-ring"

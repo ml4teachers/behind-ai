@@ -41,7 +41,7 @@ export default function NextTokenPage() {
   const [examples, setExamples] = useState<[number, number]>([0, 1])
 
   // Bei jedem Seitenaufruf zwei zufällige Beispiele zeigen. Erst nach dem Mount
-  // würfeln (Server + erster Client-Render nutzen [0, 1]) — kein Hydration-Mismatch.
+  // würfeln (Server + erster Client-Render nutzen [0, 1]) – kein Hydration-Mismatch.
   useEffect(() => {
     setExamples(pickTwo(EXAMPLE_KEYS.length))
   }, [])
@@ -122,12 +122,12 @@ export default function NextTokenPage() {
       </div>
 
       <nav className="flex justify-between border-t pt-6">
-        <Link href="/embeddings">
+        <Link href="/rlvr">
           <Button variant="outline">
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>
         </Link>
-        <Link href="/data">
+        <Link href="/chain-of-thought">
           <Button>
             {t('nextToken.nextLabel')} <span aria-hidden="true">→</span>
           </Button>

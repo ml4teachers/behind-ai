@@ -4,14 +4,14 @@
  * Die Akzentfarbe ist die einzige „bunte" Farbe der App und steckt in den
  * semantischen Tokens `--primary` / `--primary-foreground` / `--ring`. Sie ist
  * im Header umschaltbar (AccentToggle) und wird zur Laufzeit über
- * `AccentProvider` als CSS-Variablen injiziert — getrennt für Light (`:root`)
+ * `AccentProvider` als CSS-Variablen injiziert – getrennt für Light (`:root`)
  * und Dark (`.dark`).
  *
  * Werte als HSL-Tripel ohne `hsl()` (passt zum Token-Schema in globals.css):
  *  - light  = Tailwind-600  (kräftig, meist weisse Schrift)
  *  - dark   = Tailwind-400  (heller Tint auf dunklem Grund, dunkle Schrift)
  *
- * Default ist `sky` — globals.css hält denselben Default, damit es vor dem
+ * Default ist `sky` – globals.css hält denselben Default, damit es vor dem
  * Mount (SSR) kein Farb-Flackern gibt.
  */
 
@@ -51,7 +51,7 @@ export interface Accent {
 const DARK_FG = '222 47% 11%'
 const WHITE_FG = '0 0% 100%'
 
-/** Alphabetisch — so erscheint die Liste auch im Picker. */
+/** Alphabetisch – so erscheint die Liste auch im Picker. */
 export const accents: Accent[] = [
   { name: 'amber', label: 'Amber', light: { primary: '32 95% 44%', foreground: DARK_FG }, dark: { primary: '43 96% 56%', foreground: DARK_FG } },
   { name: 'blue', label: 'Blue', light: { primary: '221 83% 53%', foreground: WHITE_FG }, dark: { primary: '213 94% 68%', foreground: DARK_FG } },

@@ -7,12 +7,12 @@ import { GoogleAuth } from 'google-auth-library';
 // WARUM SO?
 // - Ein echtes Basismodell (nur Pretraining, KEIN Assistenz-Finetuning) wie
 //   damals OpenAI babbage-002 bieten die grossen Anbieter praktisch nicht mehr
-//   über eine API an — verfügbar sind fast nur fertig finegetunte Chat-Modelle.
+//   über eine API an – verfügbar sind fast nur fertig finegetunte Chat-Modelle.
 // - Das charakteristische Basismodell-Verhalten lässt sich aber reproduzieren:
 //   Wir geben demselben Chat-Modell (Gemini über Vertex) den Text als
 //   MODEL-Turn (Prefill) und weisen es an, ihn wie ein rohes Sprachmodell
 //   bloss FORTZUSETZEN statt zu antworten. Genau diesen Prefill-Trick nutzt
-//   schon die Next-Token-Route — er erzeugt echte Text-Fortsetzung.
+//   schon die Next-Token-Route – er erzeugt echte Text-Fortsetzung.
 // - Der "Assistent" ist dasselbe Modell im normalen Chat-Modus: Frage als
 //   user-Turn + System-Anweisung "hilfreicher Assistent".
 //
@@ -46,10 +46,10 @@ const MODEL_CANDIDATES: string[] = Array.from(
 const BASE_INSTRUCTION =
   'Du bist ein ROHES Sprachmodell direkt nach dem Pretraining: nur mit ' +
   'zufälligem Internet-Text trainiert, ganz OHNE Assistenz-Finetuning. Du ' +
-  'kannst keine Fragen beantworten und keine Anweisungen befolgen — du kennst ' +
+  'kannst keine Fragen beantworten und keine Anweisungen befolgen – du kennst ' +
   'das Konzept "Assistent" gar nicht. Du tust nur eine Sache: den vorgegebenen ' +
   'Text genau so fortsetzen, wie er zufällig irgendwo im Internet weitergehen ' +
-  'könnte — etwa als nächste Zeile einer FAQ- oder Fragenliste, eines ' +
+  'könnte – etwa als nächste Zeile einer FAQ- oder Fragenliste, eines ' +
   'Forenbeitrags, eines Blogposts oder Wikipedia-Artikels. Schreibe den Text ' +
   'als reinen Fliesstext weiter, ohne ihn zu wiederholen, ohne ihn zu ' +
   'kommentieren, ohne Formatierung (keine Sternchen, keine Aufzählungen, keine ' +

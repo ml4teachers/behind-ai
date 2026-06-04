@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Ein echtes Belohnungsmodell (reward model) — das Herzstück von RLHF.
+// Ein echtes Belohnungsmodell (reward model) – das Herzstück von RLHF.
 //
 // Genau wie InstructGPT lernt es aus paarweisen Vergleichen ("Antwort A ist
 // besser als B") über die Bradley-Terry-Logistik:
@@ -10,7 +10,7 @@
 //
 // Der einzige Unterschied zu echten Systemen: dort ist `merkmale(x)` ein
 // riesiger Transformer, hier sind es ein paar von Hand ablesbare STIL-Merkmale
-// (freundlich, ausführlich …). Das Lernen selbst ist dasselbe — echtes SGD,
+// (freundlich, ausführlich …). Das Lernen selbst ist dasselbe – echtes SGD,
 // keine Skript-Animation. Bewusst frei von React: pure Logik.
 //
 // Wichtig für die Didaktik: das Modell sieht NUR den Stil, nicht die Wahrheit.
@@ -75,7 +75,7 @@ export interface TrainOptions {
  * Trainiert das Belohnungsmodell per Gradientenabstieg auf den Vergleichen.
  * Jeder Vergleich ist `[gewinner, verlierer]` (die vom Menschen bevorzugte
  * Antwort zuerst). Gibt die ganze Lern-Trajektorie zurück, damit die UI sie
- * ruhig abspielen kann — die Mathematik ist danach fertig und korrekt,
+ * ruhig abspielen kann – die Mathematik ist danach fertig und korrekt,
  * unabhängig davon, wie viele Frames die Animation zeigt.
  */
 export function trainReward(

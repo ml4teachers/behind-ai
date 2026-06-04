@@ -34,7 +34,7 @@ export default function PrivacyPage() {
         <p className="text-sm text-muted-foreground">{t('privacy.caption')}</p>
       </section>
 
-      {/* Worauf kommt es an? — Faktoren in Alltagssprache */}
+      {/* Worauf kommt es an? – Faktoren in Alltagssprache */}
       <section className="space-y-4">
         <h2 className="text-xl font-semibold tracking-tight">{t('privacy.factorsTitle')}</h2>
         <div className="grid gap-3 sm:grid-cols-3">
@@ -80,7 +80,7 @@ export default function PrivacyPage() {
       </div>
 
       <nav className="border-t pt-6">
-        <Link href="/">
+        <Link href="/rag">
           <Button variant="outline">
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>

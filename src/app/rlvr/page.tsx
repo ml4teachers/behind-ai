@@ -44,12 +44,12 @@ export default function RlvrPage() {
       </div>
 
       <nav className="flex justify-between border-t pt-6">
-        <Link href="/chain-of-thought">
+        <Link href="/rlhf">
           <Button variant="outline">
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>
         </Link>
-        <Link href="/rag">
+        <Link href="/next-token">
           <Button>
             {t('rlvr.nextLabel')} <span aria-hidden="true">→</span>
           </Button>

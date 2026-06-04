@@ -3,18 +3,18 @@
 // ---------------------------------------------------------------------------
 // RLVR-Labor: eine Belohnung, die man nicht faken kann.
 //
-// Drei Akte, ein durchgehender Faden — Modell echt, Prüfer echt, RL echt:
-//   1. Generieren  — das echte Modell denkt sich mehrere Lösungswege aus
+// Drei Akte, ein durchgehender Faden – Modell echt, Prüfer echt, RL echt:
+//   1. Generieren  – das echte Modell denkt sich mehrere Lösungswege aus
 //                    (N parallele CoT-Versuche bei Temperatur). Sie WIDERSPRECHEN
 //                    sich, weil Buchstabenzählen aus Tokens heraus schwerfällt.
-//   2. Prüfen      — ein winziges Stück Code zählt die Wahrheit und markiert
+//   2. Prüfen      – ein winziges Stück Code zählt die Wahrheit und markiert
 //                    jeden Versuch ✓/✗ (Belohnung 1/0). Unfakebar: kein Mensch,
-//                    keine zweite KI — nur ein Abgleich mit der echten Zahl.
-//   3. Verstärken  — REINFORCE (reinforce.ts) macht die geprüft-richtigen
+//                    keine zweite KI – nur ein Abgleich mit der echten Zahl.
+//   3. Verstärken  – REINFORCE (reinforce.ts) macht die geprüft-richtigen
 //                    Versuche wahrscheinlicher. Umschalter „Prüfer ↔ Eindruck":
 //                    mit dem Prüfer wird das Modell richtig, mit der Eindrucks-
 //                    Belohnung (was am häufigsten/überzeugendsten klingt) sackt
-//                    es auf die falsche Mehrheit ab — Reward Hacking, wie bei RLHF.
+//                    es auf die falsche Mehrheit ab – Reward Hacking, wie bei RLHF.
 //
 // Buchstabenzählen ist der anschauliche Stellvertreter: dieselbe Mechanik trägt
 // bei Mathe/Code, wo „richtig" ebenfalls prüfbar ist (Rechen-Check, Testsuite).
@@ -354,7 +354,7 @@ function AttemptCard({
         <span className="text-xs text-muted-foreground">{t('rlvrLab.attemptLabel')} {index + 1}</span>
         <span className="ml-auto inline-flex items-center gap-1.5">
           <span className="font-mono text-sm font-semibold tabular-nums">
-            {attempt.answer ?? '—'}
+            {attempt.answer ?? '–'}
           </span>
           {reveal &&
             (correct ? (

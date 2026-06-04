@@ -44,7 +44,7 @@ export default function TrainingPage() {
       </div>
 
       <nav className="flex justify-between border-t pt-6">
-        <Link href="/data">
+        <Link href="/multimodal">
           <Button variant="outline">
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>

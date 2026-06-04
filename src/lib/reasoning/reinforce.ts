@@ -13,10 +13,10 @@
 //
 // Das ist eine ehrliche Miniatur des RLVR-Updates: „mach Versuche, die sich als
 // richtig erweisen, wahrscheinlicher". Mit zwei Belohnungen:
-//   • Prüfer   — r = 1, wenn der Wert stimmt (vom JS-Prüfer verifiziert), sonst 0.
-//   • Eindruck — r = wie verbreitet/überzeugend der Wert wirkt (Anteil der
+//   • Prüfer   – r = 1, wenn der Wert stimmt (vom JS-Prüfer verifiziert), sonst 0.
+//   • Eindruck – r = wie verbreitet/überzeugend der Wert wirkt (Anteil der
 //                Versuche). Ein Stellvertreter, der das BELOHNT, was am
-//                häufigsten/selbstsichersten klingt — nicht, was geprüft stimmt.
+//                häufigsten/selbstsichersten klingt – nicht, was geprüft stimmt.
 //
 // Die Mathematik läuft hier komplett & korrekt durch; die UI spielt die fertige
 // Trajektorie nur ab (wie das RLHF-Labor). Bewusst frei von React.
@@ -61,7 +61,7 @@ const softmax = (z: number[]): number[] => {
 /**
  * Fasst rohe Versuchs-Antworten zu Klassen zusammen (ein Eintrag je Wert),
  * aufsteigend sortiert. `answers` = geparste Zahl je Versuch (oder null, wenn
- * unlesbar — wird ignoriert).
+ * unlesbar – wird ignoriert).
  */
 export function toAnswerClasses(answers: Array<number | null>, truth: number): AnswerClass[] {
   const counts = new Map<number, number>()

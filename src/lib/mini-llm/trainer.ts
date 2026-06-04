@@ -2,7 +2,7 @@
 // Stateful-Hülle um das reine Modell (model.ts): hält Vokabular, Datensatz und
 // Gewichte zusammen und treibt das Training Schritt für Schritt. Die React-
 // Komponente ruft `runSteps()` pro Animationsframe und liest Loss, Textproben
-// und Verteilung zum Anzeigen aus. Bewusst frei von React — pure Logik.
+// und Verteilung zum Anzeigen aus. Bewusst frei von React – pure Logik.
 // ---------------------------------------------------------------------------
 
 import {
@@ -91,7 +91,7 @@ export class Trainer {
     return this.cfg.lr * f
   }
 
-  // Einen Block SGD-Schritte ausführen (ein Minibatch pro Schritt). Offen — es
+  // Einen Block SGD-Schritte ausführen (ein Minibatch pro Schritt). Offen – es
   // gibt keine feste Schrittzahl, Training läuft, bis der Nutzer pausiert.
   runSteps(k: number): void {
     const N = this.ds.N
@@ -116,7 +116,7 @@ export class Trainer {
   }
 
   // Verteilung über das nächste Zeichen nach `prefix` (kürzer als C → links mit
-  // Wortgrenze '.' aufgefüllt). Top-k einzeln, der Rest als ein Bucket — genau
+  // Wortgrenze '.' aufgefüllt). Top-k einzeln, der Rest als ein Bucket – genau
   // wie die Next-Token-Seite, nur auf Zeichen-Ebene.
   distribution(prefix: string, topK = 8): Distribution {
     const probs = predict(this.model, this.contextFor(prefix))
@@ -145,7 +145,7 @@ export class Trainer {
   }
 
   // 2D-Projektion (PCA) der gelernten Zeichen-Embeddings. Während des Trainings
-  // ordnen sich die Buchstaben — ein Mini-Echo der Embeddings-Seite.
+  // ordnen sich die Buchstaben – ein Mini-Echo der Embeddings-Seite.
   embedding2D(): EmbeddingPoint[] {
     const { V, E } = this.model
     const M = this.model.Cemb

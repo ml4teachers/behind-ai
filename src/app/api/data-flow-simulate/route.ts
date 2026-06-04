@@ -7,7 +7,7 @@ import { GoogleAuth } from 'google-auth-library';
 // Diese Route macht GENAU EINEN echten Modell-Aufruf (Gemini über Vertex,
 // Structured Output): sie findet im eingegebenen Text die sensiblen Stellen
 // und erzeugt eine anonymisierte Fassung. Aus diesem EINEN Ergebnis rendert
-// die Komponente alle drei Bahnen (lokal / Cloud-API / Wrapper) — die
+// die Komponente alle drei Bahnen (lokal / Cloud-API / Wrapper) – die
 // „Wer-sieht-was"-Logik ist statisch in der Komponente, kein LLM nötig.
 //
 // Früher lief diese Route über OpenAI (gpt-4.1 / gpt-4.1-mini, 4 Calls). Jetzt
@@ -25,6 +25,9 @@ const MODEL_CANDIDATES: string[] = Array.from(
   new Set(
     [
       process.env.GEMINI_MODEL,
+      // Bewusst auf flash (nicht flash-lite): flash-lite übersieht verlässlich
+      // nicht-offensichtliche Stellen (z. B. „Schwierigkeiten zu Hause") – genau
+      // die zu erkennen ist aber der didaktische Kern dieser Route.
       'gemini-2.5-flash',
       'gemini-2.5-flash-lite',
     ].filter((m): m is string => Boolean(m))
@@ -54,15 +57,29 @@ function createAuth(): GoogleAuth {
 const auth = createAuth();
 
 const SYSTEM_INSTRUCTION =
-  'Du bist ein Datenschutz-Analysedienst für Lehrpersonen. Untersuche den ' +
-  'eingegebenen Text und finde alle personenbezogenen oder sonst sensiblen ' +
-  'Stellen: Namen, Orte/Adressen, Daten, Kontaktangaben (E-Mail/Telefon), ' +
-  'Gesundheitsangaben, Noten/Leistungen und andere persönliche Details. ' +
-  'Erzeuge ausserdem eine anonymisierte Fassung GENAU desselben Textes, in der ' +
-  'jede sensible Stelle durch einen neutralen Platzhalter in eckigen Klammern ' +
-  'ersetzt ist (z. B. [Name], [Ort], [Datum], [Note]). Der restliche Wortlaut ' +
-  'bleibt unverändert und lesbar. Wenn nichts Sensibles vorkommt, gib eine ' +
-  'leere Liste und den Originaltext zurück. Antworte ausschliesslich im JSON.';
+  'Du bist ein Datenschutz-Helfer für Lehrpersonen. Untersuche den eingegebenen ' +
+  'Text und finde alle schützenswerten Stellen. Unterscheide dabei ZWEI Arten und ' +
+  'setze das Feld "identifying" entsprechend:\n' +
+  '• identifying=true — Angaben, die auf eine BESTIMMTE reale Person zeigen: ' +
+  'vollständige Namen, konkrete Klassenbezeichnungen (z. B. „3b"), Schul- oder ' +
+  'Ortsnamen, Adressen, Geburtsdaten, Kontaktangaben (E-Mail, Telefon).\n' +
+  '• identifying=false — sensibler INHALT, der ohne Namen NIEMANDEN verrät: ' +
+  'Noten und Leistungen, Lern- oder Verhaltensbeschreibungen, Gesundheits- oder ' +
+  'Förderhinweise.\n' +
+  'Erzeuge eine anonymisierte Fassung GENAU desselben Textes, in der NUR die ' +
+  'identifizierenden Stellen (identifying=true) durch einen neutralen Platzhalter ' +
+  'in eckigen Klammern ersetzt sind (z. B. [Name], [Klasse], [Ort]). Den sensiblen ' +
+  'Inhalt (identifying=false) lässt du WÖRTLICH stehen — ohne Namen verrät er ' +
+  'niemanden, und genau er wird für eine brauchbare Antwort gebraucht. Ersetze nie ' +
+  'ganze Satzteile, nur die identifizierende Angabe selbst; der Text muss ' +
+  'vollständig und grammatikalisch korrekt bleiben.\n' +
+  'Beispiel: „Förderplanung für Lena Müller aus der 3b, die in Mathe eine 2.5 hat ' +
+  'und sich zu Hause schwer konzentrieren kann." → „Förderplanung für [Name] aus ' +
+  'der [Klasse], die in Mathe eine 2.5 hat und sich zu Hause schwer konzentrieren ' +
+  'kann." (Name und Klasse identifizieren → ersetzt; Note und Konzentrationshinweis ' +
+  'bleiben wörtlich.)\n' +
+  'Wenn nichts Schützenswertes vorkommt, gib eine leere Liste und den Originaltext ' +
+  'zurück. Antworte ausschliesslich im JSON.';
 
 // Vertex/Gemini "controlled generation": OpenAPI-Teilschema als responseSchema.
 const RESPONSE_SCHEMA = {
@@ -78,9 +95,12 @@ const RESPONSE_SCHEMA = {
             type: 'string',
             enum: ['name', 'ort', 'datum', 'kontakt', 'gesundheit', 'noten', 'persoenlich', 'andere'],
           },
+          // true = zeigt auf eine bestimmte Person (wird ersetzt);
+          // false = sensibler Inhalt, der ohne Namen niemanden verrät (bleibt).
+          identifying: { type: 'boolean' },
           reason: { type: 'string' },
         },
-        required: ['text', 'category', 'reason'],
+        required: ['text', 'category', 'identifying', 'reason'],
       },
     },
     anonymizedText: { type: 'string' },
@@ -88,7 +108,7 @@ const RESPONSE_SCHEMA = {
   required: ['sensitiveParts', 'anonymizedText'],
 };
 
-type SensitivePart = { text: string; category: string; reason: string };
+type SensitivePart = { text: string; category: string; identifying: boolean; reason: string };
 type AnalysisResult = { sensitiveParts: SensitivePart[]; anonymizedText: string };
 
 type GeminiResponse = {
@@ -106,12 +126,12 @@ function regexFallback(text: string): AnalysisResult {
 
   // E-Mail-Adressen
   anon = anon.replace(/\b[\w.+-]+@[\w-]+\.[\w.-]+\b/g, (m) => {
-    parts.push({ text: m, category: 'kontakt', reason: 'E-Mail-Adresse' });
+    parts.push({ text: m, category: 'kontakt', identifying: true, reason: 'E-Mail-Adresse' });
     return '[E-Mail]';
   });
   // Zwei aufeinanderfolgende grossgeschriebene Wörter -> mutmasslicher Name
   anon = anon.replace(/\b[A-ZÄÖÜ][a-zäöüß]+ [A-ZÄÖÜ][a-zäöüß]+\b/g, (m) => {
-    parts.push({ text: m, category: 'name', reason: 'Mutmasslicher Name' });
+    parts.push({ text: m, category: 'name', identifying: true, reason: 'Mutmasslicher Name' });
     return '[Name]';
   });
 

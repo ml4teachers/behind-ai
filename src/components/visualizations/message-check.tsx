@@ -8,18 +8,18 @@ import { useTranslations } from '@/lib/i18n/use-translations'
 // ---------------------------------------------------------------------------
 // Nachrichten-Check: „Was steckt in deiner Anfrage?" Der Eye-Opener.
 // Ruft die echte sensible-Daten-Erkennung (Gemini/Vertex, /api/data-flow-simulate)
-// und zeigt: eine harmlose Nachricht enthält schnell Schützenswertes — und das
+// und zeigt: eine harmlose Nachricht enthält schnell Schützenswertes – und das
 // geht beim Cloud-Einsatz an den Anbieter. KEIN Magie-Wrapper: die anonymisierte
 // Fassung ist „so entschärfst du es SELBST", nicht eine automatische Zwischenstufe.
 // DE inline (→ Thread 9).
 // ---------------------------------------------------------------------------
 
-type SensitivePart = { text: string; category: string; reason: string }
+type SensitivePart = { text: string; category: string; identifying?: boolean; reason: string }
 type Analysis = { sensitiveParts: SensitivePart[]; anonymizedText: string; fallback?: boolean }
 
 const EXAMPLES = [
   'Schreib eine Förderplanung für Lena Müller aus der 3b, die in Mathe eine 2.5 hat und sich zu Hause schwer konzentrieren kann.',
-  'Formuliere eine Rückmeldung an die Eltern von Tim Berger (tim.berger@example.ch) zu seiner Lese-Rechtschreib-Schwäche.',
+  'Formuliere eine Rückmeldung an die Eltern von Tim Berger zu seiner Lese-Rechtschreib-Schwäche.',
   'Erkläre den Wasserkreislauf einfach und anschaulich für eine 5. Klasse.',
 ]
 
@@ -30,14 +30,24 @@ function escapeRegExp(s: string) {
 }
 
 function HighlightedOriginal({ text, parts }: { text: string; parts: SensitivePart[] }) {
-  const uniq = Array.from(new Set(parts.map((p) => p.text).filter(Boolean)))
+  const idTexts = new Set(parts.filter((p) => p.identifying).map((p) => p.text).filter(Boolean))
+  const ctxTexts = new Set(parts.filter((p) => !p.identifying).map((p) => p.text).filter(Boolean))
+  // Längste Treffer zuerst, damit Teilstrings nicht vorzeitig matchen.
+  const uniq = Array.from(new Set([...idTexts, ...ctxTexts])).sort((a, b) => b.length - a.length)
   if (!uniq.length) return <>{text}</>
   const re = new RegExp('(' + uniq.map(escapeRegExp).join('|') + ')', 'g')
   return (
     <>
       {text.split(re).map((seg, i) =>
-        uniq.includes(seg) ? (
+        idTexts.has(seg) ? (
           <mark key={i} className="rounded bg-destructive/15 px-0.5 text-destructive">
+            {seg}
+          </mark>
+        ) : ctxTexts.has(seg) ? (
+          <mark
+            key={i}
+            className="rounded bg-[hsl(var(--chart-3)/0.18)] px-0.5 text-[hsl(var(--chart-3))]"
+          >
             {seg}
           </mark>
         ) : (
@@ -69,16 +79,6 @@ function HighlightedAnon({ text }: { text: string }) {
 
 export function MessageCheck() {
   const t = useTranslations()
-  const CATEGORY_LABELS: Record<string, string> = {
-    name: t('msgCheck.catName'),
-    ort: t('msgCheck.catOrt'),
-    datum: t('msgCheck.catDatum'),
-    kontakt: t('msgCheck.catKontakt'),
-    gesundheit: t('msgCheck.catGesundheit'),
-    noten: t('msgCheck.catNoten'),
-    persoenlich: t('msgCheck.catPersoenlich'),
-    andere: t('msgCheck.catAndere'),
-  }
   const [input, setInput] = useState(EXAMPLES[0])
   const [analysis, setAnalysis] = useState<Analysis | null>(null)
   const [loading, setLoading] = useState(false)
@@ -103,10 +103,11 @@ export function MessageCheck() {
     }
   }
 
-  const count = analysis?.sensitiveParts.length ?? 0
-  const categories = analysis
-    ? Array.from(new Set(analysis.sensitiveParts.map((p) => CATEGORY_LABELS[p.category] || p.category)))
-    : []
+  const parts = analysis?.sensitiveParts ?? []
+  const count = parts.length
+  const identifyingCount = parts.filter((p) => p.identifying).length
+  const contextCount = count - identifyingCount
+  const hasIdentifiers = identifyingCount > 0
 
   return (
     <div className="space-y-4">
@@ -155,18 +156,32 @@ export function MessageCheck() {
         </p>
       )}
 
-      {analysis && count > 0 && (
+      {analysis && hasIdentifiers && (
         <div className="space-y-3 rounded-xl border border-l-4 border-l-destructive bg-card p-4">
           <div className="flex items-center gap-2 text-base font-semibold text-destructive">
             <ShieldAlert className="h-5 w-5 shrink-0" />
             {count} {count === 1 ? t('msgCheck.foundSingular') : t('msgCheck.foundPlural')}
           </div>
           <p className="text-sm leading-relaxed">
-            <HighlightedOriginal text={input} parts={analysis.sensitiveParts} />
+            <HighlightedOriginal text={input} parts={parts} />
           </p>
-          <p className="text-sm text-muted-foreground">
-            {t('msgCheck.detected')} {categories.join(', ')}. {t('msgCheck.detectedSuffix')}
-          </p>
+          {/* Zwei-Stufen-Legende: was identifiziert (ersetzen) vs. was bleiben darf */}
+          <div className="space-y-1 text-sm">
+            <p className="flex items-start gap-2">
+              <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-sm bg-destructive/70" aria-hidden="true" />
+              <span className="text-muted-foreground">{t('msgCheck.legendIdentifying')}</span>
+            </p>
+            {contextCount > 0 && (
+              <p className="flex items-start gap-2">
+                <span
+                  className="mt-1 h-2.5 w-2.5 shrink-0 rounded-sm bg-[hsl(var(--chart-3)/0.7)]"
+                  aria-hidden="true"
+                />
+                <span className="text-muted-foreground">{t('msgCheck.legendContext')}</span>
+              </p>
+            )}
+          </div>
+          <p className="text-sm text-muted-foreground">{t('msgCheck.cloudNote')}</p>
           <div className="border-t pt-3">
             <button
               onClick={() => setShowAnon((s) => !s)}
@@ -179,12 +194,23 @@ export function MessageCheck() {
                 <p className="rounded-lg bg-muted/50 p-2.5 text-sm leading-relaxed">
                   <HighlightedAnon text={analysis.anonymizedText} />
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  {t('msgCheck.anonNote')}
-                </p>
+                <p className="text-xs text-muted-foreground">{t('msgCheck.anonNote')}</p>
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {analysis && !hasIdentifiers && count > 0 && (
+        <div className="space-y-3 rounded-xl border border-l-4 border-l-[hsl(var(--chart-3))] bg-card p-4">
+          <div className="flex items-center gap-2 text-base font-semibold text-[hsl(var(--chart-3))]">
+            <ShieldAlert className="h-5 w-5 shrink-0" />
+            {t('msgCheck.contextOnlyTitle')}
+          </div>
+          <p className="text-sm leading-relaxed">
+            <HighlightedOriginal text={input} parts={parts} />
+          </p>
+          <p className="text-sm text-muted-foreground">{t('msgCheck.contextOnlyNote')}</p>
         </div>
       )}
 

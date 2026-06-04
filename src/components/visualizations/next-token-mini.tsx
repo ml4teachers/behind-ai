@@ -144,7 +144,7 @@ export function NextTokenMini() {
             <p className="mb-3 text-xs text-muted-foreground">{t('home.demo.fallbackNotice')}</p>
           )}
 
-          {/* Token-Balken — klickbar zum Anhängen */}
+          {/* Token-Balken – klickbar zum Anhängen */}
           <div className="space-y-1.5">
             {tokens.map((tok, i) => {
               const pct = Math.round(tok.probability * 100)

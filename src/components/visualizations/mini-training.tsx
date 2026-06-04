@@ -9,7 +9,7 @@
 // Trainingsbeispiel (vorhersagen & korrigieren an einem Fall).
 //
 // Modell in Refs; Training über requestAnimationFrame mit Schritt-Budget pro
-// Frame (Tempo bremst bewusst). Offen — Play läuft weiter, „+50"/„+500" machen
+// Frame (Tempo bremst bewusst). Offen – Play läuft weiter, „+50"/„+500" machen
 // kleine Schritte. Nur gedrosselte Snapshots in den React-State.
 // Interne Strings DE inline (Viz-Konvention, EN-Migration in Thread 9).
 // ---------------------------------------------------------------------------

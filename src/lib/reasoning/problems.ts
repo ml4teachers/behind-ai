@@ -7,7 +7,7 @@
 //     Falsch→Richtig-Flip ist die Lektion: Mitdenken = Rechnen.
 //
 //   • RLVR              → Buchstaben zählen. Selbst MIT Mitdenken STREUEN die
-//     Antworten bei Temperatur (echte Mischung aus richtig/falsch) — ideal, um
+//     Antworten bei Temperatur (echte Mischung aus richtig/falsch) – ideal, um
 //     einen Prüfer sortieren und das Richtige verstärken zu lassen. (Arithmetik
 //     taugt hier nicht: unter CoT zu zuverlässig → keine Streuung.)
 // ---------------------------------------------------------------------------
@@ -18,7 +18,7 @@ export interface ArithProblem {
   id: string
   /** Anzeige- und Prompt-Schreibweise (mit ×, −, ², ³). */
   expr: string
-  /** Vom JS-Prüfer berechnetes Ergebnis — die einzige Quelle der Wahrheit. */
+  /** Vom JS-Prüfer berechnetes Ergebnis – die einzige Quelle der Wahrheit. */
   answer: number
 }
 
@@ -50,7 +50,7 @@ export interface LetterProblem {
 
 // Wörter, deren Buchstabenzahl das Modell unter Temperatur uneinheitlich rät:
 // Es verzählt sich systematisch nach UNTEN, deshalb ist die häufigste
-// (Bauchgefühl-)Antwort oft die falsche — genau das macht später den Kontrast
+// (Bauchgefühl-)Antwort oft die falsche – genau das macht später den Kontrast
 // „Prüfer vs. Eindruck" sichtbar. Das Default-Wort ist bewusst eines mit
 // MITTLERER Fehlerquote: häufig genug falsch, dass die Mehrheit daneben liegt,
 // aber zuverlässig auch mit ein paar richtigen Versuchen (sonst gäbe es nichts

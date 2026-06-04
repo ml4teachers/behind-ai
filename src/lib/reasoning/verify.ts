@@ -1,10 +1,10 @@
 // ---------------------------------------------------------------------------
 // Reine Prüf-Logik für die Reasoning-Seiten (Chain-of-Thought + RLVR).
-// Kein React, keine Abhängigkeiten — nur Funktionen, die man von Hand nachrechnet.
+// Kein React, keine Abhängigkeiten – nur Funktionen, die man von Hand nachrechnet.
 //
 // Der gemeinsame Witz beider Seiten: Bei Aufgaben mit einer EINDEUTIG prüfbaren
 // Antwort (ein Rechenergebnis, eine Buchstabenzahl) kann ein winziges Stück Code
-// die Wahrheit bestimmen — egal, wie selbstsicher das Sprachmodell klingt. Genau
+// die Wahrheit bestimmen – egal, wie selbstsicher das Sprachmodell klingt. Genau
 // dieser „Prüfer" ist auf der RLVR-Seite die Belohnung, die man nicht faken kann.
 // ---------------------------------------------------------------------------
 
@@ -17,13 +17,13 @@ export function countLetter(word: string, letter: string): number {
 }
 
 // Erlaubte Zeichen eines Rechenausdrucks. Wir werten NUR Ausdrücke aus, die
-// ausschliesslich hieraus bestehen — niemals beliebige Strings.
+// ausschliesslich hieraus bestehen – niemals beliebige Strings.
 const ARITH_ALLOWED = /^[0-9+\-*/().,\s×÷−²³^]+$/
 
 /**
  * Wertet einen einfachen Rechenausdruck aus. Unsere Anzeige-Schreibweise (×, −,
  * ², ³, ^) wird in JS-Operatoren übersetzt. Gibt `null` zurück, wenn der String
- * unerlaubte Zeichen enthält oder kein endliches Ergebnis liefert — dann gibt es
+ * unerlaubte Zeichen enthält oder kein endliches Ergebnis liefert – dann gibt es
  * schlicht kein Urteil (z. B. bei einer frei eingetippten Wortaufgabe).
  */
 export function evalArith(expr: string): number | null {

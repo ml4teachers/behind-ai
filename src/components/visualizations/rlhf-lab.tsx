@@ -3,18 +3,18 @@
 // ---------------------------------------------------------------------------
 // RLHF-Labor: Bring dem Modell deinen Geschmack bei.
 //
-// Vier Stationen, ein durchgehender Faden — alles echt gerechnet, kein Skript:
-//   1. Bewerten   — du wählst bei Antwort-Paaren die bessere (echte Klicks).
-//   2. Lernen     — aus deinen Klicks trainiert live ein echtes Belohnungs-
+// Vier Stationen, ein durchgehender Faden – alles echt gerechnet, kein Skript:
+//   1. Bewerten   – du wählst bei Antwort-Paaren die bessere (echte Klicks).
+//   2. Lernen     – aus deinen Klicks trainiert live ein echtes Belohnungs-
 //                   modell (Bradley-Terry, reward-model.ts). Loss fällt,
 //                   Gewichte wachsen = „dein Geschmack als Zahlen".
-//   3. Bewähren   — es bewertet NEUE Paare, die es nie sah, und trifft meist
-//                   deine Wahl (Verallgemeinerung — die Stärke von RLHF).
-//   4. Überlisten — das Sprachmodell jagt nur noch hohe Belohnung und findet
+//   3. Bewähren   – es bewertet NEUE Paare, die es nie sah, und trifft meist
+//                   deine Wahl (Verallgemeinerung – die Stärke von RLHF).
+//   4. Überlisten – das Sprachmodell jagt nur noch hohe Belohnung und findet
 //                   einen „Blender": top im Stil, faktisch falsch. Reward
-//                   Hacking — die Brücke zu verifizierbaren Belohnungen (RLVR).
+//                   Hacking – die Brücke zu verifizierbaren Belohnungen (RLVR).
 //
-// Das Belohnungsmodell sieht NUR fünf Stil-Merkmale, nicht die Wahrheit —
+// Das Belohnungsmodell sieht NUR fünf Stil-Merkmale, nicht die Wahrheit –
 // genau daraus entsteht das Hacking von selbst. Interne Strings DE inline
 // (Viz-Konvention; EN-Migration → Thread 9).
 // ---------------------------------------------------------------------------

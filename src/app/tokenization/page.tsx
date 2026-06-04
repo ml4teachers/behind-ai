@@ -83,7 +83,13 @@ export default function TokenizationPage() {
       {/* Multimodal-Hinweis (Brücke zu Modell-Typen, Thread 8) */}
       <div className="flex gap-3 rounded-lg border bg-muted/40 p-4 text-sm text-muted-foreground">
         <InfoCircledIcon className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
-        <p>{t('tokenization.multimodal')}</p>
+        <p>
+          {t('tokenization.multimodalPre')}
+          <Link href="/multimodal" className="font-medium text-primary hover:underline">
+            {t('nav.multimodal')}
+          </Link>
+          {t('tokenization.multimodalPost')}
+        </p>
       </div>
 
       {/* Mehr dazu (optional aufklappbar) */}
@@ -101,7 +107,7 @@ export default function TokenizationPage() {
       </div>
 
       <nav className="flex justify-between border-t pt-6">
-        <Link href="/">
+        <Link href="/data">
           <Button variant="outline">
             <span aria-hidden="true">←</span> {t('common.back')}
           </Button>

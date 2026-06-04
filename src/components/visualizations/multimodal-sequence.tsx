@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 import { useTranslations } from '@/lib/i18n/use-translations'
 
 // ---------------------------------------------------------------------------
-// „Wie ein Sprachmodell ein Bild liest" — die 2D→1D-Verwandlung.
+// „Wie ein Sprachmodell ein Bild liest" – die 2D→1D-Verwandlung.
 //
 // Ein Sprachmodell verarbeitet eine Reihe: ein Stück nach dem anderen,
 // eindimensional. Ein Bild ist aber eine Fläche. Diese Visualisierung zeigt
@@ -18,7 +18,7 @@ import { useTranslations } from '@/lib/i18n/use-translations'
 //
 // Alles clientseitig: Die Szenen werden auf ein Canvas gezeichnet, die Kacheln
 // sind echte Ausschnitte daraus, der „Vektor" je Kachel ist aus ihren Farben
-// gerechnet. Bewusst KEINE genauen Token-Zahlen und KEIN Anbieter-Vergleich —
+// gerechnet. Bewusst KEINE genauen Token-Zahlen und KEIN Anbieter-Vergleich –
 // es geht nur um das Prinzip. Eine Kachel ist anklickbar → ihre Zahlen
 // werden sichtbar (Vertiefung „Mehr Einblicke"). DE inline (→ Thread 9).
 // ---------------------------------------------------------------------------
@@ -264,7 +264,7 @@ export function MultimodalSequence() {
           </div>
         ) : step < 2 ? (
           <div className="space-y-4">
-            {/* Schritt 0 (Raster) und 1 (Reihe) teilen dieselben Kacheln —
+            {/* Schritt 0 (Raster) und 1 (Reihe) teilen dieselben Kacheln –
                 framer animiert den Umbau (gemeinsame layout-Elemente). */}
             <motion.div
               layout

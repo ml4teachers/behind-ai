@@ -397,7 +397,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
                 )
               })}
 
-              {/* Long Tail — alle übrigen Tokens als ein Balken */}
+              {/* Long Tail – alle übrigen Tokens als ein Balken */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

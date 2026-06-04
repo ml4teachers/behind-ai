@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 /*
- * behind-ai Theme — freundlich, neutral, Google-inspiriert.
+ * behind-ai Theme – freundlich, neutral, Google-inspiriert.
  * Alle Farben als semantische Tokens (HSL). Seiten sollen diese Tokens nutzen
  * (bg-background, text-foreground, text-muted-foreground, border, ...) statt
- * hartcodierter Farben — nur so funktioniert der Dark-Mode automatisch.
+ * hartcodierter Farben – nur so funktioniert der Dark-Mode automatisch.
  */
 
 @layer base {
@@ -21,7 +21,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 225 9% 14%;
 
-    /* Akzent — Default „Sky". Zur Laufzeit über AccentProvider umschaltbar
+    /* Akzent – Default „Sky". Zur Laufzeit über AccentProvider umschaltbar
        (siehe src/lib/accents.ts). Hier nur der SSR-Default. */
     --primary: 200 98% 39%;
     --primary-foreground: 0 0% 100%;
@@ -43,7 +43,7 @@
     --input: 220 13% 88%;
     --ring: 200 98% 39%;
 
-    /* Datenvisualisierung — freundliche, gut unterscheidbare Palette */
+    /* Datenvisualisierung – freundliche, gut unterscheidbare Palette */
     --chart-1: 214 82% 51%;
     --chart-2: 160 60% 41%;
     --chart-3: 38 92% 50%;
@@ -102,5 +102,13 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  /* Sichtbarer Tastatur-Fokus site-weit (nur bei Keyboard-Navigation via
+     :focus-visible). Outline statt ring, damit overflow:hidden ihn nicht
+     abschneidet. Buttons mit eigenem focus-visible:ring überschreiben das
+     dank höherer Spezifität. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
 }

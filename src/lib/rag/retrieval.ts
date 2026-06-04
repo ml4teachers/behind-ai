@@ -3,7 +3,7 @@
 //
 // Das „R" in RAG ist nichts anderes als Ähnlichkeitssuche im Embedding-Raum:
 // Frage einbetten -> Cosinus-Ähnlichkeit zu jedem Dokument -> die k ähnlichsten
-// nehmen. Genau das passiert hier — transparent und nachrechenbar. Dieselbe
+// nehmen. Genau das passiert hier – transparent und nachrechenbar. Dieselbe
 // Mathematik wie auf der Embeddings-Seite (Einheitsvektor + Skalarprodukt).
 // ---------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ export function dot(a: number[], b: number[]): number {
 
 /**
  * Bewertet alle Dokumente gegen die (bereits normierte) Frage und gibt sie
- * absteigend nach Ähnlichkeit zurück. Es wird nichts weggefiltert — die
+ * absteigend nach Ähnlichkeit zurück. Es wird nichts weggefiltert – die
  * Reihenfolge ist die Aussage.
  */
 export function rankDocs(queryUnitVec: number[], docs: RagDoc[]): ScoredDoc[] {

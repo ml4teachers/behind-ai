@@ -1,7 +1,7 @@
 # behind-ai Development Guide
 
 ## Package Manager
-- Use **pnpm** (v9). Do not use npm/yarn. There is no `package-lock.json` — only `pnpm-lock.yaml`.
+- Use **pnpm** (v9). Do not use npm/yarn. There is no `package-lock.json` – only `pnpm-lock.yaml`.
 
 ## Commands
 - `pnpm dev` - Start development server
