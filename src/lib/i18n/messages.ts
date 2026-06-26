@@ -50,6 +50,12 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nav.section.data': 'Daten',
     'nav.section.training': 'Training',
     'nav.section.inference': 'Inferenz',
+    'nav.section.mlBasics': 'ML-Grundlagen',
+    'nav.perceptron': 'Perzeptron',
+    'nav.mlp': 'MLP',
+    'nav.gradient': 'Gradientenabstieg',
+    'nav.backprop': 'Backpropagation',
+    'nav.diffusion': 'Diffusion',
 
     'nav.tokenization': 'Tokenisierung',
     'nav.nextToken': 'Next-Token-Prediction',
@@ -74,6 +80,372 @@ export const messages: Record<Locale, Record<string, string>> = {
     'common.moreAbout': 'Mehr dazu',
     'common.back': 'Zurück',
     'common.reset': 'Zurücksetzen',
+
+    // === ML-Grundlagen ===
+    // --- Perzeptron ---
+    'perceptron.title': 'Das Perzeptron',
+    'perceptron.subtitle':
+      'Ein einzelnes künstliches Neuron – der kleinste Baustein, aus dem auch Sprachmodelle bestehen. Stell die Gewichte selbst ein oder lass es lernen.',
+    'perceptron.caption':
+      'Ein Neuron gewichtet seine Eingaben, summiert sie und feuert, sobald die Summe eine Schwelle übersteigt. Genau dieses Rechenstück steckt – millionenfach – in jedem grossen Modell.',
+    'perceptron.moreP1':
+      'Ein Perzeptron nimmt ein paar Zahlen als Eingabe, multipliziert jede mit einem Gewicht, zählt alles zusammen und gibt 1 aus, wenn die Summe eine Schwelle übersteigt – sonst 0. Das Gewicht sagt, wie wichtig ein Merkmal ist (negativ heisst: es spricht dagegen), die Schwelle, wie leicht das Neuron „ja" sagt.',
+    'perceptron.moreP2':
+      'Geometrisch zieht es eine gerade Linie durch die Eingaben und sortiert alles links/rechts davon. Beim Lernen verschiebt die Lernregel die Gewichte nach jedem Fehler ein Stück – die Linie schwenkt ein, bis sie (wenn möglich) alle Beispiele richtig trennt. Manche Muster wie XOR lassen sich mit einer einzigen Linie aber nie trennen.',
+    'perceptron.moreP3':
+      'Genau dieses Neuron – gewichtete Summe, dann eine Schwelle – steht im Next-Letter-Predictor dieser Seite hundertfach nebeneinander, nur mit einer weichen Stufe (tanh) statt der harten. Stapelt man mehrere Schichten davon, entsteht ein neuronales Netz. Der nächste Schritt – mehrere Neuronen, die zusammen auch XOR lösen – ist das MLP.',
+    'perceptron.nextLabel': 'Weiter: MLP',
+
+    // --- MLP ---
+    'mlp.title': 'Das MLP: XOR lösen',
+    'mlp.subtitle':
+      'Was ein einzelnes Neuron nicht kann, schafft eine versteckte Schicht aus mehreren: auch XOR lässt sich trennen. Trainier es selbst, probier Datensätze und sieh, wie viele Neuronen die Grenze braucht.',
+    'mlp.caption':
+      'Zwei Neuronen ziehen je eine Linie, die zweite Schicht kombiniert sie zu einer gekrümmten Grenze. Genau dieser Stapel – gewichtete Summen und Quetschfunktionen, geschichtet und per Backprop gelernt – ist ein neuronales Netz.',
+    'mlp.moreP1':
+      'Das einzelne Perzeptron zieht genau eine gerade Linie. XOR („genau eines von beidem") lässt sich damit nicht trennen – die richtigen Fälle liegen über Kreuz. Die Lösung: eine versteckte Schicht. Jedes versteckte Neuron ist selbst ein kleines Perzeptron mit eigener Linie; die Ausgabeschicht verrechnet ihre Antworten und kann so Regionen statt nur Halbebenen bilden.',
+    'mlp.moreP2':
+      'Gelernt wird per Gradientenabstieg: Das Netz vergleicht seine Ausgabe mit dem Ziel und schiebt ALLE Gewichte – auch die der versteckten Schicht – ein Stück in die Richtung, die den Fehler verkleinert. Dieses Rückwärts-Durchreichen des Fehlers heisst Backpropagation. Weil zwei Neuronen mit Zufallsstart manchmal in einer Sackgasse landen, hilft „Neu starten".',
+    'mlp.moreP3':
+      'Mehr braucht es im Kern nicht: gewichtete Summe, eine Quetschfunktion (hier tanh), in Schichten gestapelt. Der Next-Letter-Predictor auf der Training-Seite ist genau das – nur mit Embedding-Eingaben, einer breiteren versteckten Schicht und einem Softmax über alle Zeichen statt einem einzelnen Sigmoid. Vom XOR-Netz zum Sprachmodell ist es dieselbe Maschine, nur grösser.',
+    'mlp.moreP4':
+      'Mehr Neuronen sind nicht automatisch besser. Probier den Datensatz „Rauschen": Mit 8 Neuronen trifft das Netz alle Trainingspunkte (gefüllt), patzt aber bei den Testpunkten (hohle Ringe) – es hat das Rauschen auswendig gelernt statt die Regel. Das ist Überanpassung; ein kleineres Netz zieht eine glattere Grenze und generalisiert oft besser. Genau diese Abwägung steckt hinter jedem echten Training. Der Schalter „tanh ↔ ReLU" zeigt nebenbei die heute übliche Aktivierung: ReLU (Knick bei 0) macht die Grenze stückweise gerade statt rund.',
+    'mlp.nextLabel': 'Weiter: Wie lernt ein Netz?',
+
+    // --- Wie lernt ein Netz? (Gradientenabstieg) ---
+    'gd.title': 'Wie lernt ein Netz?',
+    'gd.subtitle':
+      'Ein Netz senkt seinen Fehler, indem es die Gewichte verschiebt – aber woher weiss es, in welche Richtung? Die Antwort heisst Gradientenabstieg. Roll den Ball ins Tal und dreh an der Lernrate.',
+    'gd.caption':
+      'Der Fehler ist eine Landschaft über den Gewichten. Die Steigung (der Gradient) zeigt bergab; ein Schritt geht ein Stück in diese Richtung. Genau diese Suche läuft in jedem Netz – nur in viel mehr Dimensionen.',
+    'gd.moreP1':
+      'Stell dir den Fehler als Höhe über den Gewichten vor. Bei einem Gewicht ist das eine Kurve, bei zweien eine Landschaft, bei Millionen unvorstellbar – aber das Prinzip bleibt: Die Steigung an deiner Stelle sagt, wo es am steilsten bergauf geht. Das Negative davon zeigt bergab. Ein Schritt dorthin senkt den Fehler ein Stück. Das ist Gradientenabstieg.',
+    'gd.moreP2':
+      'Die Lernrate ist die Schrittweite. Zu klein, und das Lernen kriecht. Zu gross, und der Schritt überschiesst das Tal – im schlimmsten Fall wächst der Fehler mit jedem Schritt und alles divergiert. Und in einer welligen Landschaft landet man je nach Startpunkt in verschiedenen Tälern: das tiefste ist die beste Lösung (globales Minimum), ein flacheres eine Sackgasse (lokales Minimum).',
+    'gd.moreP3':
+      'In einem Netz mit vielen Gewichten braucht es einen Trick, um für jedes einzelne die Steigung zu bekommen: Backpropagation reicht den Fehler von der Ausgabe rückwärts durch und gibt jedem Gewicht seinen Anteil. Mehr ist es nicht – derselbe Schritt bergab wie hier, nur für alle Gewichte zugleich. Das ist der Motor unter dem Perzeptron, dem MLP und jedem Sprachmodell.',
+    'gd.nextLabel': 'Weiter: Backpropagation',
+    'gd.view1d': 'Eine Stellschraube',
+    'gd.view2d': 'Zwei Stellschrauben',
+    'gd.view1d.hint': 'Ein Gewicht, eine Verlustkurve. Der Ball rollt bergab – die Steigung sagt, wohin.',
+    'gd.view2d.hint': 'Zwei Gewichte, eine Landschaft. Verschiedene Starts führen in verschiedene Täler.',
+    'gd.play': 'Los',
+    'gd.pause': 'Pause',
+    'gd.step': 'Ein Schritt',
+    'gd.restart': 'Neuer Start',
+    'gd.learnRate': 'Lernrate',
+    'gd.read.weight': 'Gewicht',
+    'gd.read.slope': 'Steigung',
+    'gd.read.loss': 'Fehler',
+    'gd.read.delta': 'Schritt',
+    'gd.read.pos': 'Position',
+    'gd.deep': 'tiefes Tal',
+    'gd.shallow': 'flaches Tal',
+    'gd.2d.clickHint': 'Klick setzt den Startpunkt · „Neuer Start" würfelt einen.',
+    'gd.status.diverged.title': 'Divergiert.',
+    'gd.status.diverged.body':
+      'Die Lernrate ist zu gross – jeder Schritt überschiesst stärker, der Fehler explodiert. Verkleinere die Lernrate oder starte neu.',
+    'gd.status.settled1d':
+      'Im Minimum: die Steigung ist fast null, bergab geht es nicht mehr. Hier hört das Lernen auf.',
+    'gd.status.settledDeep': 'Im tiefen Tal gelandet – dem globalen Minimum, der besten Lösung.',
+    'gd.status.settledShallow':
+      'Im flachen Tal gelandet – einem lokalen Minimum. Ein anderer Startpunkt hätte tiefer geführt.',
+    'gd.status.idle1d': 'Drück „Los" und sieh zu, wie der Ball ins Tal rollt. Dann dreh an der Lernrate.',
+    'gd.status.idle2d': 'Drück „Los". Mit „Neuer Start" landest du mal im flachen, mal im tiefen Tal.',
+    'gd.cohesion.title': 'Das erklärt zwei Knöpfe von der MLP-Seite',
+    'gd.cohesion.lr': 'Der Lernrate-Regler hier ist derselbe wie dort: zu gross überschiesst, zu klein kriecht.',
+    'gd.cohesion.restart':
+      'Und „Neu starten" würfelt einen neuen Startpunkt – genau wie hier landet das Netz mal im tiefen, mal in einem flachen Tal. Deshalb hilft Neustarten, wenn XOR mit zwei Neuronen klemmt.',
+    'gd.cohesion.link': 'zur MLP-Seite',
+    // --- Backpropagation (Sandbox) ---
+    'bp.title': 'Backpropagation: wie das Netz seine Gewichte anpasst',
+    'bp.subtitle':
+      'Der Gradientenabstieg braucht für jedes Gewicht eine Steigung. Backpropagation rechnet sie aus – hier mit sichtbaren Gewichten und echten Zahlen. Verstell Eingabe, Ziel und Lernrate und sieh dem Netz beim Lernen zu.',
+    'bp.caption':
+      'Vorwärts rechnet das Netz seine Antwort, der Fehler zeigt, wie falsch sie ist, und rückwärts bekommt über die Kettenregel jedes Gewicht seinen Gradienten – seine Schuld am Fehler. Ein Schritt bergab passt alle Gewichte zugleich an.',
+    'bp.moreP1':
+      'Backpropagation ist nur die Kettenregel, sauber organisiert. Der Fehler an der Ausgabe wird Schicht für Schicht rückwärts durchgereicht; an jeder Kante multipliziert man mit dem lokalen Beitrag. So bekommt jedes Gewicht – auch tief im Netz – seinen eigenen Gradienten, ohne dass man Millionen Ableitungen von Hand bildet.',
+    'bp.moreP2':
+      'Der Gradient eines Gewichts sagt: Wenn ich es ein bisschen erhöhe, wie ändert sich der Fehler? Vorzeichen = Richtung, Betrag = Hebelwirkung – genau das, was der Gradientenabstieg braucht. Bei Sigmoid mit Kreuzentropie ist der Fehler y − Ziel schon die Steigung an der Ausgabe, der Startpunkt der Rückwärtsrechnung.',
+    'bp.moreP3':
+      'Dieses 2-2-1-Netz lernt sein eines Beispiel in wenigen Schritten. Genau dieselbe Maschinerie trainiert ein Sprachmodell – nur mit Milliarden Gewichten, vielen Schichten und Millionen Beispielen statt einem. Vorwärts rechnen, Fehler messen, rückwärts die Gradienten holen, einen kleinen Schritt machen, wiederholen.',
+    'bp.nextLabel': 'Ausblick: Diffusion',
+    'bp.aria': 'Netz 2-2-1 mit Gewichten',
+    'bp.phase.forward': 'Vorwärts',
+    'bp.phase.error': 'Fehler',
+    'bp.phase.backward': 'Rückwärts',
+    'bp.phase.update': 'Anpassen',
+    'bp.read.iter': 'Schritte',
+    'bp.read.error': 'Fehler',
+    'bp.read.target': 'Ziel',
+    'bp.apply': 'Schritt anwenden',
+    'bp.apply10': '10 Schritte',
+    'bp.newWeights': 'Neue Gewichte',
+    'bp.reset': 'Zurücksetzen',
+    'bp.input': 'Eingabe',
+    'bp.learnRate': 'Lernrate',
+    'bp.target': 'Ziel',
+    'bp.hint':
+      'Klick auf eine Kante zeigt die Herleitung dieses Gewichts. „Schritt anwenden" verändert die Gewichte wirklich – wiederhol es und sieh, wie y Richtung Ziel wandert und der Fehler schrumpft.',
+    'bp.focus.title': 'Gewicht',
+    'bp.focus.back': '← alle',
+    'bp.focus.weight': 'Aktueller Wert',
+    'bp.focus.contrib': 'Beitrag vorwärts',
+    'bp.focus.grad': 'Gradient (Schuld am Fehler)',
+    'bp.focus.update': 'Nach dem Schritt',
+    'bp.focus.note':
+      'Vorzeichen des Gradienten = Richtung, Betrag = wie stark dieses Gewicht den Fehler beeinflusst. Der Schritt verschiebt es gegen den Gradienten.',
+    'bp.m.fwTitle': 'Vorwärts: was sagt das Netz?',
+    'bp.m.fwNote':
+      'Jedes Neuron bildet die gewichtete Summe seiner Eingaben und quetscht sie (tanh bzw. σ). Alle Zahlen stammen aus den Gewichten im Diagramm.',
+    'bp.m.errTitle': 'Fehler messen',
+    'bp.m.errNote':
+      'Wie weit liegt die Ausgabe vom Ziel? Bei Sigmoid + Kreuzentropie ist dieser Fehler direkt die Steigung an der Ausgabe – der Start fürs Rückwärtsrechnen.',
+    'bp.m.bwTitle': 'Rückwärts: Gradient je Gewicht',
+    'bp.m.bwNote':
+      'Kettenregel: Der Fehler fliesst rückwärts. Erst die Ausgabe-Gewichte (e·h), dann die Schuld δ an jedem versteckten Neuron, dann dessen Eingangs-Gewichte (δ·x).',
+    'bp.m.upTitle': 'Anpassen: ein Schritt bergab',
+    'bp.m.upNote':
+      'Jedes Gewicht: neu = alt − Lernrate·Gradient. Drück „Schritt anwenden", um es auszuführen.',
+
+    // --- Diffusion (generativer Ausblick) ---
+    'df.title': 'Diffusion: wie aus Zufall eine Form wird',
+    'df.subtitle':
+      'Bildgeneratoren starten mit reinem Rauschen und entrauschen es Schritt für Schritt, bis ein Bild dasteht. Hier in 2D zum Mitmachen: eine Form verrauschen, einem winzigen Netz das Entrauschen beibringen, dann aus Zufall eine neue Form wachsen lassen.',
+    'df.caption':
+      'Das Netz hier lernt wirklich im Browser, das zugefügte Rauschen vorherzusagen – dieselbe Idee wie bei Stable Diffusion oder Midjourney, nur mit Punkten in der Ebene statt Millionen Pixeln.',
+    'df.moreP1':
+      'Diffusion dreht ein einfaches Vorwärts-Rezept um. Vorwärts ist leicht: Nimm eine Form und kipp Schritt für Schritt etwas Gauss-Rauschen dazu, bis nur noch Zufall übrig ist. Für jeden Zwischenschritt ist genau bekannt, wie viel Rauschen dazukam – und das wird zur Lernaufgabe.',
+    'df.moreP2':
+      'Das Netz bekommt einen verrauschten Punkt und das Rausch-Level t und sagt voraus: Welches Rauschen steckt hier drin? Zieht man dieses vorhergesagte Rauschen ab, kommt man dem Original ein Stück näher. Generieren heisst dann: bei reinem Zufall anfangen und diesen Schritt viele Male wiederholen – das Modell schiebt die Punkte Stück für Stück dorthin, wo die gelernte Form liegt.',
+    'df.moreP3':
+      'Echte Bildmodelle machen dasselbe, nur mit Bildern statt Punkten: Eingabe und Ausgabe sind ganze Bilder, das Netz ist riesig (oft ein U-Net oder Transformer), und ein Textprompt lenkt, wohin entrauscht wird. Die Temperatur regelt die Streuung – tief bleibt nah an den gelernten Formen, hoch bringt mehr Vielfalt. Das Grundprinzip bleibt: Rauschen vorhersagen, abziehen, wiederholen.',
+    'df.nextLabel': 'Zum echten Mini-Modell',
+    'df.shape.spiral': 'Spirale',
+    'df.shape.moons': 'Zwei Monde',
+    'df.shape.circle': 'Kreis',
+    'df.shape.heart': 'Herz',
+    'df.shapeHint': 'Die Zielform, die das Modell lernen soll.',
+    'df.phase.noise': 'Verrauschen',
+    'df.phase.train': 'Lernen',
+    'df.phase.gen': 'Generieren',
+    'df.pause': 'Pause',
+    'df.noise.level': 'Rausch-Stufe',
+    'df.noise.signal': 'Signal',
+    'df.noise.noise': 'Rauschen',
+    'df.noise.t0': 'Stufe 0: die reine Zielform. Schieb den Regler nach rechts und sieh zu, wie sie zerfällt.',
+    'df.noise.tT': 'Volle Stufe: nur noch Zufall – eine Gauss-Wolke, kein Muster mehr. Genau hier startet später das Generieren.',
+    'df.noise.mid': 'Teils Form, teils Rauschen. Für jede Stufe ist bekannt, wie viel Rauschen dazukam – das ist die Lernaufgabe.',
+    'df.train.sample': 'Probe',
+    'df.train.field': 'Entrausch-Feld',
+    'df.train.steps': 'Schritte',
+    'df.train.loss': 'Fehler',
+    'df.train.lossCurve': 'Fehler (Rauschen vorhersagen)',
+    'df.train.start': 'Training starten',
+    'df.train.resume': 'Weiter trainieren',
+    'df.speed.slow': 'Zeitlupe',
+    'df.speed.normal': 'Normal',
+    'df.speed.turbo': 'Turbo',
+    'df.train.toGen': 'Generieren',
+    'df.train.needMore': 'Trainiere noch etwas, bis die Probe Form annimmt.',
+    'df.train.idle':
+      'Drück „Training starten". Anfangs ist die Probe pures Rauschen – beobachte, wie sie sich mit jedem Schritt ordnet.',
+    'df.train.emerge':
+      'Die Probe wird aus Zufall erzeugt – mit dem aktuellen Stand des Netzes. Je besser es das Rauschen vorhersagt, desto klarer die Form.',
+    'df.train.fieldHint':
+      'Pfeile zeigen, wohin das Netz einen verrauschten Punkt schiebt (das vorhergesagte Rauschen, abgezogen). Mit dem Training richten sie sich Richtung Zielform aus.',
+    'df.gen.temp': 'Temperatur',
+    'df.gen.start': 'Generieren',
+    'df.gen.again': 'Nochmal',
+    'df.gen.untrained': 'Das Netz ist noch kaum trainiert – aus Zufall wird hier noch keine Form. Geh zurück zu „Lernen".',
+    'df.gen.idle': 'Start bei reinem Rauschen. Schritt für Schritt zieht das Modell das vorhergesagte Rauschen ab – die Form taucht auf.',
+    'df.gen.running': 'Entrauschen läuft … jeder Schritt eine Rausch-Stufe tiefer.',
+    'df.gen.done': 'Fertig: aus Zufall ist die gelernte Form geworden. Mit der Temperatur steuerst du Streuung gegen Schärfe.',
+
+    // --- Perzeptron-Labor (Viz) ---
+    'pp.spam.name': 'Spam-Wächter',
+    'pp.spam.feat0': 'Reizwort?',
+    'pp.spam.feat1': 'Absender bekannt?',
+    'pp.spam.v00': 'kein Reizwort',
+    'pp.spam.v01': '„gratis/gewonnen"',
+    'pp.spam.v10': 'fremd',
+    'pp.spam.v11': 'im Adressbuch',
+    'pp.spam.class0': 'Echt',
+    'pp.spam.class1': 'Spam',
+    'pp.spam.blurb':
+      'Echte Spamfilter rechnen genau so: verdächtige Signale aufaddieren, ab einer Schwelle „Müll". Stell die Gewichte ein – ein Reizwort spricht für Spam, ein bekannter Absender dagegen (negatives Gewicht).',
+    'pp.letters.name': 'Buchstaben-Wette',
+    'pp.letters.feat0': 'vorletzter Buchstabe',
+    'pp.letters.feat1': 'letzter Buchstabe',
+    'pp.letters.v00': 'Konsonant',
+    'pp.letters.v01': 'Vokal',
+    'pp.letters.v10': 'Konsonant',
+    'pp.letters.v11': 'Vokal',
+    'pp.letters.class0': 'Konsonant folgt',
+    'pp.letters.class1': 'Vokal folgt',
+    'pp.letters.blurb':
+      'Dieselbe Aufgabe wie der Next-Letter-Predictor dieser Seite, auf ein Neuron eingedampft: aus den letzten zwei Buchstaben raten, ob ein Vokal folgt. Genau dieses Atom steht im echten Modell hundertfach nebeneinander.',
+    'pp.movie.name': 'Filmgeschmack',
+    'pp.movie.feat0': 'Action?',
+    'pp.movie.feat1': 'Comedy?',
+    'pp.movie.v00': 'kein Action',
+    'pp.movie.v01': 'Action',
+    'pp.movie.v10': 'keine Comedy',
+    'pp.movie.v11': 'Comedy',
+    'pp.movie.class0': 'mag ich nicht',
+    'pp.movie.class1': 'mag ich',
+    'pp.movie.blurb':
+      'Geschmack: reine Action mag ich, reine Comedy mag ich – die Mischung („Action-Komödie") nicht, und etwas ganz ohne beides auch nicht. Versuch, dafür eine Trennlinie zu finden …',
+    'pp.jogging.name': 'Joggen?',
+    'pp.jogging.feat0': 'trocken?',
+    'pp.jogging.feat1': 'Zeit?',
+    'pp.jogging.v00': 'Regen',
+    'pp.jogging.v01': 'trocken',
+    'pp.jogging.v10': 'keine Zeit',
+    'pp.jogging.v11': 'Zeit',
+    'pp.jogging.class0': 'bleibe daheim',
+    'pp.jogging.class1': 'gehe joggen',
+    'pp.jogging.blurb':
+      'Ein „feuerndes Neuron" als Alltags-Entscheidung: gute Gründe sammeln sich auf, ab einem Punkt kippt es zu „ja". Wie wichtig ist dir jeder Grund (Gewicht), und wie leicht lässt du dich überzeugen (Schwelle)?',
+    'pp.and.name': 'UND',
+    'pp.and.blurb': 'UND: nur wahr, wenn beide Eingaben 1 sind. Eine gerade Linie schafft das.',
+    'pp.or.name': 'ODER',
+    'pp.or.blurb': 'ODER: wahr, sobald mindestens eine Eingabe 1 ist. Auch das trennt eine Linie.',
+    'pp.xor.name': 'XOR',
+    'pp.xor.blurb':
+      'XOR: wahr, wenn genau eine Eingabe 1 ist. Keine einzige gerade Linie trennt diese vier Punkte – das ist die Wand, an der ein einzelnes Perzeptron scheitert.',
+    'pp.points.name': 'Punkte',
+    'pp.points.feat0': 'Merkmal 1',
+    'pp.points.feat1': 'Merkmal 2',
+    'pp.points.class0': 'Klasse A',
+    'pp.points.class1': 'Klasse B',
+    'pp.points.blurb':
+      'Setz eigene Punkte ins Feld und lass das Neuron eine Trennlinie finden. Liegen die Farben sauber getrennt, klappt es – verschränkst du sie (wie XOR), pendelt die Linie ewig.',
+
+    'pl.group.everyday': 'Alltag',
+    'pl.group.logic': 'Logik',
+    'pl.group.custom': 'Eigene',
+    'pl.neuron.title': 'Das Neuron',
+    'pl.neuron.descPoints': 'Mit den gelernten Gewichten – am gewählten Punkt vorgerechnet.',
+    'pl.neuron.descPick': 'Klick rechts einen Fall an – das Neuron rechnet ihn hier vor.',
+    'pl.neuron.explainHint': 'Klick aufs Neuron (?) erklärt Σ und θ.',
+    'pl.neuron.empty': 'Setz rechts ein paar Punkte ins Feld.',
+    'pl.surface.title': 'Entscheidungsfläche',
+    'pl.correct': 'richtig',
+    'pl.weights': 'Gewichte',
+    'pl.weights.hint': 'Wie stark ein Merkmal zählt (negativ = spricht dagegen).',
+    'pl.threshold': 'Schwelle',
+    'pl.threshold.hint':
+      'Wie leicht das Neuron „ja" sagt: Es feuert erst, wenn die gewichtete Summe θ übersteigt.',
+    'pl.train': 'Trainieren',
+    'pl.pause': 'Pause',
+    'pl.correctBtn': 'Korrigieren',
+    'pl.check': 'Prüfen',
+    'pl.steps': 'Lernschritte',
+    'pl.sep.title': 'Getrennt. ',
+    'pl.sep.body':
+      'Eine gerade Linie teilt alle Fälle korrekt – das Neuron klassifiziert jeden Punkt richtig.',
+    'pl.stuck.title': 'Keine Linie trennt das. ',
+    'pl.stuck.body1':
+      'So sehr das Neuron auch nachjustiert – die Trennlinie pendelt und kommt nie zur Ruhe. Manche Muster (wie XOR) kann ein ',
+    'pl.stuck.em': 'einzelnes',
+    'pl.stuck.body2':
+      ' Perzeptron grundsätzlich nicht trennen. Dafür braucht es mehrere übereinander – das ist der Schritt zum MLP.',
+    'pl.check.title': 'Geprüft – Fehler. ',
+    'pl.check.atPoint': 'Beim Punkt',
+    'pl.check.atCase': 'Beim Fall',
+    'pl.check.computes': 'berechnet das Neuron',
+    'pl.check.shouldBe': '– richtig wäre aber',
+    'pl.check.hintPre': 'Drück',
+    'pl.check.hintCorrect': '„Korrigieren"',
+    'pl.check.hintPost':
+      ', um die Gewichte einen kleinen Schritt Richtung richtige Antwort zu schieben.',
+    'pl.step.title': 'Korrigiert. ',
+    'pl.step.tooLow': 'zu niedrig',
+    'pl.step.tooHigh': 'zu hoch',
+    'pl.step.up': 'nach oben',
+    'pl.step.down': 'nach unten',
+    'pl.step.body1': 'Das Neuron hat ',
+    'pl.step.body2a': ' gerechnet – also gehen die Gewichte der aktiven Merkmale (Wert 1) ',
+    'pl.step.body2b': ' und die Schwelle ',
+    'pl.step.body2c': ':',
+    'pl.calc.threshold': '(Schwelle)',
+    'pl.calc.fires': 'feuert',
+    'pl.calc.quiet': 'ruht',
+    'pl.legend.wrong': 'falsch eingeordnet',
+    'pl.legend.editHint':
+      'Klick ins Feld setzt einen Punkt · Klick auf einen Punkt entfernt ihn.',
+    'pl.points.set': 'Setzen:',
+    'pl.points.example': 'Beispiel:',
+    'pl.points.separable': 'trennbar',
+    'pl.points.entangled': 'verschränkt',
+    'pl.points.clear': 'leeren',
+    'pl.aria.neuron': 'Neuron',
+
+    // --- MLP-Labor (Viz) ---
+    'ml.net.title': 'Das Netz',
+    'ml.net.desc': 'versteckte Neuronen ziehen je eine Linie – die Ausgabe kombiniert sie.',
+    'ml.net.explainHint':
+      'Klick auf ein Neuron erklärt seine Funktion: tanh (versteckt) bzw. σ (Ausgabe).',
+    'ml.showLines': 'Linien der Neuronen',
+    'ml.data': 'Daten',
+    'ml.circle': 'Kreis',
+    'ml.noisy': 'Rauschen',
+    'ml.activation': 'Aktivierung',
+    'ml.set': 'Setzen',
+    'ml.hiddenNeurons': 'versteckte Neuronen',
+    'ml.learnRate': 'Lernrate',
+    'ml.restart': 'Neu starten',
+    'ml.epochs': 'Epochen',
+    'ml.error': 'Fehler',
+    // Überanpassung (Train vs. Test)
+    'ml.acc.train': 'Training',
+    'ml.acc.test': 'Test',
+    'ml.overfit.title': 'Überanpassung.',
+    'ml.overfit.body':
+      'Das Netz trifft {train} der Trainingspunkte, aber nur {test} der ungesehenen Testpunkte (hohle Ringe). Es hat den Trainingssatz samt der falsch gelabelten Ausreisser praktisch auswendig gelernt – die Grenze zappelt um einzelne Punkte. Weniger versteckte Neuronen erzwingen eine glattere Grenze, die auf neue Daten besser passt.',
+    'ml.generalizes.title': 'Generalisiert.',
+    'ml.generalizes.body':
+      'Training {train}, Test {test} – die gelernte Grenze passt auch auf neue, nie gesehene Punkte. Bei sauberen Daten gelingt das selbst einem grossen Netz.',
+    'ml.fit.hint':
+      'Beobachte beim Trainieren beide Zahlen. Auf dem verrauschten Satz treibt mehr Neuronen (8) die Trainings-Genauigkeit Richtung 100 %, während die Test-Genauigkeit zurückbleibt – das ist Überanpassung. Weniger Neuronen (3) halten beide näher beieinander.',
+    'ml.sep.body':
+      'Mehrere Linien, von der zweiten Schicht kombiniert, schneiden die Fläche so zu, dass alle Punkte stimmen – etwas, das eine ',
+    'ml.sep.em': 'einzelne',
+    'ml.sep.body2':
+      ' Linie nicht schafft. Genau dieser Stapel aus gewichteten Summen und Quetschfunktionen ist ein neuronales Netz.',
+    'ml.hint.pre': 'Drück ',
+    'ml.hint.train': 'Trainieren',
+    'ml.hint.mid':
+      ' und sieh zu, wie die gekrümmte Grenze entsteht. Klemmt es bei einem schwierigen Muster (z. B. Kreis), gib dem Netz ',
+    'ml.hint.more': 'mehr Neuronen',
+    'ml.hint.mid2': ' – oder probier mit ',
+    'ml.hint.restart': 'Neu starten',
+    'ml.hint.post': ' einen anderen Zufallsstart.',
+    'ml.diagram.input': 'Eingabe',
+    'ml.diagram.hidden': 'versteckt',
+    'ml.diagram.output': 'Ausgabe',
+    'ml.aria.net': 'Netz',
+
+    // --- Aktivierungs-Erklärkarte (Viz) ---
+    'act.sum.title': 'Σ > θ — gewichtete Summe trifft Schwelle',
+    'act.sum.body':
+      'Das Neuron multipliziert jede Eingabe mit ihrem Gewicht und addiert alles zur gewichteten Summe Σ. Diese vergleicht es mit der Schwelle θ: liegt Σ darüber, feuert es (Ausgabe 1), sonst ruht es (0). Das ist die harte Stufenfunktion rechts – ein Schalter ohne Zwischentöne.',
+    'act.sum.x': 'Σ − θ',
+    'act.tanh.title': 'tanh — die weiche Stufe',
+    'act.tanh.body':
+      'Auch ein verstecktes Neuron bildet eine gewichtete Summe – quetscht sie aber mit tanh sanft auf einen Wert zwischen −1 und +1, statt hart umzuschalten. Diese Kurve hat überall eine Steigung; nur deshalb kann das Netz per kleinen Schritten lernen (Gradientenabstieg). Eine harte Stufe wäre flach – kein Hinweis, wohin nachjustieren.',
+    'act.tanh.x': 'gewichtete Summe',
+    'act.sigmoid.title': 'Σ → σ — Summe, dann Wahrscheinlichkeit',
+    'act.sigmoid.body':
+      'Die Ausgabe bildet wieder eine gewichtete Summe der versteckten Werte und quetscht sie mit der Sigmoid-Funktion σ auf 0…1. Das liest sich als Wahrscheinlichkeit: nahe 1 heisst „sicher Klasse B", nahe 0 „sicher Klasse A", 0,5 ist die Grenze.',
+    'act.sigmoid.x': 'gewichtete Summe',
+    'act.relu.title': 'ReLU — der Knick bei 0',
+    'act.relu.body':
+      'ReLU lässt positive Werte unverändert durch und setzt alles Negative auf 0 – ein Knick statt einer weichen Kurve. Sie hat keine flachen Sättigungsenden wie tanh, darum bleiben die Gradienten kräftig und tiefe Netze lernen schneller; deshalb ist ReLU heute der Standard. Im Labor macht sie die Entscheidungsgrenze stückweise gerade, also eckig statt rund. Auf diesem winzigen Netz kann ein Neuron aber „absterben" (immer 0) – dann hilft „Neu starten".',
+    'act.relu.x': 'gewichtete Summe',
+    'act.close': 'Schliessen',
+    'act.aria.plot': 'Aktivierungsfunktion',
 
     // === KI im Einsatz (Thread 8) ===
     // --- Lokal vs. Cloud ---
@@ -888,6 +1260,12 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nav.section.data': 'Data',
     'nav.section.training': 'Training',
     'nav.section.inference': 'Inference',
+    'nav.section.mlBasics': 'ML basics',
+    'nav.perceptron': 'Perceptron',
+    'nav.mlp': 'MLP',
+    'nav.gradient': 'Gradient descent',
+    'nav.backprop': 'Backpropagation',
+    'nav.diffusion': 'Diffusion',
 
     'nav.tokenization': 'Tokenization',
     'nav.nextToken': 'Next-token prediction',
@@ -912,6 +1290,369 @@ export const messages: Record<Locale, Record<string, string>> = {
     'common.moreAbout': 'Learn more',
     'common.back': 'Back',
     'common.reset': 'Reset',
+
+    // === ML basics ===
+    // --- Perceptron ---
+    'perceptron.title': 'The perceptron',
+    'perceptron.subtitle':
+      'A single artificial neuron – the smallest building block that language models are also made of. Set the weights yourself, or let it learn.',
+    'perceptron.caption':
+      'A neuron weights its inputs, sums them and fires once the sum crosses a threshold. This exact little computation sits – millions of times over – inside every large model.',
+    'perceptron.moreP1':
+      'A perceptron takes a few numbers as input, multiplies each by a weight, adds them up and outputs 1 if the sum exceeds a threshold – otherwise 0. The weight says how important a feature is (negative means: it argues against), the threshold how easily the neuron says "yes".',
+    'perceptron.moreP2':
+      'Geometrically it draws a straight line through the inputs and sorts everything left/right of it. During learning, the learning rule shifts the weights a little after each mistake – the line swings in until it (if possible) separates all examples correctly. But some patterns like XOR can never be separated by a single line.',
+    'perceptron.moreP3':
+      'This very neuron – weighted sum, then a threshold – sits hundreds of times side by side in this page’s next-letter predictor, just with a soft step (tanh) instead of the hard one. Stack several layers of them and a neural network emerges. The next step – several neurons that together also solve XOR – is the MLP.',
+    'perceptron.nextLabel': 'Next: MLP',
+
+    // --- MLP ---
+    'mlp.title': 'The MLP: solving XOR',
+    'mlp.subtitle':
+      'What a single neuron cannot do, a hidden layer of several can: even XOR becomes separable. Train it, try datasets, and see how many neurons the boundary needs.',
+    'mlp.caption':
+      'Two neurons each draw a line; the second layer combines them into a curved boundary. This exact stack – weighted sums and squashing functions, layered and learned by backprop – is a neural network.',
+    'mlp.moreP1':
+      'The single perceptron draws exactly one straight line. XOR ("exactly one of the two") cannot be separated with it – the right cases lie crosswise. The solution: a hidden layer. Each hidden neuron is itself a small perceptron with its own line; the output layer combines their answers and can thus form regions instead of just half-planes.',
+    'mlp.moreP2':
+      'Learning happens by gradient descent: the network compares its output with the target and nudges ALL weights – including the hidden layer’s – a step in the direction that shrinks the error. This backward passing of the error is called backpropagation. Because two neurons with a random start sometimes land in a dead end, "Restart" helps.',
+    'mlp.moreP3':
+      'At its core it needs no more: weighted sum, a squashing function (here tanh), stacked in layers. The next-letter predictor on the training page is exactly that – just with embedding inputs, a wider hidden layer and a softmax over all characters instead of a single sigmoid. From the XOR network to a language model it’s the same machine, only bigger.',
+    'mlp.moreP4':
+      'More neurons are not automatically better. Try the "Noise" dataset: with 8 neurons the network hits every training point (filled) but stumbles on the test points (hollow rings) – it has memorised the noise instead of the rule. That is overfitting; a smaller network draws a smoother boundary and often generalises better. This exact trade-off sits behind every real training run. The "tanh ↔ ReLU" switch also shows today’s usual activation: ReLU (a kink at 0) makes the boundary piecewise straight rather than round.',
+    'mlp.nextLabel': 'Next: how does a network learn?',
+
+    // --- How does a network learn? (gradient descent) ---
+    'gd.title': 'How does a network learn?',
+    'gd.subtitle':
+      'A network lowers its error by shifting its weights – but how does it know which way? The answer is gradient descent. Roll the ball into the valley and play with the learning rate.',
+    'gd.caption':
+      'The error is a landscape over the weights. The slope (the gradient) points downhill; a step goes a little way in that direction. This very search runs inside every network – just in many more dimensions.',
+    'gd.moreP1':
+      'Picture the error as height above the weights. With one weight that’s a curve, with two a landscape, with millions unimaginable – but the principle holds: the slope at your spot says which way is steepest uphill. Its negative points downhill. A step that way lowers the error a little. That is gradient descent.',
+    'gd.moreP2':
+      'The learning rate is the step size. Too small and learning crawls. Too large and the step overshoots the valley – in the worst case the error grows every step and everything diverges. And in a bumpy landscape you end up in different valleys depending on where you start: the deepest is the best solution (global minimum), a shallower one a dead end (local minimum).',
+    'gd.moreP3':
+      'In a network with many weights you need a trick to get the slope for each one: backpropagation passes the error backward from the output and gives every weight its share. That’s all it is – the same downhill step as here, just for all weights at once. It’s the engine under the perceptron, the MLP and every language model.',
+    'gd.nextLabel': 'Next: backpropagation',
+    'gd.view1d': 'One dial',
+    'gd.view2d': 'Two dials',
+    'gd.view1d.hint': 'One weight, one loss curve. The ball rolls downhill – the slope says which way.',
+    'gd.view2d.hint': 'Two weights, one landscape. Different starts lead into different valleys.',
+    'gd.play': 'Go',
+    'gd.pause': 'Pause',
+    'gd.step': 'One step',
+    'gd.restart': 'New start',
+    'gd.learnRate': 'Learning rate',
+    'gd.read.weight': 'Weight',
+    'gd.read.slope': 'Slope',
+    'gd.read.loss': 'Error',
+    'gd.read.delta': 'Step',
+    'gd.read.pos': 'Position',
+    'gd.deep': 'deep valley',
+    'gd.shallow': 'shallow valley',
+    'gd.2d.clickHint': 'Click sets the start point · “New start” rolls a random one.',
+    'gd.status.diverged.title': 'Diverged.',
+    'gd.status.diverged.body':
+      'The learning rate is too large – each step overshoots more, the error explodes. Lower the learning rate or start over.',
+    'gd.status.settled1d':
+      'At the minimum: the slope is almost zero, there’s no more downhill. This is where learning stops.',
+    'gd.status.settledDeep': 'Landed in the deep valley – the global minimum, the best solution.',
+    'gd.status.settledShallow':
+      'Landed in the shallow valley – a local minimum. A different start would have gone deeper.',
+    'gd.status.idle1d': 'Press “Go” and watch the ball roll into the valley. Then play with the learning rate.',
+    'gd.status.idle2d': 'Press “Go”. With “New start” you land sometimes in the shallow, sometimes in the deep valley.',
+    'gd.cohesion.title': 'This explains two buttons from the MLP page',
+    'gd.cohesion.lr': 'The learning-rate slider here is the same one as there: too large overshoots, too small crawls.',
+    'gd.cohesion.restart':
+      'And “Restart” rolls a new starting point – just like here, the network lands sometimes in the deep, sometimes in a shallow valley. That’s why restarting helps when XOR gets stuck with two neurons.',
+    'gd.cohesion.link': 'to the MLP page',
+    // --- Backpropagation (sandbox) ---
+    'bp.title': 'Backpropagation: how the network adjusts its weights',
+    'bp.subtitle':
+      'Gradient descent needs a slope for every weight. Backpropagation computes it – here with visible weights and real numbers. Change the input, target and learning rate and watch the network learn.',
+    'bp.caption':
+      'Forward, the network computes its answer; the error shows how wrong it is; backward, the chain rule gives every weight its gradient – its blame for the error. One step downhill adjusts all weights at once.',
+    'bp.moreP1':
+      'Backpropagation is just the chain rule, neatly organised. The error at the output is passed backward layer by layer; at each edge you multiply by the local contribution. So every weight – even deep in the network – gets its own gradient, without forming millions of derivatives by hand.',
+    'bp.moreP2':
+      'A weight’s gradient says: if I nudge it up a little, how does the error change? Sign = direction, magnitude = leverage – exactly what gradient descent needs. With sigmoid and cross-entropy the error y − target is already the slope at the output, the starting point of the backward pass.',
+    'bp.moreP3':
+      'This 2-2-1 network learns its single example in a few steps. The very same machinery trains a language model – just with billions of weights, many layers and millions of examples instead of one. Compute forward, measure the error, get the gradients backward, take a small step, repeat.',
+    'bp.nextLabel': 'Outlook: diffusion',
+    'bp.aria': 'Network 2-2-1 with weights',
+    'bp.phase.forward': 'Forward',
+    'bp.phase.error': 'Error',
+    'bp.phase.backward': 'Backward',
+    'bp.phase.update': 'Adjust',
+    'bp.read.iter': 'Steps',
+    'bp.read.error': 'Error',
+    'bp.read.target': 'Target',
+    'bp.apply': 'Apply step',
+    'bp.apply10': '10 steps',
+    'bp.newWeights': 'New weights',
+    'bp.reset': 'Reset',
+    'bp.input': 'Input',
+    'bp.learnRate': 'Learning rate',
+    'bp.target': 'Target',
+    'bp.hint':
+      'Click an edge to see that weight’s derivation. “Apply step” really changes the weights – repeat it and watch y move toward the target and the error shrink.',
+    'bp.focus.title': 'Weight',
+    'bp.focus.back': '← all',
+    'bp.focus.weight': 'Current value',
+    'bp.focus.contrib': 'Forward contribution',
+    'bp.focus.grad': 'Gradient (blame for the error)',
+    'bp.focus.update': 'After the step',
+    'bp.focus.note':
+      'The gradient’s sign = direction, its magnitude = how strongly this weight affects the error. The step moves it against the gradient.',
+    'bp.m.fwTitle': 'Forward: what does the network say?',
+    'bp.m.fwNote':
+      'Each neuron forms the weighted sum of its inputs and squashes it (tanh or σ). All numbers come from the weights in the diagram.',
+    'bp.m.errTitle': 'Measure the error',
+    'bp.m.errNote':
+      'How far is the output from the target? With sigmoid + cross-entropy this error is directly the slope at the output – the start of the backward pass.',
+    'bp.m.bwTitle': 'Backward: a gradient per weight',
+    'bp.m.bwNote':
+      'Chain rule: the error flows backward. First the output weights (e·h), then the blame δ at each hidden neuron, then its input weights (δ·x).',
+    'bp.m.upTitle': 'Adjust: one step downhill',
+    'bp.m.upNote':
+      'Each weight: new = old − learning rate·gradient. Press “Apply step” to carry it out.',
+
+    // --- Diffusion (generative outlook) ---
+    'df.title': 'Diffusion: how random noise becomes a shape',
+    'df.subtitle':
+      'Image generators start from pure noise and denoise it step by step until a picture appears. Here it is in 2D, hands-on: noise a shape, teach a tiny network to undo it, then grow a fresh shape out of randomness.',
+    'df.caption':
+      'The network here really learns – in your browser – to predict the noise that was added. Same idea as Stable Diffusion or Midjourney, just with dots in a plane instead of millions of pixels.',
+    'df.moreP1':
+      'Diffusion turns an easy forward recipe on its head. Forward is simple: take a shape and stir in a little Gaussian noise step by step, until only randomness is left. For every intermediate step you know exactly how much noise you added – and that becomes the learning task.',
+    'df.moreP2':
+      'The network is given a noisy point and the noise level t, and predicts: which noise is in here? Subtract that predicted noise and you move a step back toward the original. Generating then means starting from pure randomness and repeating this step many times – the model nudges the points, bit by bit, to where the learned shape lives.',
+    'df.moreP3':
+      'Real image models do the same, just with images instead of points: input and output are whole images, the network is huge (often a U-Net or transformer), and a text prompt steers where it denoises toward. Temperature controls the scatter – low stays close to the learned shapes, high gives more variety. The core stays the same: predict noise, subtract, repeat.',
+    'df.nextLabel': 'To the real mini-model',
+    'df.shape.spiral': 'Spiral',
+    'df.shape.moons': 'Two moons',
+    'df.shape.circle': 'Circle',
+    'df.shape.heart': 'Heart',
+    'df.shapeHint': 'The target shape the model should learn.',
+    'df.phase.noise': 'Add noise',
+    'df.phase.train': 'Learn',
+    'df.phase.gen': 'Generate',
+    'df.pause': 'Pause',
+    'df.noise.level': 'Noise level',
+    'df.noise.signal': 'Signal',
+    'df.noise.noise': 'Noise',
+    'df.noise.t0': 'Level 0: the pure target shape. Drag the slider right and watch it dissolve.',
+    'df.noise.tT': 'Full level: nothing but randomness – a Gaussian cloud, no pattern left. This is exactly where generating starts later.',
+    'df.noise.mid': 'Part shape, part noise. For every level it is known how much noise was added – that is the learning task.',
+    'df.train.sample': 'Sample',
+    'df.train.field': 'Denoising field',
+    'df.train.steps': 'Steps',
+    'df.train.loss': 'Error',
+    'df.train.lossCurve': 'Error (predicting noise)',
+    'df.train.start': 'Start training',
+    'df.train.resume': 'Keep training',
+    'df.speed.slow': 'Slow-mo',
+    'df.speed.normal': 'Normal',
+    'df.speed.turbo': 'Turbo',
+    'df.train.toGen': 'Generate',
+    'df.train.needMore': 'Train a bit more, until the sample takes shape.',
+    'df.train.idle':
+      'Press “Start training”. At first the sample is pure noise – watch it organize with every step.',
+    'df.train.emerge':
+      'The sample is generated from randomness using the network’s current state. The better it predicts the noise, the clearer the shape.',
+    'df.train.fieldHint':
+      'Arrows show where the network pushes a noisy point (the predicted noise, subtracted). As training goes on, they line up toward the target shape.',
+    'df.gen.temp': 'Temperature',
+    'df.gen.start': 'Generate',
+    'df.gen.again': 'Again',
+    'df.gen.untrained': 'The network is barely trained – randomness won’t become a shape yet. Go back to “Learn”.',
+    'df.gen.idle': 'Start from pure noise. Step by step the model subtracts the predicted noise – the shape appears.',
+    'df.gen.running': 'Denoising … each step one noise level lower.',
+    'df.gen.done': 'Done: randomness has become the learned shape. Use temperature to trade scatter for sharpness.',
+
+    // --- Perceptron lab (viz) ---
+    'pp.spam.name': 'Spam guard',
+    'pp.spam.feat0': 'Trigger word?',
+    'pp.spam.feat1': 'Sender known?',
+    'pp.spam.v00': 'no trigger word',
+    'pp.spam.v01': '"free/you won"',
+    'pp.spam.v10': 'unknown',
+    'pp.spam.v11': 'in address book',
+    'pp.spam.class0': 'Real',
+    'pp.spam.class1': 'Spam',
+    'pp.spam.blurb':
+      'Real spam filters compute exactly like this: add up suspicious signals, and past a threshold it’s "junk". Set the weights – a trigger word argues for spam, a known sender against it (negative weight).',
+    'pp.letters.name': 'Letter bet',
+    'pp.letters.feat0': 'second-to-last letter',
+    'pp.letters.feat1': 'last letter',
+    'pp.letters.v00': 'consonant',
+    'pp.letters.v01': 'vowel',
+    'pp.letters.v10': 'consonant',
+    'pp.letters.v11': 'vowel',
+    'pp.letters.class0': 'consonant follows',
+    'pp.letters.class1': 'vowel follows',
+    'pp.letters.blurb':
+      'The same task as this page’s next-letter predictor, boiled down to one neuron: guess from the last two letters whether a vowel follows. This exact atom sits hundreds of times side by side in the real model.',
+    'pp.movie.name': 'Movie taste',
+    'pp.movie.feat0': 'Action?',
+    'pp.movie.feat1': 'Comedy?',
+    'pp.movie.v00': 'no action',
+    'pp.movie.v01': 'action',
+    'pp.movie.v10': 'no comedy',
+    'pp.movie.v11': 'comedy',
+    'pp.movie.class0': 'don’t like',
+    'pp.movie.class1': 'like',
+    'pp.movie.blurb':
+      'Taste: I like pure action, I like pure comedy – the mix ("action comedy") not, and something with neither either. Try to find a separating line for that …',
+    'pp.jogging.name': 'Go jogging?',
+    'pp.jogging.feat0': 'dry?',
+    'pp.jogging.feat1': 'time?',
+    'pp.jogging.v00': 'rain',
+    'pp.jogging.v01': 'dry',
+    'pp.jogging.v10': 'no time',
+    'pp.jogging.v11': 'time',
+    'pp.jogging.class0': 'stay home',
+    'pp.jogging.class1': 'go jogging',
+    'pp.jogging.blurb':
+      'A "firing neuron" as an everyday decision: good reasons pile up, and past a point it tips to "yes". How much does each reason matter to you (weight), and how easily are you convinced (threshold)?',
+    'pp.and.name': 'AND',
+    'pp.and.blurb': 'AND: true only when both inputs are 1. A single straight line can do that.',
+    'pp.or.name': 'OR',
+    'pp.or.blurb': 'OR: true as soon as at least one input is 1. A line separates that too.',
+    'pp.xor.name': 'XOR',
+    'pp.xor.blurb':
+      'XOR: true when exactly one input is 1. No single straight line separates these four points – this is the wall a single perceptron hits.',
+    'pp.points.name': 'Points',
+    'pp.points.feat0': 'Feature 1',
+    'pp.points.feat1': 'Feature 2',
+    'pp.points.class0': 'Class A',
+    'pp.points.class1': 'Class B',
+    'pp.points.blurb':
+      'Place your own points in the field and let the neuron find a separating line. If the colours sit cleanly apart it works – entangle them (like XOR) and the line oscillates forever.',
+
+    'pl.group.everyday': 'Everyday',
+    'pl.group.logic': 'Logic',
+    'pl.group.custom': 'Custom',
+    'pl.neuron.title': 'The neuron',
+    'pl.neuron.descPoints': 'With the learned weights – worked out at the chosen point.',
+    'pl.neuron.descPick': 'Click a case on the right – the neuron works it out here.',
+    'pl.neuron.explainHint': 'Click the neuron (?) to explain Σ and θ.',
+    'pl.neuron.empty': 'Place a few points in the field on the right.',
+    'pl.surface.title': 'Decision surface',
+    'pl.correct': 'correct',
+    'pl.weights': 'Weights',
+    'pl.weights.hint': 'How strongly a feature counts (negative = argues against).',
+    'pl.threshold': 'Threshold',
+    'pl.threshold.hint':
+      'How easily the neuron says "yes": it only fires once the weighted sum exceeds θ.',
+    'pl.train': 'Train',
+    'pl.pause': 'Pause',
+    'pl.correctBtn': 'Correct',
+    'pl.check': 'Check',
+    'pl.steps': 'learning steps',
+    'pl.sep.title': 'Separated. ',
+    'pl.sep.body':
+      'A single straight line splits all cases correctly – the neuron classifies every point right.',
+    'pl.stuck.title': 'No line separates this. ',
+    'pl.stuck.body1':
+      'However much the neuron readjusts – the separating line oscillates and never settles. Some patterns (like XOR) a ',
+    'pl.stuck.em': 'single',
+    'pl.stuck.body2':
+      ' perceptron fundamentally cannot separate. For that you need several stacked – that is the step to the MLP.',
+    'pl.check.title': 'Checked – error. ',
+    'pl.check.atPoint': 'At point',
+    'pl.check.atCase': 'At case',
+    'pl.check.computes': 'the neuron computes',
+    'pl.check.shouldBe': '– but the correct answer is',
+    'pl.check.hintPre': 'Press',
+    'pl.check.hintCorrect': '"Correct"',
+    'pl.check.hintPost': ' to nudge the weights a small step towards the right answer.',
+    'pl.step.title': 'Corrected. ',
+    'pl.step.tooLow': 'too low',
+    'pl.step.tooHigh': 'too high',
+    'pl.step.up': 'up',
+    'pl.step.down': 'down',
+    'pl.step.body1': 'The neuron computed ',
+    'pl.step.body2a': ' – so the weights of the active features (value 1) go ',
+    'pl.step.body2b': ' and the threshold goes ',
+    'pl.step.body2c': ':',
+    'pl.calc.threshold': '(threshold)',
+    'pl.calc.fires': 'fires',
+    'pl.calc.quiet': 'quiet',
+    'pl.legend.wrong': 'misclassified',
+    'pl.legend.editHint': 'Click the field to place a point · click a point to remove it.',
+    'pl.points.set': 'Place:',
+    'pl.points.example': 'Example:',
+    'pl.points.separable': 'separable',
+    'pl.points.entangled': 'entangled',
+    'pl.points.clear': 'clear',
+    'pl.aria.neuron': 'Neuron',
+
+    // --- MLP lab (viz) ---
+    'ml.net.title': 'The network',
+    'ml.net.desc': 'hidden neurons each draw a line – the output combines them.',
+    'ml.net.explainHint': 'Click a neuron to explain its function: tanh (hidden) or σ (output).',
+    'ml.showLines': 'Neuron lines',
+    'ml.data': 'Data',
+    'ml.circle': 'Circle',
+    'ml.noisy': 'Noise',
+    'ml.activation': 'Activation',
+    'ml.set': 'Place',
+    'ml.hiddenNeurons': 'hidden neurons',
+    'ml.learnRate': 'Learning rate',
+    'ml.restart': 'Restart',
+    'ml.epochs': 'epochs',
+    'ml.error': 'Error',
+    // Overfitting (train vs. test)
+    'ml.acc.train': 'Train',
+    'ml.acc.test': 'Test',
+    'ml.overfit.title': 'Overfitting.',
+    'ml.overfit.body':
+      'The network gets {train} of the training points but only {test} of the unseen test points (hollow rings). It has essentially memorised the training set, mislabelled outliers and all – the boundary wiggles around individual points. Fewer hidden neurons force a smoother boundary that fits new data better.',
+    'ml.generalizes.title': 'Generalises.',
+    'ml.generalizes.body':
+      'Train {train}, test {test} – the learned boundary also fits new, unseen points. On clean data even a large network manages this.',
+    'ml.fit.hint':
+      'While training, watch both numbers. On the noisy set, more neurons (8) push the training accuracy towards 100 % while the test accuracy lags behind – that is overfitting. Fewer neurons (3) keep the two closer together.',
+    'ml.sep.body':
+      'Several lines, combined by the second layer, cut the surface so that all points are right – something a ',
+    'ml.sep.em': 'single',
+    'ml.sep.body2':
+      ' line cannot do. Exactly this stack of weighted sums and squashing functions is a neural network.',
+    'ml.hint.pre': 'Press ',
+    'ml.hint.train': 'Train',
+    'ml.hint.mid':
+      ' and watch the curved boundary form. If it gets stuck on a hard pattern (e.g. circle), give the network ',
+    'ml.hint.more': 'more neurons',
+    'ml.hint.mid2': ' – or try a different random start with ',
+    'ml.hint.restart': 'Restart',
+    'ml.hint.post': '.',
+    'ml.diagram.input': 'Input',
+    'ml.diagram.hidden': 'hidden',
+    'ml.diagram.output': 'Output',
+    'ml.aria.net': 'Net',
+
+    // --- Activation explainer card (viz) ---
+    'act.sum.title': 'Σ > θ — weighted sum meets threshold',
+    'act.sum.body':
+      'The neuron multiplies each input by its weight and adds everything into the weighted sum Σ. It compares this with the threshold θ: if Σ is above it, it fires (output 1), otherwise it rests (0). That is the hard step function on the right – a switch with no in-between.',
+    'act.sum.x': 'Σ − θ',
+    'act.tanh.title': 'tanh — the soft step',
+    'act.tanh.body':
+      'A hidden neuron also forms a weighted sum – but squashes it smoothly with tanh to a value between −1 and +1, instead of switching abruptly. This curve has a slope everywhere; only that lets the network learn in small steps (gradient descent). A hard step would be flat – no hint which way to adjust.',
+    'act.tanh.x': 'weighted sum',
+    'act.sigmoid.title': 'Σ → σ — sum, then probability',
+    'act.sigmoid.body':
+      'The output again forms a weighted sum of the hidden values and squashes it with the sigmoid function σ to 0…1. This reads as a probability: near 1 means "surely class B", near 0 "surely class A", 0.5 is the boundary.',
+    'act.sigmoid.x': 'weighted sum',
+    'act.relu.title': 'ReLU — the kink at 0',
+    'act.relu.body':
+      'ReLU passes positive values straight through and sets everything negative to 0 – a kink instead of a smooth curve. It has no flat saturating tails like tanh, so gradients stay strong and deep networks learn faster; that is why ReLU is today’s default. In the lab it makes the decision boundary piecewise straight, so angular rather than round. On this tiny network a neuron can "die" (always 0), though – then "Restart" helps.',
+    'act.relu.x': 'weighted sum',
+    'act.close': 'Close',
+    'act.aria.plot': 'Activation function',
 
     // === AI in practice (Thread 8) ===
     // --- Local vs. cloud ---

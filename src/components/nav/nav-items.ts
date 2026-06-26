@@ -62,4 +62,17 @@ export const navSections: NavSection[] = [
       { key: 'nav.privacy', href: '/privacy' },
     ],
   },
+  // Optionaler „Mathe-Teil" am Ende des Bogens: der kleinste Baustein (Perzeptron),
+  // aus dem die Modelle der vorherigen Sektionen bestehen. Schliesst mit einem
+  // generativen Ausblick (Diffusion: wie aus Rauschen ein Bild wird).
+  {
+    key: 'nav.section.mlBasics',
+    links: [
+      { key: 'nav.perceptron', href: '/perceptron' },
+      { key: 'nav.mlp', href: '/mlp' },
+      { key: 'nav.gradient', href: '/gradient-descent' },
+      { key: 'nav.backprop', href: '/backpropagation' },
+      { key: 'nav.diffusion', href: '/diffusion' },
+    ],
+  },
 ]

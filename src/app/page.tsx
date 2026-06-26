@@ -61,7 +61,11 @@ export default function Home() {
           {t('home.paths.heading')}
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {navSections.map((section) => {
+          {/* Nur die Lebenszyklus-Sektionen mit Meta (Daten/Training/Inferenz).
+              Optionale Tracks wie „ML-Grundlagen" stehen nur in der Seitennav. */}
+          {navSections
+            .filter((section) => sectionMeta[section.key])
+            .map((section) => {
             const meta = sectionMeta[section.key]
             const Icon = meta.icon
             return (
