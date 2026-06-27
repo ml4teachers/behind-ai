@@ -58,7 +58,7 @@ function TermEntry({ term, locale, t }: { term: GlossaryTerm; locale: 'de' | 'en
   const wiki = wikipediaHref(term, locale)
   const hasExternal = wiki || (term.links && term.links.length > 0)
   return (
-    <div id={term.id} className="scroll-mt-20 border-t py-5 first:border-t-0">
+    <div id={term.id} className="scroll-mt-48 border-t py-5 first:border-t-0 sm:scroll-mt-40">
       <h3 className="text-lg font-semibold tracking-tight">{term.term[locale]}</h3>
       <p className="mt-1.5 leading-relaxed text-muted-foreground">
         <GlossaryText excludeId={term.id}>{term.long[locale]}</GlossaryText>
@@ -155,7 +155,7 @@ export default function GlossaryPage() {
       )}
 
       {groups.map(({ cat, terms }) => (
-        <section key={cat} id={`cat-${cat}`} className="scroll-mt-32 space-y-1">
+        <section key={cat} id={`cat-${cat}`} className="scroll-mt-48 space-y-1 sm:scroll-mt-40">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/70">
             {t(`glossary.category.${cat}`)}
           </h2>

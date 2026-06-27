@@ -33,11 +33,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* Desktop: ausblendbare Sidebar */}
         <aside
           className={cn(
-            'hidden shrink-0 overflow-hidden border-r border-border transition-[width] duration-200 ease-out md:block',
+            'sticky top-14 hidden h-[calc(100vh-3.5rem)] shrink-0 overflow-hidden border-r border-border transition-[width] duration-200 ease-out md:block',
             open ? 'w-64' : 'w-0',
           )}
         >
-          <div className="sticky top-14 max-h-[calc(100vh-3.5rem)] w-64 overflow-y-auto p-3">
+          <div className="h-full w-64 overflow-y-auto p-3">
             <Navigation />
           </div>
         </aside>
