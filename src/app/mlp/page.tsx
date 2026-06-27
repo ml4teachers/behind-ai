@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/accordion'
 import { MlpLab } from '@/components/visualizations/mlp-lab'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { GlossaryText } from '@/components/glossary/glossary-text'
 
 export default function MlpPage() {
   const t = useTranslations()
@@ -18,7 +19,7 @@ export default function MlpPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8 space-y-10">
       <header className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">{t('mlp.title')}</h1>
-        <p className="text-lg text-muted-foreground">{t('mlp.subtitle')}</p>
+        <p className="text-lg text-muted-foreground"><GlossaryText>{t('mlp.subtitle')}</GlossaryText></p>
       </header>
 
       {/* Interaktiv zuoberst */}
@@ -26,7 +27,7 @@ export default function MlpPage() {
         <div className="rounded-xl border bg-card p-4 sm:p-6">
           <MlpLab />
         </div>
-        <p className="text-sm text-muted-foreground">{t('mlp.caption')}</p>
+        <p className="text-sm text-muted-foreground"><GlossaryText>{t('mlp.caption')}</GlossaryText></p>
       </section>
 
       {/* Mehr dazu */}
@@ -35,10 +36,10 @@ export default function MlpPage() {
           <AccordionItem value="more" className="border-b-0">
             <AccordionTrigger className="text-base">{t('common.moreAbout')}</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base leading-relaxed text-muted-foreground">
-              <p>{t('mlp.moreP1')}</p>
-              <p>{t('mlp.moreP2')}</p>
-              <p>{t('mlp.moreP3')}</p>
-              <p>{t('mlp.moreP4')}</p>
+              <p><GlossaryText>{t('mlp.moreP1')}</GlossaryText></p>
+              <p><GlossaryText>{t('mlp.moreP2')}</GlossaryText></p>
+              <p><GlossaryText>{t('mlp.moreP3')}</GlossaryText></p>
+              <p><GlossaryText>{t('mlp.moreP4')}</GlossaryText></p>
             </AccordionContent>
           </AccordionItem>
         </Accordion>

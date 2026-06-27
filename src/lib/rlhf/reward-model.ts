@@ -30,14 +30,24 @@ export const TRAITS = [
 export type TraitKey = (typeof TRAITS)[number]
 export const D = TRAITS.length
 
-// Lesbare Labels + kurze Erklärung (DE; EN-Migration der Viz-Strings → Thread 9).
-export const TRAIT_META: Record<TraitKey, { label: string; hint: string }> = {
+// Lesbare Labels + kurze Erklärung, je UI-Sprache. Die TRAITS-Schlüssel bleiben
+// deutsche Code-Identifier; nur Label/Hint werden übersetzt.
+const TRAIT_META_DE: Record<TraitKey, { label: string; hint: string }> = {
   freundlich: { label: 'Freundlich', hint: 'warmer, höflicher Ton' },
   strukturiert: { label: 'Strukturiert', hint: 'klar gegliedert, übersichtlich' },
   ausfuehrlich: { label: 'Ausführlich', hint: 'lang, viele Details' },
   selbstsicher: { label: 'Selbstsicher', hint: 'klingt sehr überzeugt' },
   schmeichelhaft: { label: 'Schmeichelhaft', hint: 'lobt dich, gibt dir recht' },
 }
+const TRAIT_META_EN: Record<TraitKey, { label: string; hint: string }> = {
+  freundlich: { label: 'Friendly', hint: 'warm, polite tone' },
+  strukturiert: { label: 'Structured', hint: 'clearly organised, easy to follow' },
+  ausfuehrlich: { label: 'Detailed', hint: 'long, lots of detail' },
+  selbstsicher: { label: 'Confident', hint: 'sounds very sure' },
+  schmeichelhaft: { label: 'Flattering', hint: 'praises you, agrees with you' },
+}
+export const traitMeta = (locale: string): Record<TraitKey, { label: string; hint: string }> =>
+  locale === 'en' ? TRAIT_META_EN : TRAIT_META_DE
 
 export interface CurvePoint {
   x: number

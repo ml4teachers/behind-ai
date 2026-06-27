@@ -26,8 +26,16 @@ import {
   ReloadIcon,
 } from '@radix-ui/react-icons'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { useMounted } from '@/lib/use-mounted'
+import { useUIStore } from '@/lib/store'
+import { defaultLocale } from '@/lib/i18n/config'
 import { ARITH_PROBLEMS, DEFAULT_ARITH } from '@/lib/reasoning/problems'
 import { evalArith, isCorrect, parseAnswer } from '@/lib/reasoning/verify'
+import { lookupCot, pickOne, thinkingDelay } from '@/lib/fixtures'
+
+// Aufgabenstellung in der UI-Sprache (steuert die Ausgabesprache des Modells).
+const calcPrompt = (expr: string, locale: string) =>
+  locale === 'en' ? `Calculate: ${expr}` : `Berechne: ${expr}`
 
 type Mode = 'direct' | 'cot'
 type Verdict = 'correct' | 'wrong' | null
@@ -58,6 +66,9 @@ function shorten(s: string, n = 48): string {
 
 export function CotComparison() {
   const t = useTranslations()
+  const mounted = useMounted()
+  const storeLocale = useUIStore((s) => s.locale)
+  const locale = mounted ? storeLocale : defaultLocale
   const [input, setInput] = useState(DEFAULT_ARITH.expr)
   const [direct, setDirect] = useState<PanelState>(IDLE)
   const [cot, setCot] = useState<PanelState>(IDLE)
@@ -69,7 +80,7 @@ export function CotComparison() {
         const res = await fetch('/api/reasoning', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt, mode, temperature: mode === 'direct' ? 0.6 : 0.4 }),
+          body: JSON.stringify({ prompt, mode, temperature: mode === 'direct' ? 0.6 : 0.4, locale }),
         })
         const data = await res.json()
         if (!res.ok || data.error) throw new Error(data.error || `Fehler ${res.status}`)
@@ -81,6 +92,20 @@ export function CotComparison() {
         set({ ...IDLE, error: err instanceof Error ? err.message : 'Unbekannter Fehler' })
       }
     },
+    [locale],
+  )
+
+  // Eine Musterlösung (gecachter echter Lauf) in einem Panel anzeigen – läuft
+  // durch dieselbe clean→parse→Urteil-Kette wie eine Live-Antwort.
+  const serveCached = useCallback(
+    async (texts: string[], truth: number | null, set: (s: PanelState) => void) => {
+      set({ ...IDLE, loading: true })
+      await thinkingDelay()
+      const text = clean(pickOne(texts))
+      const answer = parseAnswer(text)
+      const verdict: Verdict = truth === null ? null : isCorrect(answer, truth) ? 'correct' : 'wrong'
+      set({ answer, text, loading: false, error: text ? null : 'Keine Ausgabe – bitte nochmal.', verdict })
+    },
     [],
   )
 
@@ -89,19 +114,31 @@ export function CotComparison() {
       const q = raw.trim()
       if (!q) return
       const truth = knownTruth ?? evalArith(q)
-      // Reiner Rechenausdruck → als „Berechne: …" stellen; sonst Eingabe wörtlich.
-      const prompt = truth !== null ? `Berechne: ${q}` : q
+      // Reiner Rechenausdruck → als „Berechne: …"/„Calculate: …" stellen; sonst wörtlich.
+      const prompt = truth !== null ? calcPrompt(q, locale) : q
+
+      // Vorgegebene Aufgabe -> echte Musterläufe aus dem Cache (kein API-Aufruf).
+      // Schlüssel ist der volle Prompt → DE/EN landen auf getrennten Einträgen.
+      const cached = lookupCot(prompt)
+      if (cached && cached.direct.length && cached.cot.length) {
+        serveCached(cached.direct, truth, setDirect)
+        serveCached(cached.cot, truth, setCot)
+        return
+      }
+
+      // Freie Eingabe -> echtes Modell, beide Modi parallel.
       fetchMode(prompt, 'direct', truth, setDirect)
       fetchMode(prompt, 'cot', truth, setCot)
     },
-    [fetchMode],
+    [fetchMode, serveCached, locale],
   )
 
-  // Beim ersten Laden die Standard-Aufgabe zeigen (sofort spielbar).
+  // Beim ersten Laden (sobald die echte Sprache feststeht) die Standard-Aufgabe.
   useEffect(() => {
+    if (!mounted) return
     run(DEFAULT_ARITH.expr, DEFAULT_ARITH.answer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [mounted])
 
   const busy = direct.loading || cot.loading
   const truthOfInput = evalArith(input.trim())

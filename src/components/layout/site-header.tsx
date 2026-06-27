@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { LanguageToggle } from '@/components/language-toggle'
 import { AccentToggle } from '@/components/accent-toggle'
+import { SiteSearch } from '@/components/layout/site-search'
 import { useTranslations } from '@/lib/i18n/use-translations'
 
 interface SiteHeaderProps {
@@ -48,6 +49,7 @@ export function SiteHeader({ onToggleSidebar, onOpenMobileNav }: SiteHeaderProps
       </Link>
 
       <div className="ml-auto flex items-center gap-0.5">
+        <SiteSearch />
         <AccentToggle />
         <LanguageToggle />
         <ThemeToggle />

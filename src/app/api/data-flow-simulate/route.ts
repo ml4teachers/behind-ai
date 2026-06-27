@@ -56,7 +56,9 @@ function createAuth(): GoogleAuth {
 
 const auth = createAuth();
 
-const SYSTEM_INSTRUCTION =
+type Lang = 'de' | 'en';
+
+const SYSTEM_INSTRUCTION_DE =
   'Du bist ein Datenschutz-Helfer für Lehrpersonen. Untersuche den eingegebenen ' +
   'Text und finde alle schützenswerten Stellen. Unterscheide dabei ZWEI Arten und ' +
   'setze das Feld "identifying" entsprechend:\n' +
@@ -80,6 +82,35 @@ const SYSTEM_INSTRUCTION =
   'bleiben wörtlich.)\n' +
   'Wenn nichts Schützenswertes vorkommt, gib eine leere Liste und den Originaltext ' +
   'zurück. Antworte ausschliesslich im JSON.';
+
+const SYSTEM_INSTRUCTION_EN =
+  'You are a privacy helper for teachers. Examine the entered text and find all ' +
+  'sensitive passages. Distinguish TWO kinds and set the field "identifying" ' +
+  'accordingly:\n' +
+  '• identifying=true – details that point to a SPECIFIC real person: full ' +
+  'names, concrete class labels (e.g. "3B"), school or place names, addresses, ' +
+  'dates of birth, contact details (email, phone).\n' +
+  '• identifying=false – sensitive CONTENT that reveals NOBODY without a name: ' +
+  'grades and performance, learning or behaviour descriptions, health or ' +
+  'support notes.\n' +
+  'Produce an anonymised version of EXACTLY the same text in which ONLY the ' +
+  'identifying passages (identifying=true) are replaced by a neutral placeholder ' +
+  'in square brackets (e.g. [Name], [Class], [Place]). Leave the sensitive ' +
+  'content (identifying=false) VERBATIM – without a name it reveals nobody, and ' +
+  'it is exactly what is needed for a useful answer. Never replace whole clauses, ' +
+  'only the identifying detail itself; the text must stay complete and ' +
+  'grammatically correct.\n' +
+  'Example: "Support plan for Lena Miller from class 3B, who has a C in maths ' +
+  'and struggles to concentrate at home." → "Support plan for [Name] from class ' +
+  '[Class], who has a C in maths and struggles to concentrate at home." (name ' +
+  'and class identify → replaced; grade and concentration note stay verbatim.)\n' +
+  'If nothing sensitive occurs, return an empty list and the original text. ' +
+  'Respond exclusively in JSON.';
+
+const SYSTEM_INSTRUCTION: Record<Lang, string> = {
+  de: SYSTEM_INSTRUCTION_DE,
+  en: SYSTEM_INSTRUCTION_EN,
+};
 
 // Vertex/Gemini "controlled generation": OpenAPI-Teilschema als responseSchema.
 const RESPONSE_SCHEMA = {
@@ -144,6 +175,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     promptText = body.promptText;
+    const lang: Lang = body.locale === 'en' ? 'en' : 'de';
 
     if (!promptText || typeof promptText !== 'string') {
       return NextResponse.json(
@@ -162,7 +194,7 @@ export async function POST(request: NextRequest) {
     const projectId = process.env.GCP_PROJECT_ID || (await auth.getProjectId());
 
     const requestBody = JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
+      systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION[lang] }] },
       contents: [{ role: 'user', parts: [{ text: promptText }] }],
       generationConfig: {
         temperature: 0.1,

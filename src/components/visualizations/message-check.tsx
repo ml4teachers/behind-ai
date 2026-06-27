@@ -1,9 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Loader2, AlertCircle, ShieldAlert, Check, ArrowRight } from 'lucide-react'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { useMounted } from '@/lib/use-mounted'
+import { useUIStore } from '@/lib/store'
+import { defaultLocale } from '@/lib/i18n/config'
+import { lookupPrivacy, thinkingDelay } from '@/lib/fixtures'
 
 // ---------------------------------------------------------------------------
 // Nachrichten-Check: „Was steckt in deiner Anfrage?" Der Eye-Opener.
@@ -17,10 +21,17 @@ import { useTranslations } from '@/lib/i18n/use-translations'
 type SensitivePart = { text: string; category: string; identifying?: boolean; reason: string }
 type Analysis = { sensitiveParts: SensitivePart[]; anonymizedText: string; fallback?: boolean }
 
-const EXAMPLES = [
+// Je Sprache eigene Beispiele (das Modell analysiert in der Eingabesprache; der
+// Cache-Schlüssel ist der exakte Eingabetext).
+const EXAMPLES_DE = [
   'Schreib eine Förderplanung für Lena Müller aus der 3b, die in Mathe eine 2.5 hat und sich zu Hause schwer konzentrieren kann.',
   'Formuliere eine Rückmeldung an die Eltern von Tim Berger zu seiner Lese-Rechtschreib-Schwäche.',
   'Erkläre den Wasserkreislauf einfach und anschaulich für eine 5. Klasse.',
+]
+const EXAMPLES_EN = [
+  'Write a support plan for Lena Miller from class 3B, who has a C in maths and struggles to concentrate at home.',
+  'Draft a note to the parents of Tim Berger about his dyslexia.',
+  'Explain the water cycle simply and vividly for a year 5 class.',
 ]
 
 // CATEGORY_LABELS built inside component via useTranslations()
@@ -79,20 +90,43 @@ function HighlightedAnon({ text }: { text: string }) {
 
 export function MessageCheck() {
   const t = useTranslations()
-  const [input, setInput] = useState(EXAMPLES[0])
+  const mounted = useMounted()
+  const storeLocale = useUIStore((s) => s.locale)
+  const locale = mounted ? storeLocale : defaultLocale
+  const EXAMPLES = locale === 'en' ? EXAMPLES_EN : EXAMPLES_DE
+  const [input, setInput] = useState(EXAMPLES_DE[0])
   const [analysis, setAnalysis] = useState<Analysis | null>(null)
   const [loading, setLoading] = useState(false)
   const [showAnon, setShowAnon] = useState(false)
+
+  // Beim Mounten den Default-Text auf die echte Sprache umstellen (solange der
+  // Nutzer noch nichts eingegeben hat).
+  useEffect(() => {
+    if (!mounted) return
+    const enDefault = EXAMPLES_EN[0]
+    setInput((prev) => (prev === EXAMPLES_DE[0] && storeLocale === 'en' ? enDefault : prev))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted])
 
   async function check() {
     if (!input.trim()) return
     setLoading(true)
     setShowAnon(false)
+
+    // Vorgegebenes Beispiel -> echte Musteranalyse aus dem Cache (kein API-Aufruf).
+    const cached = lookupPrivacy(input)
+    if (cached) {
+      await thinkingDelay()
+      setAnalysis({ sensitiveParts: cached.sensitiveParts, anonymizedText: cached.anonymizedText })
+      setLoading(false)
+      return
+    }
+
     try {
       const res = await fetch('/api/data-flow-simulate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ promptText: input }),
+        body: JSON.stringify({ promptText: input, locale }),
       })
       const data = (await res.json()) as Analysis
       setAnalysis(data)

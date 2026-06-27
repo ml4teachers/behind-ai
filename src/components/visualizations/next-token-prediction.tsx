@@ -91,7 +91,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
 
         setTopTokens(simulatedResponse.topTokens);
         setRemainingProbability(simulatedResponse.remainingProbability);
-        setApiNotice("Simulationsmodus aktiv - keine echte API verwendet");
+        setApiNotice(t('nextTokenPred.simMode'));
         setLoading(false);
         return;
       }
@@ -106,7 +106,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
 
 
       if (!response.ok) {
-        throw new Error(`API-Anfrage fehlgeschlagen: ${response.status}`);
+        throw new Error(`${t('nextTokenPred.apiFailed')} ${response.status}`);
       }
 
       const data = await response.json();
@@ -129,7 +129,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
       // Wenn keine Tokens zurückgegeben wurden, aber auch kein Fehler vorliegt,
       // zeigen wir eine entsprechende Nachricht an
       if (!data.topTokens || data.topTokens.length === 0) {
-        setApiNotice("Keine Token-Wahrscheinlichkeiten vom Modell erhalten. Versuche es mit einem anderen Text.");
+        setApiNotice(t('nextTokenPred.noProbs'));
       }
     } catch (err) {
       console.error("Fehler in fetchNextTokenPrediction:", err);
@@ -452,7 +452,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center p-6 bg-muted rounded-lg max-w-md">
             <p className="mb-4 text-foreground">
-              {apiNotice || "Keine Token-Vorhersagen vom Modell erhalten."}
+              {apiNotice || t('nextTokenPred.noTokens')}
             </p>
             <div className="flex justify-center gap-2">
               <Button
@@ -469,7 +469,7 @@ export function NextTokenPrediction({ text, useSimulation = false }: NextTokenPr
                     const simulated = getSimulatedPredictions(currentText);
                     setTopTokens(simulated.topTokens);
                     setRemainingProbability(simulated.remainingProbability);
-                    setApiNotice("Verwende simulierte Daten statt API-Ergebnissen");
+                    setApiNotice(t('nextTokenPred.usingSim'));
                   }}
                 >
                   {t('nextTokenPred.useSimulation')}

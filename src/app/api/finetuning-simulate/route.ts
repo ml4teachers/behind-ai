@@ -43,25 +43,46 @@ const MODEL_CANDIDATES: string[] = Array.from(
 // NICHT antworten. Bewusst stark formuliert, weil heutige Chat-Modelle stark
 // auf "hilfreich antworten" trainiert sind und sonst sofort in den Assistenz-
 // Modus fallen.
-const BASE_INSTRUCTION =
-  'Du bist ein ROHES Sprachmodell direkt nach dem Pretraining: nur mit ' +
-  'zufälligem Internet-Text trainiert, ganz OHNE Assistenz-Finetuning. Du ' +
-  'kannst keine Fragen beantworten und keine Anweisungen befolgen – du kennst ' +
-  'das Konzept "Assistent" gar nicht. Du tust nur eine Sache: den vorgegebenen ' +
-  'Text genau so fortsetzen, wie er zufällig irgendwo im Internet weitergehen ' +
-  'könnte – etwa als nächste Zeile einer FAQ- oder Fragenliste, eines ' +
-  'Forenbeitrags, eines Blogposts oder Wikipedia-Artikels. Schreibe den Text ' +
-  'als reinen Fliesstext weiter, ohne ihn zu wiederholen, ohne ihn zu ' +
-  'kommentieren, ohne Formatierung (keine Sternchen, keine Aufzählungen, keine ' +
-  'Überschriften). Beantworte die Eingabe NICHT. Bleibe dabei stets jugendfrei ' +
-  'und unanstössig (keine sexuellen, gewalttätigen oder sonst heiklen Themen).';
+type Lang = 'de' | 'en';
+
+// Das „Basismodell" wird durch einen Prefill-Trick reproduziert: die Eingabe
+// steht als letzte Zeile einer LISTE gemischter Fragen/Aufgaben (BASE_PRIME),
+// die das Modell als MODEL-Turn fortsetzt. So setzt es zuverlässig die Liste fort
+// (nächste unzusammenhängende Zeile) statt zu antworten – auch im stark assistenz-
+// geprägten Englisch (empirisch geprüft, scripts/probe-base.mjs). Die Pointe:
+// ohne Finetuning folgt es der Anweisung NICHT, es setzt nur Text fort.
+const BASE_INSTRUCTION_DE =
+  'Du bist ein ROHES Sprachmodell direkt nach dem Pretraining, ganz OHNE ' +
+  'Assistenz-Finetuning – du kennst das Konzept "Assistent" gar nicht. Du ' +
+  'beantwortest NICHTS und befolgst KEINE Anweisung. Du setzt den Text nur so ' +
+  'fort, wie eine gemischte Liste von Fragen und Aufgaben aus dem Internet ' +
+  'weitergeht: mit der NÄCHSTEN, thematisch UNZUSAMMENHÄNGENDEN Frage oder ' +
+  'Aufgabe. Niemals eine Antwort, niemals ein Gedicht, niemals Tipps – immer nur ' +
+  'die nächste Listenzeile. Ohne Markdown (keine Sternchen, keine Aufzählungen, ' +
+  'keine Überschriften). Bleibe jugendfrei und unanstössig.';
+const BASE_INSTRUCTION_EN =
+  'You are a RAW language model straight after pretraining, entirely WITHOUT ' +
+  'assistant finetuning – you do not even know the concept of an "assistant". ' +
+  'You answer NOTHING and follow NO instruction. You only continue the text the ' +
+  'way a mixed list of questions and tasks from the internet would continue: ' +
+  'with the NEXT, topically UNRELATED question or task. Never an answer, never a ' +
+  'poem, never tips – always just the next list line. No Markdown (no asterisks, ' +
+  'no bullet points, no headings). Stay family-friendly and inoffensive.';
 
 // System-Anweisung für den ASSISTENT-Modus (normaler Chat).
-const ASSISTANT_INSTRUCTION =
+const ASSISTANT_INSTRUCTION_DE =
   'Du bist ein hilfreicher Assistent. Beantworte die Anfrage direkt, präzise ' +
   'und klar strukturiert. Halte dich kurz. Antworte in der Sprache der Anfrage. ' +
   'Verwende keine Markdown-Formatierung (keine Sternchen, keine Rauten); für ' +
   'Aufzählungen einfache Spiegelstriche (–).';
+const ASSISTANT_INSTRUCTION_EN =
+  'You are a helpful assistant. Answer the request directly, precisely and in a ' +
+  'clearly structured way. Keep it short. Answer in the language of the request. ' +
+  'Do not use Markdown formatting (no asterisks, no hashes); for lists use ' +
+  'simple dashes (–).';
+
+const BASE_INSTRUCTION: Record<Lang, string> = { de: BASE_INSTRUCTION_DE, en: BASE_INSTRUCTION_EN };
+const ASSISTANT_INSTRUCTION: Record<Lang, string> = { de: ASSISTANT_INSTRUCTION_DE, en: ASSISTANT_INSTRUCTION_EN };
 
 // Basis-Modus bewusst kurz: ein Basismodell würde endlos weiterschreiben, also
 // brechen wir nach ~100 Tokens ab (didaktisch: "es stoppt nicht von selbst").
@@ -104,21 +125,24 @@ type GeminiResponse = {
 // Versuch liefert dann fast immer Text.
 const MAX_ATTEMPTS = 3;
 
-// Zwei Zeilenumbrüche am Ende des Prefills geben dem Modell "Schwung", auf
-// einer neuen Zeile weiterzuschreiben. Ohne diesen Prime beendet Gemini den
-// vorbefüllten Turn oft sofort (finishReason=STOP -> leere Fortsetzung); mit
-// ihm setzt es zuverlässig fort (z. B. als nächster Eintrag einer Fragenliste).
-const BASE_PRIME = '\n\n';
+// Prefill als LISTE: zwei generische, unzusammenhängende Prompts VOR der Eingabe.
+// Dadurch steht die Eingabe als jüngster Listeneintrag da, und das Modell setzt
+// die Liste fort (nächste unzusammenhängende Zeile) statt zu antworten. Die
+// Prime-Zeilen werden NICHT angezeigt (die Komponente zeigt nur die Eingabe).
+const BASE_PRIME: Record<Lang, string> = {
+  de: 'In welchem Jahr begann die Französische Revolution?\n\nNenne drei Länder in Südamerika.\n\n',
+  en: 'In which year did the French Revolution begin?\n\nName three countries in South America.\n\n',
+};
 
 // Baut den Request-Body je nach Modus.
-function buildRequestBody(query: string, mode: 'base' | 'assistant'): string {
+function buildRequestBody(query: string, mode: 'base' | 'assistant', lang: Lang): string {
   if (mode === 'base') {
-    // Prefill-Trick: die Eingabe kommt als MODEL-Turn, damit Gemini sie
-    // wirklich fortsetzt statt frisch zu antworten.
+    // Prefill-Trick: die Eingabe kommt als letzte Zeile einer Liste im MODEL-Turn,
+    // damit Gemini die Liste fortsetzt statt frisch zu antworten.
     return JSON.stringify({
       contents: [
-        { role: 'user', parts: [{ text: BASE_INSTRUCTION }] },
-        { role: 'model', parts: [{ text: query + BASE_PRIME }] },
+        { role: 'user', parts: [{ text: BASE_INSTRUCTION[lang] }] },
+        { role: 'model', parts: [{ text: BASE_PRIME[lang] + query + '\n\n' }] },
       ],
       generationConfig: {
         maxOutputTokens: MAX_OUTPUT_TOKENS_BASE,
@@ -132,7 +156,7 @@ function buildRequestBody(query: string, mode: 'base' | 'assistant'): string {
 
   // assistant: normaler Chat mit System-Anweisung.
   return JSON.stringify({
-    systemInstruction: { parts: [{ text: ASSISTANT_INSTRUCTION }] },
+    systemInstruction: { parts: [{ text: ASSISTANT_INSTRUCTION[lang] }] },
     contents: [{ role: 'user', parts: [{ text: query }] }],
     generationConfig: {
       maxOutputTokens: MAX_OUTPUT_TOKENS_ASSISTANT,
@@ -145,7 +169,7 @@ function buildRequestBody(query: string, mode: 'base' | 'assistant'): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const { query, mode } = await request.json();
+    const { query, mode, locale } = await request.json();
 
     if (!query || typeof query !== 'string') {
       return NextResponse.json(
@@ -161,6 +185,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const lang: Lang = locale === 'en' ? 'en' : 'de';
+
     // OAuth-Token + Projekt-ID vom Dienstkonto.
     const client = await auth.getClient();
     const accessTokenResponse = await client.getAccessToken();
@@ -170,7 +196,7 @@ export async function POST(request: NextRequest) {
     }
     const projectId = process.env.GCP_PROJECT_ID || (await auth.getProjectId());
 
-    const requestBody = buildRequestBody(query, mode);
+    const requestBody = buildRequestBody(query, mode, lang);
 
     // Leere/sehr kurze Fortsetzung neu anfragen. Im Basis-Modus verlangen wir
     // eine substanzielle Länge (eine 23-Zeichen-Fortsetzung ist anschaulich

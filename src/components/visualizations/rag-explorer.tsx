@@ -22,6 +22,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { useMounted } from '@/lib/use-mounted'
+import { useUIStore } from '@/lib/store'
+import { defaultLocale } from '@/lib/i18n/config'
 import {
   MagnifyingGlassIcon,
   FileTextIcon,
@@ -34,6 +37,7 @@ import {
   CheckCircledIcon,
 } from '@radix-ui/react-icons'
 import { rankDocs, unit, type RagDoc, type RagDocsFile, type ScoredDoc } from '@/lib/rag/retrieval'
+import { lookupRag, pickOne, thinkingDelay } from '@/lib/fixtures'
 
 // Wie viele Dokumente in den Kontext wandern.
 const TOP_K = 3
@@ -41,14 +45,22 @@ const TOP_K = 3
 // Beispielfragen bewusst OHNE Schulname – der Bezug („die Schule") steht in der
 // Wissensbasis. So treibt das Thema die Suche, nicht der oft genannte Name; die
 // letzte Frage ist absichtlich themenfremd (zeigt: die Unterlagen geben nichts her).
-const EXAMPLES = [
+// Je Sprache eigene Fragen + eigene Wissensbasis (rag-docs.<locale>.json).
+const EXAMPLES_DE = [
   'Wer leitet die Schule?',
   'Wann hat die Bibliothek offen?',
   'Worum geht es in der Projektwoche?',
   'Welche Instrumente gibt es im Musikzimmer?',
   'Wer hat die Fussball-WM 2022 gewonnen?',
 ]
-const DEFAULT_QUESTION = EXAMPLES[0]
+const EXAMPLES_EN = [
+  'Who runs the school?',
+  'When is the library open?',
+  'What is the project week about?',
+  'Which instruments are there in the music room?',
+  'Who won the 2022 football World Cup?',
+]
+const examplesFor = (locale: string) => (locale === 'en' ? EXAMPLES_EN : EXAMPLES_DE)
 
 // Wir rendern kein Markdown; Gemini streut aber gelegentlich Markdown-Zeichen
 // ein. Aufzählungen zu Spiegelstrichen, dann Fett/Emphasis/Code weg.
@@ -78,11 +90,16 @@ const IDLE: PanelState = { text: '', loading: false, error: null }
 
 export function RagExplorer() {
   const t = useTranslations()
+  const mounted = useMounted()
+  const storeLocale = useUIStore((s) => s.locale)
+  const locale = mounted ? storeLocale : defaultLocale
+  const EXAMPLES = examplesFor(locale)
+  const DEFAULT_QUESTION = EXAMPLES[0]
   const [docs, setDocs] = useState<RagDoc[]>([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
 
-  const [input, setInput] = useState(DEFAULT_QUESTION)
+  const [input, setInput] = useState(EXAMPLES_DE[0])
   const [excluded, setExcluded] = useState<Set<string>>(new Set())
   // Letzte eingebettete Frage (Text + Einheitsvektor) – daraus wird das Ranking
   // bei jedem Render frisch berechnet (auch nach dem Aus-/Einblenden von Docs).
@@ -97,12 +114,23 @@ export function RagExplorer() {
 
   const didInit = useRef(false)
 
-  // Wissensbasis laden (statische Datei, kein API-Call).
+  // Wissensbasis in der UI-Sprache laden (statische Datei, kein API-Call).
+  // Beim Sprachwechsel wird die Demo zurückgesetzt und neu geladen.
   useEffect(() => {
+    if (!mounted) return
     let cancelled = false
+    setLoading(true)
+    setLoadError(null)
+    didInit.current = false
+    setExcluded(new Set())
+    setLastQuery(null)
+    setPlain(IDLE)
+    setRag(IDLE)
+    setAnsweredWith(null)
+    setInput(examplesFor(locale)[0])
     ;(async () => {
       try {
-        const res = await fetch('/rag-docs.json')
+        const res = await fetch(`/rag-docs.${locale}.json`)
         if (!res.ok) throw new Error(`Wissensbasis konnte nicht geladen werden (${res.status})`)
         const data: RagDocsFile = await res.json()
         if (cancelled) return
@@ -117,7 +145,8 @@ export function RagExplorer() {
     return () => {
       cancelled = true
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted, locale])
 
   // Eine Antwort holen (mit oder ohne Kontext).
   const fetchAnswer = useCallback(
@@ -127,7 +156,7 @@ export function RagExplorer() {
         const res = await fetch('/api/rag-answer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question, context }),
+          body: JSON.stringify({ question, context, locale }),
         })
         const data = await res.json()
         if (!res.ok || data.error) throw new Error(data.error || `Fehler ${res.status}`)
@@ -137,8 +166,17 @@ export function RagExplorer() {
         set({ text: '', loading: false, error: err instanceof Error ? err.message : 'Unbekannter Fehler' })
       }
     },
-    [],
+    [locale],
   )
+
+  // Eine gecachte Musterantwort in ein Panel schreiben (gleiche clean→set-Kette
+  // wie fetchAnswer, nur ohne Netz).
+  const serveCachedAnswer = useCallback(async (texts: string[], set: (s: PanelState) => void) => {
+    set({ text: '', loading: true, error: null })
+    await thinkingDelay()
+    const text = clean(pickOne(texts))
+    set({ text, loading: false, error: text ? null : 'Keine Ausgabe – bitte nochmal versuchen.' })
+  }, [])
 
   // Eine Frage durch die ganze Pipeline schicken.
   const run = useCallback(
@@ -146,22 +184,36 @@ export function RagExplorer() {
       const question = rawQuestion.trim()
       if (!question || currentDocs.length === 0) return
 
+      // Vorgegebene Frage? Dann liegen Frage-Embedding + beide Antworten gecacht
+      // vor (kein API-Aufruf). Freie Eingaben fragen weiter live das Modell.
+      const cached = lookupRag(question)
+
       // Schritt „Antwort ohne Kontext" braucht kein Retrieval -> sofort starten.
-      fetchAnswer(question, '', setPlain)
+      // Hängt nicht von der Wissensbasis ab, ist also für bekannte Fragen immer gecacht.
+      if (cached && cached.plain.length) serveCachedAnswer(cached.plain, setPlain)
+      else fetchAnswer(question, '', setPlain)
 
       // Schritt „Abrufen": Frage einbetten, dann gegen die aktiven Dokumente ranken.
       setEmbedding(true)
       setRetrievalError(null)
       setRag({ text: '', loading: true, error: null })
       try {
-        const res = await fetch('/api/embeddings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: question }),
-        })
-        const data = await res.json()
-        if (!res.ok || !data.embedding) throw new Error(data.error || `Fehler ${res.status}`)
-        const vec = unit(data.embedding as number[])
+        let vec: number[]
+        if (cached) {
+          // Frage-Embedding ist nur von der Frage abhängig -> gecacht nutzbar,
+          // auch nachdem Dokumente aus-/eingeblendet wurden.
+          await thinkingDelay()
+          vec = unit(cached.embedding)
+        } else {
+          const res = await fetch('/api/embeddings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: question }),
+          })
+          const data = await res.json()
+          if (!res.ok || !data.embedding) throw new Error(data.error || `Fehler ${res.status}`)
+          vec = unit(data.embedding as number[])
+        }
         setLastQuery({ text: question, vec })
 
         const active = currentDocs.filter((d) => !currentExcluded.has(d.id))
@@ -169,8 +221,14 @@ export function RagExplorer() {
         const context = top.map((s) => `${s.doc.title}\n${s.doc.text}`).join('\n\n')
         setAnsweredWith({ ids: top.map((s) => s.doc.id), excl: [...currentExcluded].sort().join(',') })
 
-        // Schritt „Antworten mit Kontext".
-        await fetchAnswer(question, context, setRag)
+        // Schritt „Antworten mit Kontext": gecacht NUR bei unveränderter Wissens-
+        // basis (Default-Top-K). Sobald Dokumente weggeschaltet sind, ändert sich
+        // das Retrieval -> dann echte Generierung mit dem neuen Kontext.
+        if (cached && cached.grounded.length && currentExcluded.size === 0) {
+          await serveCachedAnswer(cached.grounded, setRag)
+        } else {
+          await fetchAnswer(question, context, setRag)
+        }
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Unbekannter Fehler'
         setRetrievalError(msg)
@@ -179,7 +237,7 @@ export function RagExplorer() {
         setEmbedding(false)
       }
     },
-    [fetchAnswer],
+    [fetchAnswer, serveCachedAnswer],
   )
 
   // Beim ersten Laden (sobald Docs da sind) die Standardfrage zeigen.

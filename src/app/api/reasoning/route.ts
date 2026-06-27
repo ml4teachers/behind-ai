@@ -32,16 +32,26 @@ const MODEL_CANDIDATES: string[] = Array.from(
   )
 );
 
-const DIRECT_INSTRUCTION =
+// Die System-Anweisungen gibt es je Sprache (de/en), damit der sichtbare
+// Rechenweg bzw. die Schätzung in der Sprache der Aufgabe erscheint. „Antwort:"
+// bzw. „Answer:" wird vom Prüfer (verify.ts: parseAnswer) in beiden Sprachen erkannt.
+const DIRECT_INSTRUCTION_DE =
   'Beantworte die Aufgabe SOFORT mit dem Endergebnis. Schreibe KEINE ' +
   'Zwischenschritte, KEINEN Rechenweg und KEINE Erklärung. Gib genau eine Zeile ' +
   'aus: Antwort: <Ergebnis>.';
+const DIRECT_INSTRUCTION_EN =
+  'Answer the task IMMEDIATELY with the final result. Write NO intermediate ' +
+  'steps, NO working and NO explanation. Output exactly one line: Answer: <result>.';
 
-const COT_INSTRUCTION =
+const COT_INSTRUCTION_DE =
   'Löse die Aufgabe Schritt für Schritt. Schreibe deinen Rechenweg bzw. ' +
   'Gedankengang kurz und nachvollziehbar aus. Schliesse mit genau einer Zeile: ' +
   'Antwort: <Ergebnis>. Verwende keine Markdown-Formatierung (keine Sternchen, ' +
   'keine Rauten).';
+const COT_INSTRUCTION_EN =
+  'Solve the task step by step. Write out your working / reasoning briefly and ' +
+  'clearly. Finish with exactly one line: Answer: <result>. Do not use any ' +
+  'Markdown formatting (no asterisks, no hashes).';
 
 // 'sample' (für RLVR): eine SCHÄTZUNG aus dem Stegreif, ohne pedantisches
 // Durchbuchstabieren. Das ist Absicht – es bringt die natürliche Unsicherheit
@@ -49,10 +59,14 @@ const COT_INSTRUCTION =
 // Tokens sieht statt Buchstaben). Erst diese Streuung gibt dem Prüfer etwas zu
 // sortieren. Methodisches Durchzählen würde die Aufgabe trivialisieren (siehe
 // die Chain-of-Thought-Seite: mit Rechenweg wird das Modell zuverlässig).
-const SAMPLE_INSTRUCTION =
+const SAMPLE_INSTRUCTION_DE =
   'Schätze aus dem Bauch heraus, OHNE die Buchstaben einzeln durchzuzählen. ' +
   'Nenne in einem kurzen Satz deine Schätzung und schliesse mit genau einer ' +
   'Zeile: Antwort: <Zahl>. Verwende keine Markdown-Formatierung.';
+const SAMPLE_INSTRUCTION_EN =
+  'Guess off the top of your head, WITHOUT spelling out the letters one by one. ' +
+  'State your guess in one short sentence and finish with exactly one line: ' +
+  'Answer: <number>. Do not use any Markdown formatting.';
 
 // „Sofort"-Antworten sind kurz; der Rechenweg braucht Platz; ein Stegreif-
 // Versuch ist knapp. Alle Werte lassen sich pro Anfrage übersteuern.
@@ -62,11 +76,11 @@ const MAX_TOKENS_SAMPLE = 220;
 const MAX_ATTEMPTS = 2;
 
 type Mode = 'direct' | 'cot' | 'sample';
+type Lang = 'de' | 'en';
 
-const INSTRUCTIONS: Record<Mode, string> = {
-  direct: DIRECT_INSTRUCTION,
-  cot: COT_INSTRUCTION,
-  sample: SAMPLE_INSTRUCTION,
+const INSTRUCTIONS: Record<Lang, Record<Mode, string>> = {
+  de: { direct: DIRECT_INSTRUCTION_DE, cot: COT_INSTRUCTION_DE, sample: SAMPLE_INSTRUCTION_DE },
+  en: { direct: DIRECT_INSTRUCTION_EN, cot: COT_INSTRUCTION_EN, sample: SAMPLE_INSTRUCTION_EN },
 };
 const DEFAULT_MAX_TOKENS: Record<Mode, number> = {
   direct: MAX_TOKENS_DIRECT,
@@ -104,7 +118,7 @@ type GeminiResponse = {
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, mode, temperature, maxOutputTokens } = await request.json();
+    const { prompt, mode, temperature, maxOutputTokens, locale } = await request.json();
 
     if (!prompt || typeof prompt !== 'string') {
       return NextResponse.json({ error: 'Prompt muss angegeben werden' }, { status: 400 });
@@ -117,6 +131,7 @@ export async function POST(request: NextRequest) {
     }
 
     const m = mode as Mode;
+    const lang: Lang = locale === 'en' ? 'en' : 'de';
     const temp = typeof temperature === 'number' ? Math.min(2, Math.max(0, temperature)) : 0.7;
     const maxTok =
       typeof maxOutputTokens === 'number'
@@ -125,7 +140,7 @@ export async function POST(request: NextRequest) {
 
     const requestBody = JSON.stringify({
       systemInstruction: {
-        parts: [{ text: INSTRUCTIONS[m] }],
+        parts: [{ text: INSTRUCTIONS[lang][m] }],
       },
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       generationConfig: {

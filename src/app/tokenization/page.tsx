@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/accordion'
 import { TokenizationVisualization } from '@/components/visualizations/tokenization-visualization'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { GlossaryText } from '@/components/glossary/glossary-text'
 import Link from 'next/link'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 
@@ -31,7 +32,7 @@ export default function TokenizationPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8 space-y-10">
       <header className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">{t('tokenization.title')}</h1>
-        <p className="text-lg text-muted-foreground">{t('tokenization.subtitle')}</p>
+        <p className="text-lg text-muted-foreground"><GlossaryText>{t('tokenization.subtitle')}</GlossaryText></p>
       </header>
 
       {/* Interaktiv zuoberst */}
@@ -77,7 +78,7 @@ export default function TokenizationPage() {
           )}
         </div>
 
-        <p className="text-sm text-muted-foreground">{t('tokenization.caption')}</p>
+        <p className="text-sm text-muted-foreground"><GlossaryText>{t('tokenization.caption')}</GlossaryText></p>
       </section>
 
       {/* Multimodal-Hinweis (Brücke zu Modell-Typen, Thread 8) */}
@@ -98,9 +99,9 @@ export default function TokenizationPage() {
           <AccordionItem value="more" className="border-b-0">
             <AccordionTrigger className="text-base">{t('common.moreAbout')}</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base leading-relaxed text-muted-foreground">
-              <p>{t('tokenization.moreP1')}</p>
-              <p>{t('tokenization.moreP2')}</p>
-              <p>{t('tokenization.moreP3')}</p>
+              <p><GlossaryText>{t('tokenization.moreP1')}</GlossaryText></p>
+              <p><GlossaryText>{t('tokenization.moreP2')}</GlossaryText></p>
+              <p><GlossaryText>{t('tokenization.moreP3')}</GlossaryText></p>
             </AccordionContent>
           </AccordionItem>
         </Accordion>

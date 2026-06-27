@@ -1,0 +1,102 @@
+{
+  "The capital of France is": {
+    "topTokens": [
+      {
+        "token": " Paris",
+        "probability": 0.9931747836158334
+      },
+      {
+        "token": " a",
+        "probability": 0.0025275748329763206
+      },
+      {
+        "token": " an",
+        "probability": 0.0007719011964524619
+      },
+      {
+        "token": ".",
+        "probability": 0.0005689047709335497
+      },
+      {
+        "token": ",",
+        "probability": 0.0004378382535160346
+      }
+    ],
+    "remainingProbability": 0.002518997330288264
+  },
+  "Die Hauptstadt von Frankreich ist": {
+    "topTokens": [
+      {
+        "token": " Paris",
+        "probability": 0.993070035420158
+      },
+      {
+        "token": " bekannt",
+        "probability": 0.0030050796665958886
+      },
+      {
+        "token": " eine",
+        "probability": 0.0007367017712318947
+      },
+      {
+        "token": " die",
+        "probability": 0.00033468793419780756
+      },
+      {
+        "token": " natürlich",
+        "probability": 0.000209944363093287
+      }
+    ],
+    "remainingProbability": 0.0026435508447231193
+  },
+  "Goethe’s secret favourite colour was": {
+    "topTokens": [
+      {
+        "token": " not",
+        "probability": 0.3428031854010178
+      },
+      {
+        "token": " a",
+        "probability": 0.17440845293811053
+      },
+      {
+        "token": ",",
+        "probability": 0.055895259815088055
+      },
+      {
+        "token": " actually",
+        "probability": 0.03922721550480594
+      },
+      {
+        "token": " probably",
+        "probability": 0.035831420604008415
+      }
+    ],
+    "remainingProbability": 0.3518344657369693
+  },
+  "Goethes geheime Lieblingsfarbe war": {
+    "topTokens": [
+      {
+        "token": " nicht",
+        "probability": 0.1514893429608003
+      },
+      {
+        "token": " das",
+        "probability": 0.056600956195628646
+      },
+      {
+        "token": ",",
+        "probability": 0.04141686143618579
+      },
+      {
+        "token": " ange",
+        "probability": 0.028772462858226013
+      },
+      {
+        "token": " Grün",
+        "probability": 0.01470161981164046
+      }
+    ],
+    "remainingProbability": 0.7070187567375188
+  }
+}

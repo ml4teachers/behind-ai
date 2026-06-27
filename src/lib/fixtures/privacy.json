@@ -1,0 +1,102 @@
+{
+  "Erkläre den Wasserkreislauf einfach und anschaulich für eine 5. Klasse.": {
+    "sensitiveParts": [],
+    "anonymizedText": "Erkläre den Wasserkreislauf einfach und anschaulich für eine 5. Klasse."
+  },
+  "Schreib eine Förderplanung für Lena Müller aus der 3b, die in Mathe eine 2.5 hat und sich zu Hause schwer konzentrieren kann.": {
+    "sensitiveParts": [
+      {
+        "text": "Lena Müller",
+        "category": "name",
+        "identifying": true,
+        "reason": "vollständiger Name einer realen Person"
+      },
+      {
+        "text": "3b",
+        "category": "andere",
+        "identifying": true,
+        "reason": "konkrete Klassenbezeichnung"
+      },
+      {
+        "text": "2.5",
+        "category": "noten",
+        "identifying": false,
+        "reason": "Note, die ohne Namen niemanden verrät"
+      },
+      {
+        "text": "sich zu Hause schwer konzentrieren kann",
+        "category": "persoenlich",
+        "identifying": false,
+        "reason": "Verhaltensbeschreibung, die ohne Namen niemanden verrät"
+      }
+    ],
+    "anonymizedText": "Schreib eine Förderplanung für [Name] aus der [Klasse], die in Mathe eine 2.5 hat und sich zu Hause schwer konzentrieren kann."
+  },
+  "Formuliere eine Rückmeldung an die Eltern von Tim Berger zu seiner Lese-Rechtschreib-Schwäche.": {
+    "sensitiveParts": [
+      {
+        "text": "Tim Berger",
+        "category": "name",
+        "identifying": true,
+        "reason": "vollständiger Name einer realen Person"
+      },
+      {
+        "text": "Lese-Rechtschreib-Schwäche",
+        "category": "gesundheit",
+        "identifying": false,
+        "reason": "sensibler Inhalt, der ohne Namen niemanden verrät"
+      }
+    ],
+    "anonymizedText": "Formuliere eine Rückmeldung an die Eltern von [Name] zu seiner Lese-Rechtschreib-Schwäche."
+  },
+  "Explain the water cycle simply and vividly for a year 5 class.": {
+    "sensitiveParts": [],
+    "anonymizedText": "Explain the water cycle simply and vividly for a year 5 class."
+  },
+  "Draft a note to the parents of Tim Berger about his dyslexia.": {
+    "sensitiveParts": [
+      {
+        "text": "Tim Berger",
+        "category": "name",
+        "identifying": true,
+        "reason": "Full name of a student"
+      },
+      {
+        "text": "dyslexia",
+        "category": "gesundheit",
+        "identifying": false,
+        "reason": "Medical condition, but not identifying without a name"
+      }
+    ],
+    "anonymizedText": "Draft a note to the parents of [Name] about his dyslexia."
+  },
+  "Write a support plan for Lena Miller from class 3B, who has a C in maths and struggles to concentrate at home.": {
+    "sensitiveParts": [
+      {
+        "text": "Lena Miller",
+        "category": "name",
+        "identifying": true,
+        "reason": "Full name of a student."
+      },
+      {
+        "text": "3B",
+        "category": "persoenlich",
+        "identifying": true,
+        "reason": "Specific class label."
+      },
+      {
+        "text": "C in maths",
+        "category": "noten",
+        "identifying": false,
+        "reason": "Grade information, not identifying without a name."
+      },
+      {
+        "text": "struggles to concentrate at home",
+        "category": "persoenlich",
+        "identifying": false,
+        "reason": "Behavioral description, not identifying without a name."
+      }
+    ],
+    "anonymizedText": "Write a support plan for [Name] from class [Class], who has a C in maths and struggles to concentrate at home."
+  }
+}

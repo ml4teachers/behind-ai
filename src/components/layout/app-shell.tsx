@@ -1,15 +1,19 @@
 'use client'
 
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Navigation } from '@/components/nav/navigation'
 import { SiteHeader } from '@/components/layout/site-header'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { GlossaryScopeProvider } from '@/components/glossary/glossary-scope'
 import { useUIStore } from '@/lib/store'
 import { useMounted } from '@/lib/use-mounted'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const mounted = useMounted()
+  const pathname = usePathname()
   const sidebarOpen = useUIStore((state) => state.sidebarOpen)
   const toggleSidebar = useUIStore((state) => state.toggleSidebar)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -18,6 +22,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const open = mounted ? sidebarOpen : true
 
   return (
+    <TooltipProvider delayDuration={300}>
     <div className="flex min-h-screen flex-col">
       <SiteHeader
         onToggleSidebar={toggleSidebar}
@@ -47,8 +52,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </SheetContent>
         </Sheet>
 
-        <main className="min-w-0 flex-1 bg-background">{children}</main>
+        <main className="min-w-0 flex-1 bg-background">
+          {/* Glossar-Scope pro Seite zurücksetzen (Remount via key=pathname) */}
+          <GlossaryScopeProvider key={pathname}>{children}</GlossaryScopeProvider>
+        </main>
       </div>
     </div>
+    </TooltipProvider>
   )
 }

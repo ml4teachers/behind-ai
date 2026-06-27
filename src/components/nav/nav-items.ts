@@ -10,6 +10,7 @@ export type NavSection = {
 }
 
 export const homeLink: NavLink = { key: 'nav.home', href: '/' }
+export const glossaryLink: NavLink = { key: 'nav.glossary', href: '/glossary' }
 export const resourcesLink: NavLink = { key: 'nav.resources', href: '/resources' }
 export const impressumLink: NavLink = { key: 'nav.impressum', href: '/impressum' }
 
@@ -19,7 +20,7 @@ export const impressumLink: NavLink = { key: 'nav.impressum', href: '/impressum'
  * (einzige Änderung historisch: /daten -> /data, Redirect in next.config.js).
  *
  * Lern-Bogen:
- *   Daten:     Trainingsdaten → Tokenisierung → Embeddings → Bild & Ton
+ *   Daten:     Trainingsdaten → Tokenisierung → Embeddings → Verzerrung → Bild & Ton
  *   Training:  Pretraining → Finetuning → RLHF → RLVR
  *   Inferenz:  Next-Token → Attention → Chain-of-Thought → RAG → Datenschutz
  *
@@ -39,6 +40,7 @@ export const navSections: NavSection[] = [
       { key: 'nav.data', href: '/data' },
       { key: 'nav.tokenization', href: '/tokenization' },
       { key: 'nav.embeddings', href: '/embeddings' },
+      { key: 'nav.bias', href: '/bias' },
       { key: 'nav.multimodal', href: '/multimodal' },
     ],
   },
@@ -57,6 +59,7 @@ export const navSections: NavSection[] = [
       { key: 'nav.nextToken', href: '/next-token' },
       { key: 'nav.attention', href: '/attention' },
       { key: 'nav.cot', href: '/chain-of-thought' },
+      { key: 'nav.hallucinations', href: '/hallucinations' },
       { key: 'nav.rag', href: '/rag' },
       { key: 'nav.agents', href: '/agents' },
       { key: 'nav.privacy', href: '/privacy' },

@@ -23,6 +23,10 @@ import {
   ExclamationTriangleIcon,
 } from '@radix-ui/react-icons'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { useMounted } from '@/lib/use-mounted'
+import { useUIStore } from '@/lib/store'
+import { defaultLocale } from '@/lib/i18n/config'
+import { lookupFinetuning, pickOne, thinkingDelay } from '@/lib/fixtures'
 
 type Mode = 'base' | 'assistant'
 
@@ -36,15 +40,21 @@ interface PanelState {
 const IDLE: PanelState = { query: '', text: '', loading: false, error: null }
 
 // Beispielanfragen: je eine Frage und mehrere Anweisungen mit Formatvorgaben.
-// Bewusst jugendfrei & schulnah; alle zeigen den Kontrast zuverlässig.
-const EXAMPLES = [
+// Bewusst jugendfrei & schulnah; alle zeigen den Kontrast zuverlässig. Je Sprache
+// eigene Beispiele, damit das Modell in der UI-Sprache antwortet (Schlüssel des
+// Caches ist der exakte Anfragetext).
+const EXAMPLES_DE = [
   'Wer war Marie Curie?',
   'Schreibe ein kurzes Gedicht über den Herbst.',
   'Erkläre Photosynthese in einem Satz.',
   'Gib mir drei Tipps gegen Lampenfieber.',
 ]
-
-const DEFAULT_QUERY = EXAMPLES[0]
+const EXAMPLES_EN = [
+  'Who was Marie Curie?',
+  'Write a short poem about autumn.',
+  'Explain photosynthesis in one sentence.',
+  'Give me three tips against stage fright.',
+]
 
 // Wir rendern kein Markdown, Gemini streut aber gelegentlich Markdown-Zeichen
 // ein. Beim Assistenten: Aufzählungen zu Spiegelstrichen, dann Fett/Emphasis
@@ -69,7 +79,11 @@ function cleanAssistant(s: string): string {
 
 export function FinetuningComparison() {
   const t = useTranslations()
-  const [input, setInput] = useState(DEFAULT_QUERY)
+  const mounted = useMounted()
+  const storeLocale = useUIStore((s) => s.locale)
+  const locale = mounted ? storeLocale : defaultLocale
+  const EXAMPLES = locale === 'en' ? EXAMPLES_EN : EXAMPLES_DE
+  const [input, setInput] = useState(EXAMPLES_DE[0])
   const [base, setBase] = useState<PanelState>(IDLE)
   const [assistant, setAssistant] = useState<PanelState>(IDLE)
 
@@ -80,7 +94,7 @@ export function FinetuningComparison() {
         const res = await fetch('/api/finetuning-simulate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query, mode }),
+          body: JSON.stringify({ query, mode, locale }),
         })
         const data = await res.json()
         if (!res.ok || data.error) {
@@ -98,6 +112,19 @@ export function FinetuningComparison() {
         })
       }
     },
+    [locale],
+  )
+
+  // Eine Musterlösung (gecachte echte Antwort) in einem Panel anzeigen – mit
+  // derselben modusabhängigen Bereinigung wie der Live-Pfad.
+  const serveCached = useCallback(
+    async (query: string, mode: Mode, texts: string[], set: (s: PanelState) => void) => {
+      set({ query, text: '', loading: true, error: null })
+      await thinkingDelay()
+      const raw = pickOne(texts)
+      const text = mode === 'assistant' ? cleanAssistant(raw) : cleanBase(raw)
+      set({ query, text, loading: false, error: null })
+    },
     [],
   )
 
@@ -105,18 +132,30 @@ export function FinetuningComparison() {
     (query: string) => {
       const q = query.trim()
       if (!q) return
-      // Beide Modi parallel anfragen.
+
+      // Vorgegebenes Beispiel -> echte Musterlösungen aus dem Cache (kein API-Aufruf).
+      const cached = lookupFinetuning(q)
+      if (cached && cached.base.length && cached.assistant.length) {
+        serveCached(q, 'base', cached.base, setBase)
+        serveCached(q, 'assistant', cached.assistant, setAssistant)
+        return
+      }
+
+      // Freie Eingabe -> echtes Modell, beide Modi parallel.
       fetchMode(q, 'base', setBase)
       fetchMode(q, 'assistant', setAssistant)
     },
-    [fetchMode],
+    [fetchMode, serveCached],
   )
 
-  // Beim ersten Laden die Standard-Frage zeigen (sofort spielbar).
+  // Beim ersten Laden (sobald die echte Sprache feststeht) die Standard-Frage.
   useEffect(() => {
-    run(DEFAULT_QUERY)
+    if (!mounted) return
+    const first = (storeLocale === 'en' ? EXAMPLES_EN : EXAMPLES_DE)[0]
+    setInput(first)
+    run(first)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [mounted])
 
   const busy = base.loading || assistant.loading
 

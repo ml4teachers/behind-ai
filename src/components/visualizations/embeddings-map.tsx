@@ -6,6 +6,9 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { useMounted } from '@/lib/use-mounted'
+import { useUIStore } from '@/lib/store'
+import { defaultLocale } from '@/lib/i18n/config'
 
 // ---------------------------------------------------------------------------
 // Bedeutungs-Landkarte: ~80 deutsche Alltagswörter, platziert nach echter
@@ -91,6 +94,9 @@ const toPctY = (y: number) => INSET + ((1.1 - clamp(y, -1.1, 1.1)) / 2.2) * (100
 
 export function EmbeddingsMap() {
   const t = useTranslations()
+  const mounted = useMounted()
+  const storeLocale = useUIStore((s) => s.locale)
+  const locale = mounted ? storeLocale : defaultLocale
   const EXAMPLES = [
     t('embMap.ex1'),
     t('embMap.ex2'),
@@ -120,12 +126,19 @@ export function EmbeddingsMap() {
   const [hiddenCats, setHiddenCats] = useState<Set<string>>(new Set())
   const addedCounter = useRef(0)
 
-  // Referenz-Embeddings laden (statische Datei, kein API-Call).
+  // Referenz-Embeddings in der UI-Sprache laden (statische Datei, kein API-Call).
+  // Beim Sprachwechsel wird die Karte neu geladen und die eigenen Wörter geleert.
   useEffect(() => {
+    if (!mounted) return
     let cancelled = false
+    setLoading(true)
+    setError(null)
+    setAddedPoints([])
+    setSelectedId(null)
+    addedCounter.current = 0
     ;(async () => {
       try {
-        const res = await fetch('/embeddings-map.json')
+        const res = await fetch(`/embeddings-map.${locale}.json`)
         if (!res.ok) throw new Error(`${t('embMap.errLoad')} (${res.status})`)
         const data: MapData = await res.json()
         if (cancelled) return
@@ -148,7 +161,8 @@ export function EmbeddingsMap() {
     return () => {
       cancelled = true
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted, locale])
 
   const allPoints = [...refPoints, ...addedPoints]
   // Sichtbare Punkte (ausgeblendete Kategorien raus; Nutzer-Wörter immer sichtbar).

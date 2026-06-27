@@ -25,9 +25,11 @@ import { cn } from '@/lib/utils'
 import { CheckIcon, Cross2Icon, ReloadIcon, ThickArrowRightIcon } from '@radix-ui/react-icons'
 import { useMounted } from '@/lib/use-mounted'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { useUIStore } from '@/lib/store'
+import { defaultLocale } from '@/lib/i18n/config'
 import {
   TRAITS,
-  TRAIT_META,
+  traitMeta,
   type CurvePoint,
   type Trajectory,
   reward,
@@ -36,11 +38,12 @@ import {
 import {
   type Answer,
   type LabelRound,
-  GENERALIZE_ROUNDS,
-  HACK_CANDIDATES,
+  generalizeRounds,
+  hackCandidates,
   HACK_CORRECT,
-  HACK_PROMPT,
-  LABEL_ROUNDS,
+  hackPrompt,
+  labelRounds,
+  LABEL_ROUND_COUNT,
 } from '@/lib/rlhf/data'
 
 type Stage = 'label' | 'train' | 'generalize' | 'hack'
@@ -50,6 +53,15 @@ const TICK_MS = 50
 export function RlhfLab() {
   const t = useTranslations()
   const mounted = useMounted()
+  const storeLocale = useUIStore((s) => s.locale)
+  const locale = mounted ? storeLocale : defaultLocale
+  // Inhalt (Fragen/Antworten) in der UI-Sprache; traits/help bleiben gleich.
+  const LABEL_ROUNDS = useMemo(() => labelRounds(locale), [locale])
+  const GENERALIZE_ROUNDS = useMemo(() => generalizeRounds(locale), [locale])
+  const HACK = useMemo(
+    () => ({ prompt: hackPrompt(locale), candidates: hackCandidates(locale) }),
+    [locale],
+  )
 
   const [stage, setStage] = useState<Stage>('label')
   const [labelIdx, setLabelIdx] = useState(0)
@@ -141,7 +153,7 @@ export function RlhfLab() {
       )}
 
       {(stage === 'train' || stage === 'generalize' || stage === 'hack') && (
-        <RewardModelPanel weights={weights} loss={playedLoss} animating={stage === 'train' && !trainingDone} t={t} />
+        <RewardModelPanel weights={weights} loss={playedLoss} animating={stage === 'train' && !trainingDone} locale={locale} t={t} />
       )}
 
       {stage === 'train' && (
@@ -161,6 +173,8 @@ export function RlhfLab() {
 
       {stage === 'generalize' && (
         <GeneralizeStage
+          rounds={GENERALIZE_ROUNDS}
+          labelCount={LABEL_ROUND_COUNT}
           weights={weights}
           picks={genPicks}
           onPick={(i, side) => setGenPicks((p) => ({ ...p, [i]: side }))}
@@ -170,7 +184,15 @@ export function RlhfLab() {
       )}
 
       {stage === 'hack' && (
-        <HackStage weights={weights} hacked={hacked} onHack={() => setHacked(true)} onReset={reset} t={t} />
+        <HackStage
+          prompt={HACK.prompt}
+          candidates={HACK.candidates}
+          weights={weights}
+          hacked={hacked}
+          onHack={() => setHacked(true)}
+          onReset={reset}
+          t={t}
+        />
       )}
     </div>
   )
@@ -269,11 +291,13 @@ function RewardModelPanel({
   weights,
   loss,
   animating,
+  locale,
   t,
 }: {
   weights: number[]
   loss: CurvePoint[]
   animating: boolean
+  locale: string
   t: (k: string) => string
 }) {
   return (
@@ -289,7 +313,7 @@ function RewardModelPanel({
       </div>
       <div>
         <h3 className="mb-3 text-sm font-semibold">{t('rlhfLab.weightTitle')}</h3>
-        <WeightBars weights={weights} />
+        <WeightBars weights={weights} locale={locale} />
         <p className="mt-3 text-xs text-muted-foreground">
           {t('rlhfLab.weightNote')}
         </p>
@@ -323,8 +347,9 @@ function LossMini({ points }: { points: CurvePoint[] }) {
   )
 }
 
-function WeightBars({ weights }: { weights: number[] }) {
+function WeightBars({ weights, locale }: { weights: number[]; locale: string }) {
   const maxAbs = Math.max(0.4, ...weights.map((w) => Math.abs(w)))
+  const meta = traitMeta(locale)
   return (
     <div className="space-y-2">
       {TRAITS.map((trait, i) => {
@@ -333,8 +358,8 @@ function WeightBars({ weights }: { weights: number[] }) {
         const positive = w >= 0
         return (
           <div key={trait} className="flex items-center gap-2">
-            <span className="w-24 shrink-0 truncate text-right text-xs text-muted-foreground" title={TRAIT_META[trait].hint}>
-              {TRAIT_META[trait].label}
+            <span className="w-24 shrink-0 truncate text-right text-xs text-muted-foreground" title={meta[trait].hint}>
+              {meta[trait].label}
             </span>
             <div className="relative h-4 flex-1">
               {/* Mittellinie */}
@@ -365,12 +390,16 @@ function WeightBars({ weights }: { weights: number[] }) {
 
 // === Station 3: Verallgemeinern ==============================================
 function GeneralizeStage({
+  rounds,
+  labelCount,
   weights,
   picks,
   onPick,
   onNext,
   t,
 }: {
+  rounds: LabelRound[]
+  labelCount: number
   weights: number[]
   picks: Record<number, 'a' | 'b'>
   onPick: (i: number, side: 'a' | 'b') => void
@@ -378,8 +407,8 @@ function GeneralizeStage({
   t: (k: string) => string
 }) {
   const rmPick = (r: LabelRound): 'a' | 'b' => (reward(weights, r.a.traits) >= reward(weights, r.b.traits) ? 'a' : 'b')
-  const answered = GENERALIZE_ROUNDS.every((_, i) => picks[i])
-  const agree = GENERALIZE_ROUNDS.filter((r, i) => picks[i] && picks[i] === rmPick(r)).length
+  const answered = rounds.every((_, i) => picks[i])
+  const agree = rounds.filter((r, i) => picks[i] && picks[i] === rmPick(r)).length
 
   return (
     <div className="space-y-4">
@@ -391,7 +420,7 @@ function GeneralizeStage({
       </div>
 
       <div className="space-y-3">
-        {GENERALIZE_ROUNDS.map((round, i) => {
+        {rounds.map((round, i) => {
           const picked = picks[i]
           const modelPick = rmPick(round)
           return (
@@ -425,7 +454,7 @@ function GeneralizeStage({
                         )}
                         {isModel && (
                           <span className="inline-flex items-center gap-1 rounded bg-[hsl(var(--chart-2)/0.15)] px-1.5 py-0.5 text-xs font-medium text-[hsl(var(--chart-2))]">
-                            Belohnungsmodell
+                            {t('rlhfLab.genRewardModel')}
                           </span>
                         )}
                       </span>
@@ -442,9 +471,9 @@ function GeneralizeStage({
         <div className="flex flex-wrap items-center gap-3 rounded-lg border bg-[hsl(var(--chart-2)/0.08)] p-3">
           <p className="flex-1 text-sm">
             <span className="font-semibold text-[hsl(var(--chart-2))]">
-              {agree} {t('rlhfLab.labelOf')} {GENERALIZE_ROUNDS.length}
+              {agree} {t('rlhfLab.labelOf')} {rounds.length}
             </span>{' '}
-            {t('rlhfLab.genAgree')} {LABEL_ROUNDS.length} {t('rlhfLab.genAgreeSuffix')}
+            {t('rlhfLab.genAgree')} {labelCount} {t('rlhfLab.genAgreeSuffix')}
           </p>
           <Button onClick={onNext} className="gap-1.5">
             {t('rlhfLab.genNext')} <ThickArrowRightIcon />
@@ -480,12 +509,16 @@ function GeneralizeStage({
 const HACK_SHOWN = [1, 12, 2, 3, 6, 4]
 
 function HackStage({
+  prompt,
+  candidates,
   weights,
   hacked,
   onHack,
   onReset,
   t,
 }: {
+  prompt: string
+  candidates: Answer[]
   weights: number[]
   hacked: boolean
   onHack: () => void
@@ -495,10 +528,10 @@ function HackStage({
   const choices = useMemo(
     () =>
       HACK_SHOWN.map((idx) => {
-        const ans = HACK_CANDIDATES[idx]
+        const ans = candidates[idx]
         return { ans, r: reward(weights, ans.traits), correct: ans.help >= 0.5 }
       }),
-    [weights],
+    [weights, candidates],
   )
   const pickIdx = useMemo(
     () => choices.reduce((best, c, i) => (c.r > choices[best].r ? i : best), 0),
@@ -523,7 +556,7 @@ function HackStage({
 
       <div className="rounded-lg border bg-background/40 p-3">
         <p className="text-xs text-muted-foreground">{t('rlhfLab.hackQuestion')}</p>
-        <p className="mt-0.5 font-medium">{HACK_PROMPT}</p>
+        <p className="mt-0.5 font-medium">{prompt}</p>
       </div>
 
       {!hacked && <p className="text-sm font-medium">{t('rlhfLab.hackGuess')}</p>}

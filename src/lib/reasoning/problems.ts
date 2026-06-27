@@ -69,12 +69,38 @@ export const LETTER_PROBLEMS: LetterProblem[] = RAW_LETTER.map(([word, letter], 
   answer: countLetter(word, letter),
 }))
 
+// Englische Entsprechung: empirisch (scripts/probe-letters.mjs) ausgewählt – das
+// Modell zählt englische Buchstaben VIEL zuverlässiger als deutsche Komposita,
+// daher braucht es Wörter, bei denen es aus dem Stegreif STREUT. Das Default-Wort
+// „unintentionally" liegt mehrheitlich daneben (rät meist 3 statt 4) – genau das
+// macht später den Kontrast „Prüfer vs. Eindruck" sichtbar. Die anderen streuen
+// ebenfalls (4/5/6 bzw. 1/2 bzw. 3/4).
+const RAW_LETTER_EN: Array<[word: string, letter: string]> = [
+  ['unintentionally', 'n'],
+  ['assassination', 's'],
+  ['withdrawal', 'w'],
+  ['Worcestershire', 'r'],
+]
+
+export const LETTER_PROBLEMS_EN: LetterProblem[] = RAW_LETTER_EN.map(([word, letter], i) => ({
+  id: `l${i}`,
+  word,
+  letter,
+  answer: countLetter(word, letter),
+}))
+
 export const DEFAULT_ARITH = ARITH_PROBLEMS[0]
 export const DEFAULT_LETTER = LETTER_PROBLEMS[0]
+
+/** Buchstaben-Aufgaben in der UI-Sprache. */
+export const letterProblems = (locale: string): LetterProblem[] =>
+  locale === 'en' ? LETTER_PROBLEMS_EN : LETTER_PROBLEMS
 
 /** Prompt-Text, der für eine Arithmetik-Aufgabe ans Modell geht. */
 export const arithPrompt = (p: ArithProblem): string => `Berechne: ${p.expr}`
 
-/** Prompt-Text, der für eine Buchstaben-Aufgabe ans Modell geht. */
-export const letterPrompt = (p: LetterProblem): string =>
-  `Wie viele Buchstaben '${p.letter}' kommen im Wort '${p.word}' vor?`
+/** Prompt-Text, der für eine Buchstaben-Aufgabe ans Modell geht (UI-Sprache). */
+export const letterPrompt = (p: LetterProblem, locale = 'de'): string =>
+  locale === 'en'
+    ? `How many times does the letter '${p.letter}' appear in the word '${p.word}'?`
+    : `Wie viele Buchstaben '${p.letter}' kommen im Wort '${p.word}' vor?`

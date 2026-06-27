@@ -25,12 +25,18 @@ const MODEL = process.env.GEMINI_EMBEDDING_MODEL || 'gemini-embedding-2'
 const OUTPUT_DIM = 768
 const LOCATION = 'global'
 
+// Sprache der Wörterkarte: `node scripts/gen-embeddings-map.mjs en` (Default: de).
+// Geschrieben wird public/embeddings-map.<locale>.json. Die Kategorie-SCHLÜSSEL
+// bleiben deutsch (tiere/essen/…), weil Farben (CAT_COLOR) und Labels (i18n
+// embMap.cat*) daran hängen – nur die WÖRTER sind übersetzt.
+const LOCALE = process.argv[2] === 'en' ? 'en' : 'de'
+
 if (!process.env.GOOGLE_APPLICATION_CREDENTIALS && fs.existsSync('./gcp-service-account.json')) {
   process.env.GOOGLE_APPLICATION_CREDENTIALS = './gcp-service-account.json'
 }
 
 // --- Kuratierte Wörter: 8 gut unterscheidbare Kategorien (chart-1..8) ----------
-const CATEGORIES = {
+const CATEGORIES_DE = {
   tiere: ['Hund', 'Katze', 'Pferd', 'Kuh', 'Schwein', 'Schaf', 'Elefant', 'Löwe', 'Tiger', 'Bär', 'Wolf', 'Fuchs', 'Maus', 'Adler', 'Hai', 'Delfin', 'Frosch', 'Schmetterling'],
   essen: ['Brot', 'Käse', 'Apfel', 'Banane', 'Tomate', 'Kartoffel', 'Reis', 'Nudeln', 'Suppe', 'Salat', 'Schokolade', 'Kuchen', 'Kaffee', 'Milch', 'Wein', 'Fleisch', 'Honig', 'Butter'],
   orte: ['Deutschland', 'Frankreich', 'Italien', 'Spanien', 'Japan', 'China', 'Brasilien', 'Ägypten', 'Berlin', 'Paris', 'Rom', 'Madrid', 'Tokio', 'London', 'Wien', 'Zürich', 'Indien', 'Kanada'],
@@ -40,6 +46,20 @@ const CATEGORIES = {
   musik: ['Gitarre', 'Klavier', 'Geige', 'Trompete', 'Schlagzeug', 'Flöte', 'Cello', 'Harfe', 'Saxophon', 'Klarinette', 'Trommel', 'Orgel', 'Akkordeon', 'Mundharmonika', 'Kontrabass', 'Oboe', 'Posaune', 'Ukulele'],
   fahrzeuge: ['Auto', 'Fahrrad', 'Zug', 'Flugzeug', 'Schiff', 'Bus', 'Motorrad', 'Rakete', 'Hubschrauber', 'U-Boot', 'Traktor', 'Straßenbahn', 'Lastwagen', 'Taxi', 'Roller', 'Segelboot', 'Ballon', 'Kanu'],
 }
+
+// Englische Entsprechungen (gleiche Reihenfolge, gleiche Kategorie-Schlüssel).
+const CATEGORIES_EN = {
+  tiere: ['Dog', 'Cat', 'Horse', 'Cow', 'Pig', 'Sheep', 'Elephant', 'Lion', 'Tiger', 'Bear', 'Wolf', 'Fox', 'Mouse', 'Eagle', 'Shark', 'Dolphin', 'Frog', 'Butterfly'],
+  essen: ['Bread', 'Cheese', 'Apple', 'Banana', 'Tomato', 'Potato', 'Rice', 'Pasta', 'Soup', 'Salad', 'Chocolate', 'Cake', 'Coffee', 'Milk', 'Wine', 'Meat', 'Honey', 'Butter'],
+  orte: ['Germany', 'France', 'Italy', 'Spain', 'Japan', 'China', 'Brazil', 'Egypt', 'Berlin', 'Paris', 'Rome', 'Madrid', 'Tokyo', 'London', 'Vienna', 'Zurich', 'India', 'Canada'],
+  gefuehle: ['Joy', 'Happiness', 'Sadness', 'Fear', 'Anger', 'Love', 'Hate', 'Envy', 'Pride', 'Shame', 'Hope', 'Courage', 'Loneliness', 'Longing', 'Surprise', 'Disgust', 'Boredom', 'Gratitude'],
+  berufe: ['Doctor', 'Teacher', 'Pilot', 'Baker', 'Lawyer', 'Gardener', 'Cook', 'Police officer', 'Nurse', 'Engineer', 'Artist', 'Farmer', 'Hairdresser', 'Programmer', 'Salesperson', 'Architect', 'Firefighter', 'Judge'],
+  sport: ['Football', 'Tennis', 'Swimming', 'Yoga', 'Boxing', 'Marathon', 'Climbing', 'Skiing', 'Basketball', 'Gymnastics', 'Cycling', 'Golf', 'Horse riding', 'Diving', 'Handball', 'Volleyball', 'Jogging', 'Sailing'],
+  musik: ['Guitar', 'Piano', 'Violin', 'Trumpet', 'Drum kit', 'Flute', 'Cello', 'Harp', 'Saxophone', 'Clarinet', 'Drum', 'Organ', 'Accordion', 'Harmonica', 'Double bass', 'Oboe', 'Trombone', 'Ukulele'],
+  fahrzeuge: ['Car', 'Bicycle', 'Train', 'Airplane', 'Ship', 'Bus', 'Motorcycle', 'Rocket', 'Helicopter', 'Submarine', 'Tractor', 'Tram', 'Truck', 'Taxi', 'Scooter', 'Sailboat', 'Balloon', 'Canoe'],
+}
+
+const CATEGORIES = LOCALE === 'en' ? CATEGORIES_EN : CATEGORIES_DE
 
 const entries = []
 for (const [cat, words] of Object.entries(CATEGORIES)) {
@@ -202,6 +222,6 @@ const out = {
     vec: e.vec.map((v) => round(v, 4)),
   })),
 }
-const outPath = path.join(process.cwd(), 'public', 'embeddings-map.json')
+const outPath = path.join(process.cwd(), 'public', `embeddings-map.${LOCALE}.json`)
 fs.writeFileSync(outPath, JSON.stringify(out))
 console.log(`Geschrieben: ${outPath} (${entries.length} Wörter, ${(fs.statSync(outPath).size / 1024).toFixed(0)} KB)`)

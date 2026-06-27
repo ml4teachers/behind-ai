@@ -11,6 +11,7 @@ import {
 import { NextTokenMini } from '@/components/visualizations/next-token-mini'
 import { navSections } from '@/components/nav/nav-items'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { GlossaryText } from '@/components/glossary/glossary-text'
 
 /** Icon + Kurzbeschreibung je Pfad. Reihenfolge & Links kommen aus navSections. */
 const sectionMeta: Record<string, { icon: LucideIcon; descKey: string }> = {
@@ -29,13 +30,13 @@ export default function Home() {
         <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
           {t('home.hero.title')}
         </h1>
-        <p className="mt-3 max-w-2xl text-lg text-muted-foreground">{t('home.hero.subtitle')}</p>
+        <p className="mt-3 max-w-2xl text-lg text-muted-foreground"><GlossaryText>{t('home.hero.subtitle')}</GlossaryText></p>
       </header>
 
       {/* Hero-Interaktiv: echte Mini-Demo zuoberst */}
       <section className="mb-4">
         <NextTokenMini />
-        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{t('home.demo.caption')}</p>
+        <p className="mt-3 max-w-2xl text-sm text-muted-foreground"><GlossaryText>{t('home.demo.caption')}</GlossaryText></p>
         <Link
           href="/next-token"
           className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
@@ -50,7 +51,7 @@ export default function Home() {
         <AccordionItem value="what-is-llm">
           <AccordionTrigger>{t('home.more.title')}</AccordionTrigger>
           <AccordionContent className="max-w-2xl text-muted-foreground">
-            {t('home.more.body')}
+            <GlossaryText>{t('home.more.body')}</GlossaryText>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
@@ -74,7 +75,7 @@ export default function Home() {
                   <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
                   <h3 className="font-semibold text-foreground">{t(section.key)}</h3>
                 </div>
-                <p className="mb-4 text-sm text-muted-foreground">{t(meta.descKey)}</p>
+                <p className="mb-4 text-sm text-muted-foreground"><GlossaryText>{t(meta.descKey)}</GlossaryText></p>
                 <ul className="space-y-0.5">
                   {section.links.map((link) => (
                     <li key={link.href}>

@@ -37,21 +37,38 @@ const MODEL_CANDIDATES: string[] = Array.from(
   )
 );
 
+type Lang = 'de' | 'en';
+
 // System-Anweisung OHNE Kontext: ganz normaler hilfreicher Assistent.
-const PLAIN_INSTRUCTION =
+const PLAIN_INSTRUCTION_DE =
   'Du bist ein hilfreicher Assistent. Beantworte die Frage so gut du kannst, ' +
   'kurz und klar. Wenn du es nicht sicher weisst, sage das offen und rate nicht ' +
-  'ins Blaue. Antworte in der Sprache der Frage, ohne Markdown-Formatierung ' +
+  'ins Blaue. Antworte auf Deutsch, ohne Markdown-Formatierung ' +
   '(keine Sternchen, keine Rauten); nutze für Aufzählungen Spiegelstriche (–).';
+const PLAIN_INSTRUCTION_EN =
+  'You are a helpful assistant. Answer the question as well as you can, briefly ' +
+  'and clearly. If you are not sure, say so openly and do not guess wildly. ' +
+  'Answer in English, without Markdown formatting (no asterisks, no hashes); ' +
+  'use dashes (–) for lists.';
 
 // System-Anweisung MIT Kontext: striktes Grounding auf die Unterlagen.
-const GROUNDED_INSTRUCTION =
+const GROUNDED_INSTRUCTION_DE =
   'Du beantwortest die Frage AUSSCHLIESSLICH anhand der unten bereitgestellten ' +
   'Unterlagen. Verwende kein anderes Wissen. Steht die Antwort nicht oder nur ' +
   'teilweise in den Unterlagen, sage offen, dass die Unterlagen dazu nichts ' +
   'hergeben, statt zu raten. Fasse dich kurz und bleibe nah am Text der ' +
-  'Unterlagen. Antworte in der Sprache der Frage, ohne Markdown-Formatierung ' +
+  'Unterlagen. Antworte auf Deutsch, ohne Markdown-Formatierung ' +
   '(keine Sternchen, keine Rauten); nutze für Aufzählungen Spiegelstriche (–).';
+const GROUNDED_INSTRUCTION_EN =
+  'You answer the question EXCLUSIVELY based on the documents provided below. ' +
+  'Use no other knowledge. If the answer is not in the documents, or only ' +
+  'partially, say openly that the documents do not cover it, instead of ' +
+  'guessing. Be brief and stay close to the text of the documents. Answer in ' +
+  'English, without Markdown formatting (no asterisks, no hashes); use dashes ' +
+  '(–) for lists.';
+
+const PLAIN_INSTRUCTION: Record<Lang, string> = { de: PLAIN_INSTRUCTION_DE, en: PLAIN_INSTRUCTION_EN };
+const GROUNDED_INSTRUCTION: Record<Lang, string> = { de: GROUNDED_INSTRUCTION_DE, en: GROUNDED_INSTRUCTION_EN };
 
 // Genug Raum, damit beide Antworten von selbst zu Ende kommen.
 const MAX_OUTPUT_TOKENS = 320;
@@ -85,8 +102,17 @@ type GeminiResponse = {
 };
 
 // Baut den User-Turn. Mit Kontext werden die Unterlagen vor die Frage gestellt.
-function buildUserText(question: string, context: string): string {
+function buildUserText(question: string, context: string, lang: Lang): string {
   if (!context) return question;
+  if (lang === 'en') {
+    return (
+      'DOCUMENTS:\n' +
+      context +
+      '\n\nQUESTION:\n' +
+      question +
+      '\n\nAnswer the question only based on the documents above.'
+    );
+  }
   return (
     'UNTERLAGEN:\n' +
     context +
@@ -103,6 +129,7 @@ export async function POST(request: NextRequest) {
     const contextRaw: unknown = body?.context;
     const context =
       typeof contextRaw === 'string' ? contextRaw.trim() : '';
+    const lang: Lang = body?.locale === 'en' ? 'en' : 'de';
 
     if (!question || typeof question !== 'string' || question.trim().length === 0) {
       return NextResponse.json(
@@ -124,12 +151,12 @@ export async function POST(request: NextRequest) {
 
     const requestBody = JSON.stringify({
       systemInstruction: {
-        parts: [{ text: grounded ? GROUNDED_INSTRUCTION : PLAIN_INSTRUCTION }],
+        parts: [{ text: grounded ? GROUNDED_INSTRUCTION[lang] : PLAIN_INSTRUCTION[lang] }],
       },
       contents: [
         {
           role: 'user',
-          parts: [{ text: buildUserText(question.trim(), context) }],
+          parts: [{ text: buildUserText(question.trim(), context, lang) }],
         },
       ],
       generationConfig: {

@@ -32,10 +32,12 @@ import {
 } from '@radix-ui/react-icons'
 import { useMounted } from '@/lib/use-mounted'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { useUIStore } from '@/lib/store'
+import { defaultLocale } from '@/lib/i18n/config'
 import {
   DEFAULT_LETTER,
-  LETTER_PROBLEMS,
   type LetterProblem,
+  letterProblems,
   letterPrompt,
 } from '@/lib/reasoning/problems'
 import { extractNumber, parseAnswer } from '@/lib/reasoning/verify'
@@ -46,6 +48,7 @@ import {
   reinforce,
   toAnswerClasses,
 } from '@/lib/reasoning/reinforce'
+import { lookupRlvr, pickOne, pickSome, thinkingDelay } from '@/lib/fixtures'
 
 type Stage = 'generate' | 'verify' | 'reinforce'
 
@@ -71,6 +74,9 @@ function clean(s: string): string {
 export function RlvrLab() {
   const t = useTranslations()
   const mounted = useMounted()
+  const storeLocale = useUIStore((s) => s.locale)
+  const locale = mounted ? storeLocale : defaultLocale
+  const PROBLEMS = letterProblems(locale)
 
   const [problem, setProblem] = useState<LetterProblem>(DEFAULT_LETTER)
   const [stage, setStage] = useState<Stage>('generate')
@@ -100,6 +106,13 @@ export function RlvrLab() {
     setPlay(0)
   }, [])
 
+  // Sobald die echte Sprache feststeht: im EN-UI auf das erste englische Wort
+  // umstellen (der Default-State ist das erste deutsche Wort).
+  useEffect(() => {
+    if (mounted && storeLocale === 'en') reset(letterProblems('en')[0])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted])
+
   // --- Akt 1: N echte CoT-Versuche parallel sampeln -------------------------
   const sample = useCallback(async (p: LetterProblem) => {
     stopTimer()
@@ -110,6 +123,35 @@ export function RlvrLab() {
     setSampling(true)
     setAttempts(new Array(N_SAMPLES).fill(null))
 
+    // Vorgegebenes Wort -> echte Stegreif-Versuche aus dem Cache (kein API-Aufruf).
+    // Das war hier mit Abstand der grösste Posten: 8 parallele Modell-Aufrufe je
+    // „Generieren". Wir ziehen 8 aus dem geernteten Pool (Streuung bleibt echt).
+    const cached = lookupRlvr(p.word)
+    if (cached && cached.attempts.length) {
+      const isRight = (raw: string) => extractNumber(parseAnswer(clean(raw))) === p.answer
+      const chosen = pickSome(cached.attempts, N_SAMPLES)
+      // Mindestens ein richtiger Versuch muss dabei sein (sonst gäbe es nichts zu
+      // verstärken) – passend zur bewussten Wortauswahl in problems.ts.
+      if (cached.attempts.some(isRight) && !chosen.some(isRight)) {
+        chosen[Math.floor(Math.random() * chosen.length)] = pickOne(cached.attempts.filter(isRight))
+      }
+      await Promise.all(
+        chosen.map(async (raw, i) => {
+          // Gestaffeltes Einlaufen wie bei echten, unterschiedlich schnellen Abrufen.
+          await thinkingDelay(250, 950)
+          const text = clean(raw)
+          const answer = extractNumber(parseAnswer(text))
+          setAttempts((prev) => {
+            const next = [...prev]
+            next[i] = { text, answer, error: false }
+            return next
+          })
+        }),
+      )
+      setSampling(false)
+      return
+    }
+
     await Promise.all(
       Array.from({ length: N_SAMPLES }, async (_, i) => {
         try {
@@ -117,10 +159,11 @@ export function RlvrLab() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              prompt: letterPrompt(p),
+              prompt: letterPrompt(p, locale),
               mode: 'sample',
               temperature: 1.0,
               maxOutputTokens: 220,
+              locale,
             }),
           })
           const data = await res.json()
@@ -142,7 +185,7 @@ export function RlvrLab() {
       }),
     )
     setSampling(false)
-  }, [])
+  }, [locale])
 
   // --- Akt 3: REINFORCE-Trajektorien (Prüfer + Eindruck) vorab rechnen -------
   const classes = useMemo(() => {
@@ -193,9 +236,9 @@ export function RlvrLab() {
       {/* Aufgabe + Wort-Auswahl */}
       <div className="rounded-lg border bg-background/40 p-3">
         <p className="text-xs text-muted-foreground">{t('rlvrLab.taskLabel')}</p>
-        <p className="mt-0.5 font-medium">{letterPrompt(problem)}</p>
+        <p className="mt-0.5 font-medium">{letterPrompt(problem, locale)}</p>
         <div className="mt-3 flex flex-wrap gap-2">
-          {LETTER_PROBLEMS.map((p) => (
+          {PROBLEMS.map((p) => (
             <Button
               key={p.id}
               variant={p.id === problem.id ? 'secondary' : 'outline'}

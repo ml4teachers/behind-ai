@@ -27,6 +27,11 @@ const MODEL = process.env.GEMINI_EMBEDDING_MODEL || 'gemini-embedding-2'
 const OUTPUT_DIM = 768
 const LOCATION = 'global'
 
+// Sprache der Wissensbasis: `node scripts/gen-rag-docs.mjs en` (Default: de).
+// Geschrieben wird public/rag-docs.<locale>.json; die Live-Frage muss in
+// derselben Sprache eingebettet werden (passiert in rag-explorer.tsx automatisch).
+const LOCALE = process.argv[2] === 'en' ? 'en' : 'de'
+
 if (!process.env.GOOGLE_APPLICATION_CREDENTIALS && fs.existsSync('./gcp-service-account.json')) {
   process.env.GOOGLE_APPLICATION_CREDENTIALS = './gcp-service-account.json'
 }
@@ -36,7 +41,7 @@ if (!process.env.GOOGLE_APPLICATION_CREDENTIALS && fs.existsSync('./gcp-service-
 // (Zielgruppe Lehrpersonen). Mehrere „Zeiten"-Dokumente (Bibliothek, Mensa,
 // Sekretariat) sind Absicht: So muss die Ähnlichkeitssuche wirklich das richtige
 // heraussuchen, nicht nur irgendein Dokument über Öffnungszeiten.
-const DOCS = [
+const DOCS_DE = [
   {
     id: 'gruendung',
     title: 'Über die Schule',
@@ -109,6 +114,83 @@ const DOCS = [
   },
 ]
 
+// Englische Fassung derselben erfundenen Wissensbasis (gleiche ids -> identische
+// Retrieval-Lehrstücke; nur in der Sprache des englischen UI).
+const DOCS_EN = [
+  {
+    id: 'gruendung',
+    title: 'About the school',
+    text: 'Lindenhof School was founded in 1987 and is named after the old linden trees in the courtyard. Today it is attended by 320 pupils, taught by 28 teachers.',
+  },
+  {
+    id: 'leitung',
+    title: 'School leadership',
+    text: 'The school has been led since 2019 by headteacher Dr. Astrid Velm. Her deputy is Marco Brunner, who is also responsible for the timetable.',
+  },
+  {
+    id: 'bibliothek',
+    title: 'Library',
+    text: 'The school library is open Monday to Friday from 8 am to 4 pm. It holds over 9,000 books. To borrow books you need a reader’s card, which you get from the school office.',
+  },
+  {
+    id: 'mensa',
+    title: 'Cafeteria',
+    text: 'The cafeteria serves a warm lunch from 11:45 am to 1:15 pm, including a vegetarian option every day. The menu for the week is posted on the notice board every Monday.',
+  },
+  {
+    id: 'projektwoche',
+    title: 'Project week',
+    text: 'Every year in the last week of June there is a project week with cross-class work. The theme for 2025 is “Water”. On Friday the groups present their results to the parents.',
+  },
+  {
+    id: 'handyregel',
+    title: 'Phone rule',
+    text: 'During lessons phones are switched off and placed in the box provided. During breaks they may be used in the schoolyard. If the rule is broken, the device is collected until the end of the school day.',
+  },
+  {
+    id: 'sporttag',
+    title: 'Sports day',
+    text: 'The annual sports day takes place each September at the sports ground by the Mühlbach. There are athletics competitions and a football tournament. Families are warmly invited to watch and help out.',
+  },
+  {
+    id: 'musikzimmer',
+    title: 'Music room',
+    text: 'The music room is room 14 and is equipped with a piano, a drum kit and twelve guitars. The school choir rehearses every Tuesday from 4 to 5 pm and is open to everyone from year 4 upwards.',
+  },
+  {
+    id: 'schulweg',
+    title: 'Getting there',
+    text: 'Bus line 7 stops right in front of the school’s main entrance and runs every 15 minutes. Bikes are parked in the covered bike rack by the west wing; a helmet is recommended for everyone.',
+  },
+  {
+    id: 'schuelerrat',
+    title: 'Student council',
+    text: 'The student council meets every two weeks on Wednesday during the long break. Each class sends two elected representatives. Among other things, the council organises the summer flea market in the schoolyard.',
+  },
+  {
+    id: 'schulgarten',
+    title: 'School garden',
+    text: 'Behind the west wing lies the school garden with vegetable beds and a beehive. It is looked after by the year 5 classes. In 2023 the school received the regional “Green Courtyard Award” for it.',
+  },
+  {
+    id: 'ferien',
+    title: 'Holiday calendar',
+    text: 'The autumn holidays 2025 run from 4 to 19 October. The first school day after the holidays is Monday, 20 October. The exact dates of all holidays are in the year planner on the notice board at the entrance.',
+  },
+  {
+    id: 'sekretariat',
+    title: 'School office',
+    text: 'The school office is staffed Monday to Friday from 7:30 am to 12:00 noon. Here you report children sick, collect forms and the reader’s card for the library. Ms Keller is in charge.',
+  },
+  {
+    id: 'anmeldung',
+    title: 'Enrolment',
+    text: 'New children are enrolled at the school office. For kindergarten the cut-off date is 31 July. A trial day can be arranged at any time; to do so, phone the school office.',
+  },
+]
+
+const DOCS = LOCALE === 'en' ? DOCS_EN : DOCS_DE
+
 // --- Embeddings holen ---------------------------------------------------------
 const auth = new GoogleAuth({ scopes: 'https://www.googleapis.com/auth/cloud-platform' })
 const client = await auth.getClient()
@@ -142,13 +224,21 @@ for (const d of DOCS) {
 console.log('\nFertig mit Embeddings.')
 
 // --- Qualitätskontrolle: zu jeder Beispielfrage das Top-Dokument zeigen -------
-const SANITY_QUERIES = [
-  'Wie viele Schülerinnen und Schüler hat die Lindenhof-Schule?',
-  'Wann hat die Bibliothek der Lindenhof-Schule offen?',
-  'Wer leitet die Lindenhof-Schule?',
-  'Worum geht es in der Projektwoche der Lindenhof-Schule?',
-  'Wann gibt es Mittagessen?',
-]
+const SANITY_QUERIES = LOCALE === 'en'
+  ? [
+      'How many pupils does Lindenhof School have?',
+      'When is the Lindenhof School library open?',
+      'Who runs Lindenhof School?',
+      'What is the project week at Lindenhof School about?',
+      'When is lunch served?',
+    ]
+  : [
+      'Wie viele Schülerinnen und Schüler hat die Lindenhof-Schule?',
+      'Wann hat die Bibliothek der Lindenhof-Schule offen?',
+      'Wer leitet die Lindenhof-Schule?',
+      'Worum geht es in der Projektwoche der Lindenhof-Schule?',
+      'Wann gibt es Mittagessen?',
+    ]
 const cos = (a, b) => { let d = 0; for (let i = 0; i < a.length; i++) d += a[i] * b[i]; return d }
 console.log('\nStichprobe (Frage -> bestes Dokument):')
 for (const q of SANITY_QUERIES) {
@@ -174,6 +264,6 @@ const out = {
     vec: d.vec.map((v) => round(v, 4)),
   })),
 }
-const outPath = path.join(process.cwd(), 'public', 'rag-docs.json')
+const outPath = path.join(process.cwd(), 'public', `rag-docs.${LOCALE}.json`)
 fs.writeFileSync(outPath, JSON.stringify(out))
 console.log(`\nGeschrieben: ${outPath} (${docs.length} Dokumente, ${(fs.statSync(outPath).size / 1024).toFixed(0)} KB)`)

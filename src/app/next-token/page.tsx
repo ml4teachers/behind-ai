@@ -11,7 +11,15 @@ import {
 } from '@/components/ui/accordion'
 import { NextTokenPrediction } from '@/components/visualizations/next-token-prediction'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { GlossaryText } from '@/components/glossary/glossary-text'
+import { useMounted } from '@/lib/use-mounted'
+import { useUIStore } from '@/lib/store'
+import { defaultLocale } from '@/lib/i18n/config'
 import Link from 'next/link'
+
+// Default-Seeds beider Sprachen – nur diese werden bei Sprachwechsel ersetzt,
+// vom Nutzer Eingetipptes bleibt stehen.
+const SEEDS = ['Gelb ist eine', 'Yellow is a']
 
 // Pool an Beispiel-Satzanfängen (i18n-Keys; Texte je DE/EN in messages.ts).
 // Auf der Seite werden daraus zufällig zwei gezeigt.
@@ -36,6 +44,9 @@ function pickTwo(n: number): [number, number] {
 
 export default function NextTokenPage() {
   const t = useTranslations()
+  const mounted = useMounted()
+  const storeLocale = useUIStore((s) => s.locale)
+  const locale = mounted ? storeLocale : defaultLocale
   const [inputText, setInputText] = useState('Gelb ist eine')
   const [showPrediction, setShowPrediction] = useState(false)
   const [examples, setExamples] = useState<[number, number]>([0, 1])
@@ -45,6 +56,14 @@ export default function NextTokenPage() {
   useEffect(() => {
     setExamples(pickTwo(EXAMPLE_KEYS.length))
   }, [])
+
+  // Start-Satz in der UI-Sprache (beim Mount und bei Sprachwechsel) – nur, wenn
+  // der bisherige Text noch ein Default-Seed ist (Nutzer-Eingaben bleiben).
+  useEffect(() => {
+    if (!mounted) return
+    setInputText((prev) => (SEEDS.includes(prev) ? t('nextToken.seed') : prev))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted, locale])
 
   // Vorhersage nur zurücksetzen, wenn sich der Text wirklich ändert.
   const handleTextChange = (newText: string) => {
@@ -58,7 +77,7 @@ export default function NextTokenPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8 space-y-10">
       <header className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">{t('nextToken.title')}</h1>
-        <p className="text-lg text-muted-foreground">{t('nextToken.subtitle')}</p>
+        <p className="text-lg text-muted-foreground"><GlossaryText>{t('nextToken.subtitle')}</GlossaryText></p>
       </header>
 
       {/* Interaktiv zuoberst */}
@@ -104,7 +123,7 @@ export default function NextTokenPage() {
           )}
         </div>
 
-        <p className="text-sm text-muted-foreground">{t('nextToken.caption')}</p>
+        <p className="text-sm text-muted-foreground"><GlossaryText>{t('nextToken.caption')}</GlossaryText></p>
       </section>
 
       {/* Mehr dazu (optional aufklappbar) */}
@@ -113,9 +132,9 @@ export default function NextTokenPage() {
           <AccordionItem value="more" className="border-b-0">
             <AccordionTrigger className="text-base">{t('common.moreAbout')}</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base leading-relaxed text-muted-foreground">
-              <p>{t('nextToken.moreP1')}</p>
-              <p>{t('nextToken.moreP2')}</p>
-              <p>{t('nextToken.moreP3')}</p>
+              <p><GlossaryText>{t('nextToken.moreP1')}</GlossaryText></p>
+              <p><GlossaryText>{t('nextToken.moreP2')}</GlossaryText></p>
+              <p><GlossaryText>{t('nextToken.moreP3')}</GlossaryText></p>
             </AccordionContent>
           </AccordionItem>
         </Accordion>

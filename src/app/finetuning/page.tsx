@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/accordion'
 import { FinetuningComparison } from '@/components/visualizations/finetuning-comparison'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { GlossaryText } from '@/components/glossary/glossary-text'
 
 export default function FinetuningPage() {
   const t = useTranslations()
@@ -18,7 +19,7 @@ export default function FinetuningPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8 space-y-10">
       <header className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">{t('finetuning.title')}</h1>
-        <p className="text-lg text-muted-foreground">{t('finetuning.subtitle')}</p>
+        <p className="text-lg text-muted-foreground"><GlossaryText>{t('finetuning.subtitle')}</GlossaryText></p>
       </header>
 
       {/* Interaktiv zuoberst */}
@@ -26,7 +27,7 @@ export default function FinetuningPage() {
         <div className="rounded-xl border bg-card p-4 sm:p-6">
           <FinetuningComparison />
         </div>
-        <p className="text-sm text-muted-foreground">{t('finetuning.caption')}</p>
+        <p className="text-sm text-muted-foreground"><GlossaryText>{t('finetuning.caption')}</GlossaryText></p>
       </section>
 
       {/* Mehr dazu (optional aufklappbar) */}
@@ -35,9 +36,9 @@ export default function FinetuningPage() {
           <AccordionItem value="more" className="border-b-0">
             <AccordionTrigger className="text-base">{t('common.moreAbout')}</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base leading-relaxed text-muted-foreground">
-              <p>{t('finetuning.moreP1')}</p>
-              <p>{t('finetuning.moreP2')}</p>
-              <p>{t('finetuning.moreP3')}</p>
+              <p><GlossaryText>{t('finetuning.moreP1')}</GlossaryText></p>
+              <p><GlossaryText>{t('finetuning.moreP2')}</GlossaryText></p>
+              <p><GlossaryText>{t('finetuning.moreP3')}</GlossaryText></p>
             </AccordionContent>
           </AccordionItem>
         </Accordion>

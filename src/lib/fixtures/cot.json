@@ -1,0 +1,176 @@
+{
+  "Berechne: 13²−7×8+19": {
+    "truth": 132,
+    "direct": [
+      "Antwort: 108"
+    ],
+    "cot": [
+      "Schritt 1: Potenzen berechnen.\n13^2 = 169\n\nSchritt 2: Multiplikationen und Divisionen von links nach rechts berechnen.\n7 x 8 = 56\n\nSchritt 3: Additionen und Subtraktionen von links nach rechts berechnen.\n169 - 56 = 113\n113 + 19 = 132\n\nAntwort: 132",
+      "Wir berechnen den Ausdruck Schritt für Schritt unter Beachtung der Reihenfolge der Operationen (Potenzen vor Multiplikation/Division vor Addition/Subtraktion).\n\n1. Potenzen berechnen:\n   13² = 13 × 13 = 169\n\nDer Ausdruck wird zu: 169 - 7 × 8 + 19\n\n2. Multiplikation berechnen:\n   7 × 8 = 56\n\nDer Ausdruck wird zu: 169 - 56 + 19\n\n3. Addition und Subtraktion von links nach rechts berechnen:\n   169 - 56 = 113\n   113 + 19 = 132\n\nAntwort: 132",
+      "Wir berechnen die Potenzen zuerst.\n13^2 = 169\n\nAls Nächstes führen wir die Multiplikation durch.\n7 x 8 = 56\n\nNun setzen wir die Ergebnisse in die ursprüngliche Gleichung ein.\n169 - 56 + 19\n\nJetzt führen wir die Subtraktion und Addition von links nach rechts durch.\n169 - 56 = 113\n113 + 19 = 132\n\nAntwort: 132",
+      "Zuerst berechnen wir die Potenz.\n13^2 = 169\n\nAls Nächstes berechnen wir die Multiplikation.\n7 * 8 = 56\n\nNun setzen wir die Ergebnisse in die ursprüngliche Gleichung ein und führen die Subtraktion und Addition von links nach rechts durch.\n169 - 56 + 19\n169 - 56 = 113\n113 + 19 = 132\n\nAntwort: 132"
+    ]
+  },
+  "Berechne: (17×6)+(23×4)−15²": {
+    "truth": -31,
+    "direct": [
+      "Antwort: 19",
+      "Antwort: 37"
+    ],
+    "cot": [
+      "1. Schritt: Berechne die erste Multiplikation: 17 * 6\n   17 * 6 = 102\n\n2. Schritt: Berechne die zweite Multiplikation: 23 * 4\n   23 * 4 = 92\n\n3. Schritt: Berechne die Potenz: 15^2\n   15^2 = 15 * 15 = 225\n\n4. Schritt: Setze die Ergebnisse in den ursprünglichen Ausdruck ein und führe die Addition und Subtraktion von links nach rechts aus.\n   (102) + (92) - 225\n   102 + 92 = 194\n   194 - 225 = -31\n\nAntwort: -31",
+      "Schritt 1: Berechne die Multiplikationen.\n17 x 6 = 102\n23 x 4 = 92\n\nSchritt 2: Berechne die Potenz.\n15^2 = 15 x 15 = 225\n\nSchritt 3: Setze die Ergebnisse in die ursprüngliche Gleichung ein und berechne.\n102 + 92 - 225\n194 - 225\n-31\n\nAntwort: -31",
+      "Schritt 1: Berechne die Multiplikationen.\n17 * 6 = 102\n23 * 4 = 92\n\nSchritt 2: Berechne die Potenz.\n15^2 = 15 * 15 = 225\n\nSchritt 3: Setze die Ergebnisse in die ursprüngliche Gleichung ein und berechne die Addition und Subtraktion von links nach rechts.\n(102) + (92) - 225\n102 + 92 = 194\n194 - 225 = -31\n\nAntwort: -31",
+      "Um den Ausdruck zu berechnen, folgen wir der Reihenfolge der Operationen (Punkt vor Strich, Klammern zuerst, Potenzen zuerst).\n\n1.  Berechne die Ausdrücke in den Klammern:\n    17 x 6 = 102\n    23 x 4 = 92\n\n2.  Berechne die Potenz:\n    15² = 15 x 15 = 225\n\n3.  Setze die berechneten Werte in den ursprünglichen Ausdruck ein:\n    102 + 92 - 225\n\n4.  Führe die Addition und Subtraktion von links nach rechts aus:\n    102 + 92 = 194\n    194 - 225 = -31\n\nAntwort: -31"
+    ]
+  },
+  "Berechne: 47+18×3−6²": {
+    "truth": 65,
+    "direct": [
+      "Antwort: 59",
+      "Antwort: 53"
+    ],
+    "cot": [
+      "Wir berechnen den Ausdruck 47+18x3-6².\nZuerst lösen wir die Potenz auf: 6² = 6x6 = 36.\nDer Ausdruck wird zu: 47+18x3-36.\nAls Nächstes führen wir die Multiplikation durch: 18x3 = 54.\nDer Ausdruck wird zu: 47+54-36.\nNun führen wir die Addition durch: 47+54 = 101.\nDer Ausdruck wird zu: 101-36.\nZuletzt führen wir die Subtraktion durch: 101-36 = 65.\n\nAntwort: 65",
+      "Wir berechnen die Aufgabe Schritt für Schritt nach der Reihenfolge der mathematischen Operationen (Punktrechnung vor Strichrechnung, Potenzen vor Multiplikation/Division).\n\n1. Potenzen berechnen:\n   6² = 6 × 6 = 36\n\nDie Gleichung wird zu: 47 + 18 × 3 - 36\n\n2. Multiplikation berechnen:\n   18 × 3 = 54\n\nDie Gleichung wird zu: 47 + 54 - 36\n\n3. Addition und Subtraktion von links nach rechts berechnen:\n   47 + 54 = 101\n   101 - 36 = 65\n\nAntwort: 65",
+      "Wir müssen die Reihenfolge der Operationen (Punkt vor Strich, Potenzen zuerst) beachten.\n\n1. Potenzen berechnen:\n   6² = 36\n\n2. Multiplikation berechnen:\n   18 × 3 = 54\n\n3. Addition und Subtraktion von links nach rechts berechnen:\n   47 + 54 = 101\n   101 - 36 = 65\n\nAntwort: 65",
+      "Wir berechnen den Ausdruck 47+18x3-6^2.\nWir folgen der Reihenfolge der Operationen (Punkt vor Strich, Potenzen zuerst).\n\n1. Potenzen berechnen:\n6^2 = 36\n\nDer Ausdruck wird zu: 47 + 18 x 3 - 36\n\n2. Multiplikation berechnen:\n18 x 3 = 54\n\nDer Ausdruck wird zu: 47 + 54 - 36\n\n3. Addition und Subtraktion von links nach rechts berechnen:\n47 + 54 = 101\n\nDer Ausdruck wird zu: 101 - 36\n\n4. Subtraktion berechnen:\n101 - 36 = 65\n\nAntwort: 65"
+    ]
+  },
+  "Berechne: (24×3)−(19×2)+7²": {
+    "truth": 83,
+    "direct": [
+      "Antwort: 107",
+      "Antwort: 105"
+    ],
+    "cot": [
+      "Schritt 1: Berechne die Produkte in den Klammern.\n24 x 3 = 72\n19 x 2 = 38\n\nSchritt 2: Berechne die Potenz.\n7^2 = 49\n\nSchritt 3: Setze die Ergebnisse in die ursprüngliche Gleichung ein.\n72 - 38 + 49\n\nSchritt 4: Führe die Subtraktion durch.\n72 - 38 = 34\n\nSchritt 5: Führe die Addition durch.\n34 + 49 = 83\n\nAntwort: 83",
+      "Schritt 1: Berechne die Produkte in den Klammern.\n24 x 3 = 72\n19 x 2 = 38\n\nSchritt 2: Berechne die Potenz.\n7^2 = 7 x 7 = 49\n\nSchritt 3: Setze die berechneten Werte in die ursprüngliche Gleichung ein.\n72 - 38 + 49\n\nSchritt 4: Führe die Subtraktion und Addition von links nach rechts aus.\n72 - 38 = 34\n34 + 49 = 83\n\nAntwort: 83",
+      "Schritt 1: Berechne die Multiplikationen.\n24 × 3 = 72\n19 × 2 = 38\n\nSchritt 2: Berechne die Potenz.\n7² = 7 × 7 = 49\n\nSchritt 3: Setze die Ergebnisse in die ursprüngliche Gleichung ein und berechne die Subtraktion und Addition von links nach rechts.\n(72) - (38) + 49\n72 - 38 = 34\n34 + 49 = 83\n\nAntwort: 83",
+      "Schritt 1: Berechne die Produkte in den Klammern.\n24 × 3 = 72\n19 × 2 = 38\n\nSchritt 2: Berechne die Potenz.\n7² = 7 × 7 = 49\n\nSchritt 3: Setze die berechneten Werte in den Ausdruck ein.\n72 - 38 + 49\n\nSchritt 4: Führe die Subtraktion durch.\n72 - 38 = 34\n\nSchritt 5: Führe die Addition durch.\n34 + 49 = 83\n\nAntwort: 83"
+    ]
+  },
+  "Berechne: (31×4)−9³+200": {
+    "truth": -405,
+    "direct": [
+      "Antwort: -39",
+      "Antwort: -59",
+      "Antwort: -55"
+    ],
+    "cot": [
+      "Wir berechnen zuerst die Multiplikation:\n31 * 4 = 124\n\nAls Nächstes berechnen wir die Potenz:\n9^3 = 9 * 9 * 9 = 81 * 9 = 729\n\nNun setzen wir die Ergebnisse in die ursprüngliche Gleichung ein:\n124 - 729 + 200\n\nJetzt führen wir die Subtraktion und Addition von links nach rechts aus:\n124 - 729 = -605\n\n-605 + 200 = -405\n\nAntwort: -405",
+      "Schritt 1: Berechne die Multiplikation.\n31 × 4 = 124\n\nSchritt 2: Berechne die Potenz.\n9³ = 9 × 9 × 9 = 81 × 9 = 729\n\nSchritt 3: Setze die Ergebnisse in die ursprüngliche Gleichung ein und berechne die Subtraktion.\n124 - 729 = -605\n\nSchritt 4: Addiere den letzten Wert.\n-605 + 200 = -405\n\nAntwort: -405",
+      "Schritt 1: Berechne die Multiplikation.\n31 x 4 = 124\n\nSchritt 2: Berechne die Potenz.\n9³ = 9 x 9 x 9 = 81 x 9 = 729\n\nSchritt 3: Setze die Ergebnisse in die ursprüngliche Gleichung ein und berechne die Subtraktion.\n124 - 729 = -605\n\nSchritt 4: Berechne die Addition.\n-605 + 200 = -405\n\nAntwort: -405",
+      "Schritt 1: Berechne die Multiplikation.\n31 * 4 = 124\n\nSchritt 2: Berechne die Potenz.\n9³ = 9 * 9 * 9 = 81 * 9 = 729\n\nSchritt 3: Setze die Ergebnisse in die ursprüngliche Gleichung ein und berechne die Subtraktion.\n124 - 729 = -605\n\nSchritt 4: Berechne die Addition.\n-605 + 200 = -405\n\nAntwort: -405"
+    ]
+  },
+  "Berechne: 100−7×9+4³": {
+    "truth": 101,
+    "direct": [
+      "Antwort: 86"
+    ],
+    "cot": [
+      "Wir müssen die Reihenfolge der Operationen (Punkt vor Strich, Potenzen vor Multiplikation/Division) beachten.\n\n1.  Berechne die Potenz: 4³ = 4 * 4 * 4 = 16 * 4 = 64\n2.  Berechne die Multiplikation: 7 * 9 = 63\n3.  Setze die Ergebnisse in die ursprüngliche Gleichung ein: 100 - 63 + 64\n4.  Führe die Subtraktion von links nach rechts aus: 100 - 63 = 37\n5.  Führe die Addition aus: 37 + 64 = 101\n\nAntwort: 101",
+      "Der Ausdruck lautet 100 - 7 * 9 + 4^3.\nZuerst berechnen wir die Potenz: 4^3 = 4 * 4 * 4 = 16 * 4 = 64.\nDer Ausdruck wird zu 100 - 7 * 9 + 64.\nAls Nächstes berechnen wir die Multiplikation: 7 * 9 = 63.\nDer Ausdruck wird zu 100 - 63 + 64.\nNun führen wir die Subtraktion und Addition von links nach rechts aus.\n100 - 63 = 37.\nDer Ausdruck wird zu 37 + 64.\nZuletzt die Addition: 37 + 64 = 101.\n\nAntwort: 101",
+      "Wir berechnen den Ausdruck Schritt für Schritt unter Beachtung der Reihenfolge der Operationen (Potenzen, Multiplikation/Division, Addition/Subtraktion).\n\nSchritt 1: Potenzen berechnen\n4³ = 4 × 4 × 4 = 16 × 4 = 64\n\nDer Ausdruck wird zu: 100 - 7 × 9 + 64\n\nSchritt 2: Multiplikation berechnen\n7 × 9 = 63\n\nDer Ausdruck wird zu: 100 - 63 + 64\n\nSchritt 3: Subtraktion und Addition von links nach rechts berechnen\n100 - 63 = 37\n\nDer Ausdruck wird zu: 37 + 64\n\nSchritt 4: Addition berechnen\n37 + 64 = 101\n\nAntwort: 101",
+      "Wir berechnen den Ausdruck Schritt für Schritt unter Beachtung der Reihenfolge der Operationen (Potenzen vor Multiplikation/Division vor Addition/Subtraktion).\n\n1. Potenzen berechnen:\n   4³ = 4 × 4 × 4 = 16 × 4 = 64\n\nDer Ausdruck wird zu: 100 - 7 × 9 + 64\n\n2. Multiplikation berechnen:\n   7 × 9 = 63\n\nDer Ausdruck wird zu: 100 - 63 + 64\n\n3. Subtraktion und Addition von links nach rechts berechnen:\n   100 - 63 = 37\n\nDer Ausdruck wird zu: 37 + 64\n\n   37 + 64 = 101\n\nAntwort: 101"
+    ]
+  },
+  "Berechne: 8×7+6×9−5²": {
+    "truth": 85,
+    "direct": [
+      "Antwort: 77"
+    ],
+    "cot": [
+      "Der Ausdruck lautet: 8x7 + 6x9 - 5^2.\nZuerst werden die Multiplikationen und Potenzen berechnet.\n8x7 = 56\n6x9 = 54\n5^2 = 25\nNun werden die Ergebnisse in den Ausdruck eingesetzt: 56 + 54 - 25.\nAls Nächstes werden die Additionen und Subtraktionen von links nach rechts durchgeführt.\n56 + 54 = 110\n110 - 25 = 85\nAntwort: 85",
+      "Zuerst berechnen wir die Multiplikationen und die Potenz.\n8 * 7 = 56\n6 * 9 = 54\n5^2 = 25\n\nAls Nächstes führen wir die Addition und Subtraktion von links nach rechts aus.\n56 + 54 = 110\n110 - 25 = 85\n\nAntwort: 85",
+      "Um den Ausdruck 8x7+6x9-5² zu berechnen, müssen wir die Reihenfolge der Operationen (Punkt vor Strich) beachten.\n\n1. Potenzen berechnen:\n   5² = 5 * 5 = 25\n\n2. Multiplikationen berechnen:\n   8 * 7 = 56\n   6 * 9 = 54\n\n3. Addition und Subtraktion von links nach rechts durchführen:\n   56 + 54 = 110\n   110 - 25 = 85\n\nAntwort: 85",
+      "Berechne: 8x7+6x9-5²\n\nSchritt 1: Potenzen berechnen.\n5² = 5 * 5 = 25\n\nSchritt 2: Multiplikationen berechnen (von links nach rechts).\n8 * 7 = 56\n6 * 9 = 54\n\nSchritt 3: Additionen und Subtraktionen berechnen (von links nach rechts).\n56 + 54 = 110\n110 - 25 = 85\n\nAntwort: 85"
+    ]
+  },
+  "Calculate: 13²−7×8+19": {
+    "truth": 132,
+    "direct": [
+      "Answer: 157"
+    ],
+    "cot": [
+      "Step 1: Calculate the square term.\n13² = 169\n\nStep 2: Calculate the multiplication term.\n7×8 = 56\n\nStep 3: Perform the subtraction.\n169 - 56 = 113\n\nStep 4: Perform the addition.\n113 + 19 = 132\nAnswer: 132",
+      "Step 1: Calculate the square of 13.\n13² = 13 × 13 = 169\n\nStep 2: Perform the multiplication.\n7 × 8 = 56\n\nStep 3: Substitute the calculated values back into the expression.\n169 - 56 + 19\n\nStep 4: Perform the subtraction.\n169 - 56 = 113\n\nStep 5: Perform the addition.\n113 + 19 = 132\nAnswer: 132",
+      "Step 1: Calculate the square.\n13² = 169\n\nStep 2: Perform the multiplication.\n7 × 8 = 56\n\nStep 3: Substitute the results back into the expression.\n169 - 56 + 19\n\nStep 4: Perform the subtraction.\n169 - 56 = 113\n\nStep 5: Perform the addition.\n113 + 19 = 132\nAnswer: 132",
+      "Step 1: Calculate 13 squared.\n13^2 = 169\n\nStep 2: Calculate 7 multiplied by 8.\n7 * 8 = 56\n\nStep 3: Substitute these values back into the expression.\n169 - 56 + 19\n\nStep 4: Perform the subtraction.\n169 - 56 = 113\n\nStep 5: Perform the addition.\n113 + 19 = 132\nAnswer: 132"
+    ]
+  },
+  "Calculate: (17×6)+(23×4)−15²": {
+    "truth": -31,
+    "direct": [
+      "Answer: 37",
+      "Answer: 67"
+    ],
+    "cot": [
+      "Step 1: Calculate the first multiplication.\n17 × 6 = 102\n\nStep 2: Calculate the second multiplication.\n23 × 4 = 92\n\nStep 3: Calculate the square of 15.\n15² = 15 × 15 = 225\n\nStep 4: Substitute the calculated values back into the expression.\n102 + 92 - 225\n\nStep 5: Perform the addition.\n102 + 92 = 194\n\nStep 6: Perform the subtraction.\n194 - 225 = -31\nAnswer: -31",
+      "Step 1: Calculate the first multiplication.\n17 × 6 = 102\n\nStep 2: Calculate the second multiplication.\n23 × 4 = 92\n\nStep 3: Calculate the square of 15.\n15² = 15 × 15 = 225\n\nStep 4: Perform the addition and subtraction in order from left to right.\n102 + 92 - 225\n194 - 225\n\nStep 5: Perform the final subtraction.\n194 - 225 = -31\n\nAnswer: -31"
+    ]
+  },
+  "Calculate: 47+18×3−6²": {
+    "truth": 65,
+    "direct": [
+      "Answer: 59",
+      "Answer: 53",
+      "Answer: 47"
+    ],
+    "cot": [
+      "We need to follow the order of operations (PEMDAS/BODMAS):\n1. Parentheses/Brackets\n2. Exponents/Orders\n3. Multiplication and Division (from left to right)\n4. Addition and Subtraction (from left to right)\n\nStep 1: Calculate the exponent.\n6² = 36\n\nThe expression becomes: 47 + 18 × 3 - 36\n\nStep 2: Perform the multiplication.\n18 × 3 = 54\n\nThe expression becomes: 47 + 54 - 36\n\nStep 3: Perform the addition from left to right.\n47 + 54 = 101\n\nThe expression becomes: 101 - 36\n\nStep 4: Perform the subtraction.\n101 - 36 = 65\n\nAnswer: 65",
+      "We need to follow the order of operations (PEMDAS/BODMAS):\n1. Parentheses/Brackets\n2. Exponents/Orders\n3. Multiplication and Division (from left to right)\n4. Addition and Subtraction (from left to right)\n\nStep 1: Calculate the exponent.\n6² = 36\n\nThe expression becomes: 47 + 18 × 3 - 36\n\nStep 2: Perform the multiplication.\n18 × 3 = 54\n\nThe expression becomes: 47 + 54 - 36\n\nStep 3: Perform addition and subtraction from left to right.\nFirst, perform the addition:\n47 + 54 = 101\n\nThe expression becomes: 101 - 36\n\nStep 4: Perform the subtraction.\n101 - 36 = 65\n\nAnswer: 65",
+      "We need to follow the order of operations (PEMDAS/BODMAS): Parentheses/Brackets, Exponents/Orders, Multiplication and Division (from left to right), Addition and Subtraction (from left to right).\n\nStep 1: Calculate the exponent.\n6² = 36\n\nStep 2: Perform the multiplication.\n18 × 3 = 54\n\nStep 3: Perform the addition and subtraction from left to right.\n47 + 54 = 101\n101 - 36 = 65\n\nAnswer: 65"
+    ]
+  },
+  "Calculate: (24×3)−(19×2)+7²": {
+    "truth": 83,
+    "direct": [
+      "Answer: 107",
+      "Answer: 95",
+      "Answer: 105"
+    ],
+    "cot": [
+      "Step 1: Calculate the product of 24 and 3.\n24 × 3 = 72\n\nStep 2: Calculate the product of 19 and 2.\n19 × 2 = 38\n\nStep 3: Calculate the square of 7.\n7² = 7 × 7 = 49\n\nStep 4: Substitute the calculated values back into the expression.\n(72) - (38) + 49\n\nStep 5: Perform the subtraction.\n72 - 38 = 34\n\nStep 6: Perform the addition.\n34 + 49 = 83\nAnswer: 83",
+      "Step 1: Calculate the multiplication operations.\n24 × 3 = 72\n19 × 2 = 38\n\nStep 2: Calculate the exponentiation.\n7² = 7 × 7 = 49\n\nStep 3: Substitute these values back into the original expression.\n72 - 38 + 49\n\nStep 4: Perform the subtraction.\n72 - 38 = 34\n\nStep 5: Perform the addition.\n34 + 49 = 83\n\nAnswer: 83",
+      "Step 1: Calculate the product of 24 and 3.\n24 × 3 = 72\n\nStep 2: Calculate the product of 19 and 2.\n19 × 2 = 38\n\nStep 3: Calculate the square of 7.\n7² = 7 × 7 = 49\n\nStep 4: Substitute the calculated values back into the original expression.\n(72) - (38) + 49\n\nStep 5: Perform the subtraction.\n72 - 38 = 34\n\nStep 6: Perform the addition.\n34 + 49 = 83\nAnswer: 83"
+    ]
+  },
+  "Calculate: 100−7×9+4³": {
+    "truth": 101,
+    "direct": [
+      "Answer: 81",
+      "Answer: 91"
+    ],
+    "cot": [
+      "To calculate 100−7×9+4³, we need to follow the order of operations (PEMDAS/BODMAS):\n1. Parentheses/Brackets\n2. Exponents/Orders\n3. Multiplication and Division (from left to right)\n4. Addition and Subtraction (from left to right)\n\nStep 1: Calculate the exponent.\n4³ = 4 × 4 × 4 = 16 × 4 = 64\n\nThe expression becomes: 100 − 7 × 9 + 64\n\nStep 2: Perform the multiplication.\n7 × 9 = 63\n\nThe expression becomes: 100 − 63 + 64\n\nStep 3: Perform the addition and subtraction from left to right.\n100 − 63 = 37\n\nThe expression becomes: 37 + 64\n\nStep 4: Perform the final addition.\n37 + 64 = 101\n\nAnswer: 101",
+      "We need to follow the order of operations (PEMDAS/BODMAS): Parentheses/Brackets, Exponents/Orders, Multiplication and Division (from left to right), Addition and Subtraction (from left to right).\n\nStep 1: Calculate the exponent.\n4³ = 4 × 4 × 4 = 16 × 4 = 64\n\nThe expression becomes: 100 - 7 × 9 + 64\n\nStep 2: Perform the multiplication.\n7 × 9 = 63\n\nThe expression becomes: 100 - 63 + 64\n\nStep 3: Perform subtraction and addition from left to right.\n100 - 63 = 37\n\nThe expression becomes: 37 + 64\n\nStep 4: Perform the addition.\n37 + 64 = 101\n\nAnswer: 101",
+      "Step 1: Calculate the exponent.\n4³ = 4 × 4 × 4 = 16 × 4 = 64\n\nStep 2: Perform the multiplication.\n7 × 9 = 63\n\nStep 3: Substitute these values back into the original expression.\n100 - 63 + 64\n\nStep 4: Perform the subtraction.\n100 - 63 = 37\n\nStep 5: Perform the addition.\n37 + 64 = 101\n\nAnswer: 101",
+      "Step 1: Calculate the exponentiation.\n4³ = 4 × 4 × 4 = 16 × 4 = 64\n\nStep 2: Perform the multiplication.\n7 × 9 = 63\n\nStep 3: Substitute the calculated values back into the expression.\n100 - 63 + 64\n\nStep 4: Perform the subtraction from left to right.\n100 - 63 = 37\n\nStep 5: Perform the addition.\n37 + 64 = 101\n\nAnswer: 101"
+    ]
+  },
+  "Calculate: (31×4)−9³+200": {
+    "truth": -405,
+    "direct": [
+      "Answer: -289",
+      "Answer: -183",
+      "Answer: -283"
+    ],
+    "cot": [
+      "Step 1: Calculate the multiplication.\n31 × 4 = 124\n\nStep 2: Calculate the exponentiation.\n9³ = 9 × 9 × 9 = 81 × 9 = 729\n\nStep 3: Substitute the calculated values back into the expression.\n124 - 729 + 200\n\nStep 4: Perform the subtraction.\n124 - 729 = -605\n\nStep 5: Perform the addition.\n-605 + 200 = -405\n\nAnswer: -405",
+      "The problem asks us to calculate the value of the expression (31×4)−9³+200.\nWe need to follow the order of operations (PEMDAS/BODMAS): Parentheses/Brackets, Exponents/Orders, Multiplication and Division (from left to right), Addition and Subtraction (from left to right).\n\nStep 1: Calculate the expression inside the parentheses.\n31 × 4 = 124\n\nStep 2: Calculate the exponent.\n9³ = 9 × 9 × 9 = 81 × 9 = 729\n\nStep 3: Substitute the calculated values back into the expression.\nThe expression becomes 124 - 729 + 200\n\nStep 4: Perform subtraction and addition from left to right.\nFirst, perform the subtraction:\n124 - 729\n\nTo subtract a larger number from a smaller number, we can subtract the smaller number from the larger number and then take the negative of the result.\n729 - 124 = 605\nSo, 124 - 729 = -605\n\nStep 5: Perform the addition.\n-605 + 200\n\nTo add a negative number and a positive number, we find the difference between their absolute values and use the sign of the number with the larger absolute value.\nAbsolute value of -605 is 605.\nAbsolute value of 200 is 200.\nThe difference is 605 - 200 = 405.\nSince 605 has a larger absolute value and is negative, the result is negative.\n-605 + 200 = -405\n\nAnswer: -405"
+    ]
+  },
+  "Calculate: 8×7+6×9−5²": {
+    "truth": 85,
+    "direct": [
+      "Answer: 73",
+      "Answer: 77"
+    ],
+    "cot": [
+      "Step 1: Calculate the multiplication operations.\n8×7 = 56\n6×9 = 54\n\nStep 2: Calculate the exponentiation.\n5² = 5×5 = 25\n\nStep 3: Substitute the calculated values back into the expression.\n56 + 54 - 25\n\nStep 4: Perform the addition from left to right.\n56 + 54 = 110\n\nStep 5: Perform the subtraction.\n110 - 25 = 85\nAnswer: 85",
+      "Step 1: Calculate the multiplication operations.\n8×7 = 56\n6×9 = 54\n\nStep 2: Calculate the exponentiation.\n5² = 5×5 = 25\n\nStep 3: Substitute these values back into the expression.\n56 + 54 - 25\n\nStep 4: Perform the addition from left to right.\n56 + 54 = 110\n\nStep 5: Perform the subtraction.\n110 - 25 = 85\nAnswer: 85"
+    ]
+  }
+}

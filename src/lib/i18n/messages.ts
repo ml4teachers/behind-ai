@@ -45,6 +45,7 @@ export const messages: Record<Locale, Record<string, string>> = {
       'Ein Sprachmodell hat enorme Mengen Text gelesen und dabei gelernt, Muster der Sprache zu erkennen. Im Kern sagt es immer das wahrscheinlichste nächste Wort voraus – nur auf extrem hohem Niveau. Daraus entstehen Antworten, Zusammenfassungen, Übersetzungen und vieles mehr.',
 
     'nav.home': 'Einführung',
+    'nav.glossary': 'Glossar',
     'nav.resources': 'Ressourcen',
     'nav.impressum': 'Impressum',
     'nav.section.data': 'Daten',
@@ -66,9 +67,11 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nav.rlhf': 'RLHF',
     'nav.rag': 'RAG',
     'nav.cot': 'Chain-of-Thought',
+    'nav.hallucinations': 'Halluzinationen',
     'nav.rlvr': 'RLVR',
     'nav.agents': 'Agenten',
     'nav.embeddings': 'Embeddings',
+    'nav.bias': 'Verzerrung',
     'nav.multimodal': 'Bild & Ton',
     'nav.localVsCloud': 'Lokal vs. Cloud',
     'nav.hardware': 'Hardware-Check',
@@ -549,6 +552,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nextToken.subtitle':
       'Ist das Training vorbei, macht ein Sprachmodell bei jeder Antwort im Kern nur eines: Es sagt das nächste Token voraus – wieder und wieder, Token für Token.',
     'nextToken.placeholder': 'Gib den Anfang eines Satzes ein …',
+    'nextToken.seed': 'Gelb ist eine',
     'nextToken.predict': 'Nächsten Token vorhersagen',
     // Beispiel-Satzanfänge (Pool; auf der Seite werden zufällig zwei gezeigt)
     'nextToken.ex1': 'Der beste Freund des Menschen ist der',
@@ -663,7 +667,58 @@ export const messages: Record<Locale, Record<string, string>> = {
       'Wie ähnlich zwei Embeddings sind, misst die Cosinus-Ähnlichkeit: ein Wert zwischen -1 und 1 (in der Praxis meist 0 bis 1), wobei 1 für „nahezu gleiche Bedeutung" steht. Diese Vektoren lernt ein Modell aus riesigen Textmengen nach dem Prinzip: Wörter, die in ähnlichen Kontexten vorkommen, haben ähnliche Bedeutung.',
     'embeddings.moreP3':
       'Embeddings sind ein Grundbaustein vieler KI-Anwendungen: semantische Suche, Empfehlungssysteme, Übersetzung und vor allem RAG, wo passende Dokumente gefunden werden, um Antworten mit echtem Wissen zu unterfüttern.',
-    'embeddings.nextLabel': 'Weiter: Bild & Ton',
+    'embeddings.nextLabel': 'Weiter: Verzerrung',
+
+    // --- Verzerrung / Bias ---
+    'bias.title': 'Verzerrung: woher die Schlagseite kommt',
+    'bias.subtitle':
+      'Sprachmodelle übernehmen die Muster ihrer Trainingstexte – auch die unausgesprochenen. Hier wird eine solche Verzerrung messbar: Wie eng verbindet ein Modell Berufe mit einem Geschlecht?',
+    'bias.caption':
+      'Die Berufe oben sind mit einem Embedding-Modell (gemini-embedding-2) platziert: Ihr Ort auf der Achse ist die echte Nähe zu typisch männlichen oder weiblichen Wörtern. Niemand hat dem Modell gesagt, dass Berufe ein Geschlecht haben – die Schlagseite stammt aus den Texten, mit denen es trainiert wurde.',
+    'bias.moreP1':
+      'Ein Embedding-Modell lernt Bedeutung daraus, in welchen Zusammenhängen Wörter vorkommen. Stehen über Jahrzehnte „die Krankenschwester … sie" und „der Ingenieur … er" in den Texten, dann rückt „Pflege" im Vektorraum näher an „weiblich" und „Technik" näher an „männlich". Das Modell ist ein Spiegel seiner Daten – mit allen Schieflagen, die in der Sprache stecken.',
+    'bias.moreP2':
+      'Eine zweite Quelle ist das menschliche Feedback (RLHF): Beim Feinschliff bewerten Menschen die Antworten, und ihre Vorlieben – was „gut klingt", welche Beispiele selbstverständlich wirken – fliessen mit ein. RLHF kann ein Modell auch darauf trainieren, an der Oberfläche neutral zu antworten. Die gelernte Verbindung darunter bleibt davon unberührt und taucht an anderer Stelle wieder auf, etwa beim Übersetzen oder beim Ausschmücken einer Geschichte.',
+    'bias.moreP3':
+      'Genau das zeigt der zweite Teil oben: Rechnet man die Geschlechts-Richtung aus den Vektoren heraus, steht auf der Achse alles in der Mitte – doch die Berufe gruppieren sich weiter nach demselben Muster. Die Verzerrung sitzt nicht an einer Stelle, sondern verteilt im ganzen Vektor. Für den Unterricht heisst das: KI-Ausgaben sind nie „aus sich heraus neutral" – sie tragen die Statistik ihrer Quellen weiter. Das lässt sich abmildern, aber nicht per Knopfdruck löschen.',
+    'bias.nextLabel': 'Weiter: Bild & Ton',
+    // Visualisierung (BiasLab)
+    'bias.lab.errLoad': 'Die Karte konnte nicht geladen werden.',
+    'bias.lab.s1.title': 'Berufe auf einer Geschlechter-Achse',
+    'bias.lab.s1.hint':
+      'Jeder Beruf liegt dort, wo seine Bedeutung im Modell näher an typisch männlichen oder weiblichen Wörtern steht. Tipp ein eigenes Wort ein – es wird live eingebettet und fällt an seine Stelle.',
+    'bias.lab.axisFemale': 'weiblich',
+    'bias.lab.axisMale': 'männlich',
+    'bias.lab.axisNeutral': 'neutral',
+    'bias.lab.neutralNote':
+      'Neutrale Objekte wie Tisch oder Apfel liegen in der Mitte – kein Geschlechts-Bezug. Auffällig: „Krankenpfleger" liegt trotz männlicher Wortform links. Die Schlagseite kommt aus der Bedeutung, nicht aus der Endung.',
+    'bias.lab.inputPlaceholder': 'Beruf oder Wort …',
+    'bias.lab.embedBtn': 'Einordnen',
+    'bias.lab.embeddingBtn': 'Wird eingebettet …',
+    'bias.lab.examplesLabel': 'Beispiele:',
+    'bias.lab.ex1': 'Hebamme',
+    'bias.lab.ex2': 'Astronaut',
+    'bias.lab.ex3': 'Erzieherin',
+    'bias.lab.ex4': 'Manager',
+    'bias.lab.resetBtn': 'Zurücksetzen',
+    'bias.lab.errEmbed': 'konnte nicht eingebettet werden.',
+    'bias.lab.detailMale': 'steht näher an typisch männlichen Wörtern.',
+    'bias.lab.detailFemale': 'steht näher an typisch weiblichen Wörtern.',
+    'bias.lab.detailNeutral': 'liegt fast in der Mitte – kaum ein Geschlechts-Bezug.',
+    'bias.lab.detailAnchor': 'ist ein neutrales Objekt und liegt bei 0.',
+    'bias.lab.s2.title': 'Lässt sich das wieder herausrechnen?',
+    'bias.lab.s2.hint':
+      'Man kann die Geschlechts-Richtung aus jedem Vektor entfernen. Auf der Achse steht der Beruf dann in der Mitte. Aber sind damit auch seine Nachbarn neutral?',
+    'bias.lab.probeLabel': 'Beispiel-Beruf:',
+    'bias.lab.debiasBtn': 'Geschlechts-Richtung herausrechnen',
+    'bias.lab.debiasUndo': 'Wieder einrechnen',
+    'bias.lab.neighborsLabel': 'Nächste Berufe im Bedeutungsraum',
+    'bias.lab.neighborsBefore': '(im Original)',
+    'bias.lab.neighborsAfter': '(Geschlechts-Richtung entfernt)',
+    'bias.lab.stayedOf': 'von',
+    'bias.lab.stayedSame': 'Nachbarn sind dieselben.',
+    'bias.lab.punch':
+      'Die Verzerrung sitzt nicht in einer einzelnen Stellschraube, sondern verteilt im ganzen Vektor. Eine Richtung zu löschen entfernt die Messung – nicht das Muster. Genau deshalb ist Verzerrung so schwer wieder herauszubekommen.',
 
     // --- Daten / Pretraining ---
     'data.title': 'Wo kommen die Daten her?',
@@ -732,8 +787,60 @@ export const messages: Record<Locale, Record<string, string>> = {
     'cot.moreP2':
       'Entdeckt wurde das als simpler Trick: Hängt man an eine Frage „Denke Schritt für Schritt", werden die Antworten messbar besser. Heutige Reasoning-Modelle haben dieses Mitdenken fest eingebaut – sie tun es von selbst und zeigen den Gedankengang oft nur verkürzt oder gar nicht.',
     'cot.moreP3':
-      'Mitdenken hilft, ist aber keine Garantie – der Gedankengang selbst kann Fehler enthalten. Dass ein Modell zuverlässiger denkt, übt man im Training, indem man geprüfte Lösungswege belohnt – so wie bei RLVR. Zur Laufzeit gibt es einen weiteren Hebel: dem Modell die passenden Fakten mitgeben, statt sie aus dem Gedächtnis zu raten. Genau das zeigt die nächste Station: RAG.',
-    'cot.nextLabel': 'Weiter: RAG',
+      'Mitdenken hilft, ist aber keine Garantie – der Gedankengang selbst kann Fehler enthalten. Dass ein Modell zuverlässiger denkt, übt man im Training, indem man geprüfte Lösungswege belohnt – so wie bei RLVR. Und es gibt eine Grenze, an der auch der beste Gedankengang nichts ändert: Wenn das Modell etwas schlicht nicht weiß, hält es nicht inne, sondern schreibt trotzdem flüssig weiter. Was dabei herauskommt, zeigt die nächste Station.',
+    'cot.nextLabel': 'Weiter: Halluzinationen',
+
+    // --- Halluzinationen ---
+    'hl.title': 'Halluzinationen: wenn das Modell überzeugend daneben liegt',
+    'hl.subtitle':
+      'Sprachmodelle sagen den wahrscheinlichsten nächsten Text voraus – nicht die Wahrheit. Fehlt ihnen das Wissen, schweigen sie selten; sie füllen die Lücke mit etwas Plausiblem. Frag hier das Modell nach etwas Ausgedachtem und sieh, wie selbstsicher es erfindet.',
+    'hl.caption':
+      'Oben antwortet ein Sprachmodell (Gemini über Vertex) mit einem ganz normalen Assistenten-Prompt – ohne Auftrag, etwas zu erfinden. Die Wahrscheinlichkeits-Balken weiter unten stammen aus demselben Mechanismus wie auf der Next-Token-Seite.',
+    'hl.part1.title': 'Die Erfindungs-Maschine',
+    'hl.part1.hint':
+      'Wähle ein Thema – jedes ist frei erfunden. Oder tippe selbst etwas Ausgedachtes ein.',
+    'hl.chip.novel': 'Ein Roman von 1931',
+    'hl.chip.physicist': 'Eine Schweizer Physikerin',
+    'hl.chip.treaty': 'Ein historischer Vertrag',
+    'hl.chip.effect': 'Ein Fachbegriff',
+    'hl.q.novel':
+      'Worum geht es im Roman „Die Uhren von Saint-Galmier" von Henri Vautrin (1931)? Fasse die Handlung kurz zusammen.',
+    'hl.q.physicist':
+      'Wer war die Schweizer Physikerin Elsbeth Marrer (1894–1971) und wofür ist sie bekannt?',
+    'hl.q.treaty':
+      'Was wurde im Vertrag von Niederbüren (1647) geregelt? Nenne die wichtigsten Punkte.',
+    'hl.q.effect': 'Erkläre kurz den Hofstadter-Lindqvist-Effekt aus der Psycholinguistik.',
+    'hl.freePlaceholder': 'z. B. ein erfundener Buchtitel, Name oder Fachbegriff …',
+    'hl.ask': 'Fragen',
+    'hl.revealBtn': 'Auflösen: stimmt das?',
+    'hl.reveal.title': 'Frei erfunden.',
+    'hl.reveal.body':
+      'Dieses Thema gibt es nicht – Roman, Person, Vertrag und Fachbegriff sind ausgedacht. Trotzdem klingt die Antwort detailliert und sicher. Das Modell hat nicht nachgeschlagen, sondern den wahrscheinlichsten Text fortgesetzt und die Lücke gefüllt. Genau das ist eine Halluzination.',
+    'hl.freeNote':
+      'Erfunden oder echt? Aus dem Ton allein lässt sich das nicht erkennen – das Modell klingt in beiden Fällen gleich überzeugt. Im Zweifel: nachprüfen.',
+    'hl.offline': 'Modell gerade nicht erreichbar – gezeigt wird eine zuvor aufgezeichnete Antwort.',
+    'hl.errorFree': 'Das Modell ist gerade nicht erreichbar. Versuch es gleich nochmal.',
+    'hl.part2.title': 'Warum erfindet es? Ein Blick in die Wahrscheinlichkeiten',
+    'hl.part2.hint':
+      'Dieselbe Mechanik wie auf der Next-Token-Seite: die Verteilung über das nächste Token – einmal bei einem Faktum, einmal bei etwas Unwissbarem.',
+    'hl.lp.known.label': 'Etwas, das es weiß',
+    'hl.lp.known.prompt': 'Die Hauptstadt von Frankreich ist',
+    'hl.lp.known.verdict':
+      'Ein einzelner Balken trägt fast die ganze Wahrscheinlichkeit. Das Modell ist sich sicher – und liegt richtig.',
+    'hl.lp.knownTag': 'ein Balken dominiert.',
+    'hl.lp.guess.label': 'Etwas, das es nicht wissen kann',
+    'hl.lp.guess.prompt': 'Goethes geheime Lieblingsfarbe war',
+    'hl.lp.guess.verdict':
+      'Trotzdem wählt das Modell eines aus und schreibt es als flüssigen, selbstsicheren Satz hin. Im fertigen Text ist von dieser Unsicherheit nichts mehr zu sehen – das ist der Nährboden für Halluzinationen.',
+    'hl.lp.guessTag': 'Die Balken sind flach und zerstreut – das Modell rät.',
+    'hl.lp.unavailable': 'Wahrscheinlichkeiten gerade nicht verfügbar.',
+    'hl.moreP1':
+      'Ein Sprachmodell hat keine Faktendatenbank, in der es nachschlägt. Es hat aus Texten Muster gelernt und sagt bei jedem Schritt das wahrscheinlichste nächste Token voraus. Stimmt die wahrscheinlichste Fortsetzung zufällig mit der Wirklichkeit überein, ist die Antwort richtig; tut sie es nicht, klingt sie genauso flüssig – nur eben falsch.',
+    'hl.moreP2':
+      'Entscheidend ist: Das Modell hat keinen eingebauten „Ich weiß es nicht"-Reflex. Wo Wissen fehlt, bricht es nicht ab, sondern setzt mit dem fort, was plausibel klingt. Deshalb erfindet es Romane, Lebensläufe oder Quellen mit erfundenen, aber glaubwürdigen Details. Je spezifischer und selbstsicherer eine Antwort klingt, desto weniger sagt das allein über ihre Richtigkeit aus.',
+    'hl.moreP3':
+      'Woran man sich halten kann: bei überprüfbaren Fakten gegenchecken, nach Quellen verlangen und diese wirklich öffnen, und dem Modell die nötigen Unterlagen direkt mitgeben, statt es aus dem Gedächtnis raten zu lassen. Genau dieser letzte Hebel ist die nächste Station: RAG – erst nachschlagen, dann antworten.',
+    'hl.nextLabel': 'Weiter: RAG',
 
     // --- RLVR ---
     'rlvr.title': 'RLVR: eine Belohnung, die man prüfen kann',
@@ -822,6 +929,32 @@ export const messages: Record<Locale, Record<string, string>> = {
     'a11y.toggleSidebar': 'Navigation ein-/ausblenden',
     'a11y.toggleLanguage': 'Sprache wechseln',
     'a11y.toggleAccent': 'Akzentfarbe wählen',
+    'a11y.search': 'Suche',
+    'a11y.openSearch': 'Suche öffnen',
+
+    // === Suche (Header) ===
+    'search.placeholder': 'Suchen …',
+    'search.hint': 'Seiten und Begriffe durchsuchen',
+    'search.pages': 'Seiten',
+    'search.terms': 'Begriffe',
+    'search.empty': 'Nichts gefunden.',
+
+    // === Glossar ===
+    'glossary.title': 'Glossar',
+    'glossary.subtitle':
+      'Die wichtigsten Begriffe rund um KI-Sprachmodelle – kurz erklärt, mit Links zu den Erklärseiten und weiterführenden Quellen.',
+    'glossary.filterPlaceholder': 'Begriff suchen …',
+    'glossary.empty': 'Kein Begriff gefunden.',
+    'glossary.explainOn': 'Mehr dazu auf dieser Seite',
+    'glossary.external': 'Weiterführend',
+    'glossary.wikipedia': 'Wikipedia',
+    'glossary.countLabel': 'Begriffe',
+    'glossary.category.data': 'Daten',
+    'glossary.category.training': 'Training',
+    'glossary.category.inference': 'Inferenz',
+    'glossary.category.mlBasics': 'ML-Grundlagen',
+    'glossary.category.general': 'Allgemein',
+    'glossary.backBtn': 'Zur Einführung',
 
     // === Viz-Komponenten ===
     // --- mini-training.tsx ---
@@ -832,6 +965,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'miniTraining.speedTurbo': 'Turbo',
     'miniTraining.customLabel': 'Eigene',
     'miniTraining.customHint': 'Gib eigene Wörter ein (durch Leerzeichen getrennt) – das Modell lernt nur daraus. Probier Tiernamen, Städte oder Fantasiewörter.',
+    'miniTraining.customPlaceholder': 'apfel banane kirsche …',
     'miniTraining.customApply': 'Übernehmen & neu starten',
     'miniTraining.customWords': 'Wörter',
     'miniTraining.pause': 'Pause',
@@ -931,6 +1065,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'rlhfLab.genHeading': 'Neue Antworten, die das Modell nie gesehen hat',
     'rlhfLab.genHint': 'Wähl wieder die bessere – dann zeigt sich, ob dein Belohnungsmodell genauso entscheidet.',
     'rlhfLab.genYourChoice': 'deine Wahl',
+    'rlhfLab.genRewardModel': 'Belohnungsmodell',
     'rlhfLab.genAgree': 'Mal trifft das Modell deine Wahl – aus nur',
     'rlhfLab.genAgreeSuffix': 'Klicks. Genau das macht RLHF praktikabel: ein paar tausend Vergleiche, und das Modell kann Millionen Antworten bewerten, ohne dass ein Mensch mitliest.',
     'rlhfLab.genNext': 'Wo es kippt',
@@ -1090,6 +1225,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nextTokenPred.useSimulation': 'Simulation verwenden',
     'nextTokenPred.simMode': 'Simulationsmodus aktiv - keine echte API verwendet',
     'nextTokenPred.apiFailed': 'API-Anfrage fehlgeschlagen:',
+    'nextTokenPred.noProbs': 'Keine Token-Wahrscheinlichkeiten vom Modell erhalten. Versuche es mit einem anderen Text.',
+    'nextTokenPred.usingSim': 'Verwende simulierte Daten statt API-Ergebnissen',
 
     // --- multimodal-sequence.tsx ---
     'multimodalSeq.sceneLabel': 'Kacheln:',
@@ -1255,6 +1392,7 @@ export const messages: Record<Locale, Record<string, string>> = {
       'A language model has read vast amounts of text and learned to recognise patterns in language. At its core it always predicts the most likely next word – just at an extremely high level. From that come answers, summaries, translations and much more.',
 
     'nav.home': 'Introduction',
+    'nav.glossary': 'Glossary',
     'nav.resources': 'Resources',
     'nav.impressum': 'Imprint',
     'nav.section.data': 'Data',
@@ -1276,9 +1414,11 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nav.rlhf': 'RLHF',
     'nav.rag': 'RAG',
     'nav.cot': 'Chain-of-thought',
+    'nav.hallucinations': 'Hallucinations',
     'nav.rlvr': 'RLVR',
     'nav.agents': 'Agents',
     'nav.embeddings': 'Embeddings',
+    'nav.bias': 'Bias',
     'nav.multimodal': 'Images & sound',
     'nav.localVsCloud': 'Local vs. cloud',
     'nav.hardware': 'Hardware check',
@@ -1756,6 +1896,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nextToken.subtitle':
       'Once training is done, a language model does only one thing for every answer: it predicts the next token – again and again, token by token.',
     'nextToken.placeholder': 'Type the start of a sentence …',
+    'nextToken.seed': 'Yellow is a',
     'nextToken.predict': 'Predict next token',
     // Example sentence starts (pool; two are shown at random on the page)
     'nextToken.ex1': 'Man’s best friend is a',
@@ -1868,7 +2009,58 @@ export const messages: Record<Locale, Record<string, string>> = {
       'How similar two embeddings are is measured by cosine similarity: a value between -1 and 1 (in practice mostly 0 to 1), where 1 means “almost identical meaning”. A model learns these vectors from huge amounts of text following one principle: words that appear in similar contexts have similar meaning.',
     'embeddings.moreP3':
       'Embeddings are a foundational building block of many AI applications: semantic search, recommendation systems, translation and above all RAG, where matching documents are retrieved to ground answers in real knowledge.',
-    'embeddings.nextLabel': 'Next: Images & sound',
+    'embeddings.nextLabel': 'Next: Bias',
+
+    // --- Bias ---
+    'bias.title': 'Bias: where the slant comes from',
+    'bias.subtitle':
+      'Language models pick up the patterns of their training text – including the unspoken ones. Here one such bias becomes measurable: how tightly does a model tie jobs to a gender?',
+    'bias.caption':
+      'The jobs above are placed with an embedding model (gemini-embedding-2): each one’s spot on the axis is its real closeness to typically male or female words. No one told the model that jobs have a gender – the slant comes from the text it was trained on.',
+    'bias.moreP1':
+      'An embedding model learns meaning from the contexts words appear in. When decades of text say “the nurse … she” and “the engineer … he”, “care” drifts closer to “female” in the vector space and “engineering” closer to “male”. The model mirrors its data – along with every slant baked into the language.',
+    'bias.moreP2':
+      'A second source is human feedback (RLHF): during fine-tuning people rate answers, and their preferences – what “sounds good”, which examples feel self-evident – flow in too. RLHF can also train a model to answer neutrally on the surface. The learned association underneath stays untouched and resurfaces elsewhere, for instance when translating or fleshing out a story.',
+    'bias.moreP3':
+      'That is exactly what the second part above shows: remove the gender direction from the vectors and everything lines up in the middle of the axis – yet the jobs still group by the same pattern. The bias does not sit in one place; it is spread across the whole vector. For the classroom: AI output is never “neutral by itself” – it carries the statistics of its sources forward. That can be softened, but not deleted at the push of a button.',
+    'bias.nextLabel': 'Next: Images & sound',
+    // Visualisation (BiasLab)
+    'bias.lab.errLoad': 'The map could not be loaded.',
+    'bias.lab.s1.title': 'Jobs on a gender axis',
+    'bias.lab.s1.hint':
+      'Each job sits where its meaning in the model lands closer to typically male or female words. Type your own word – it is embedded live and drops into place.',
+    'bias.lab.axisFemale': 'female',
+    'bias.lab.axisMale': 'male',
+    'bias.lab.axisNeutral': 'neutral',
+    'bias.lab.neutralNote':
+      'Neutral objects like table or apple sit in the middle – no gender link. The striking part: plain job words like nurse or teacher land far on the female side, while pilot or engineer lean male. The slant rides on meaning, picked up from how the words are used in text.',
+    'bias.lab.inputPlaceholder': 'Job or word …',
+    'bias.lab.embedBtn': 'Place it',
+    'bias.lab.embeddingBtn': 'Embedding …',
+    'bias.lab.examplesLabel': 'Examples:',
+    'bias.lab.ex1': 'midwife',
+    'bias.lab.ex2': 'astronaut',
+    'bias.lab.ex3': 'kindergarten teacher',
+    'bias.lab.ex4': 'manager',
+    'bias.lab.resetBtn': 'Reset',
+    'bias.lab.errEmbed': 'could not be embedded.',
+    'bias.lab.detailMale': 'sits closer to typically male words.',
+    'bias.lab.detailFemale': 'sits closer to typically female words.',
+    'bias.lab.detailNeutral': 'sits almost in the middle – barely any gender link.',
+    'bias.lab.detailAnchor': 'is a neutral object and sits at 0.',
+    'bias.lab.s2.title': 'Can you just remove it?',
+    'bias.lab.s2.hint':
+      'You can strip the gender direction out of every vector. On the axis the job then sits in the middle. But does that make its neighbours neutral too?',
+    'bias.lab.probeLabel': 'Example job:',
+    'bias.lab.debiasBtn': 'Remove gender direction',
+    'bias.lab.debiasUndo': 'Add it back',
+    'bias.lab.neighborsLabel': 'Closest jobs in meaning space',
+    'bias.lab.neighborsBefore': '(original)',
+    'bias.lab.neighborsAfter': '(gender direction removed)',
+    'bias.lab.stayedOf': 'of',
+    'bias.lab.stayedSame': 'neighbours stayed the same.',
+    'bias.lab.punch':
+      'The bias is not in a single dial; it is spread across the whole vector. Deleting one direction removes the measurement, not the pattern. That is exactly why bias is so hard to get rid of.',
 
     // --- Data / pre-training ---
     'data.title': 'Where does the data come from?',
@@ -1937,8 +2129,60 @@ export const messages: Record<Locale, Record<string, string>> = {
     'cot.moreP2':
       'It was discovered as a simple trick: appending “think step by step” to a question makes answers measurably better. Today’s reasoning models have this thinking built in – they do it on their own and often show the working only in shortened form, or not at all.',
     'cot.moreP3':
-      'Thinking helps, but it is no guarantee – the working itself can contain mistakes. Getting a model to reason more reliably is something you train for by rewarding checked lines of reasoning – as in RLVR. At runtime there is another lever: giving the model the right facts instead of guessing them from memory. That is exactly what the next stop shows: RAG.',
-    'cot.nextLabel': 'Next: RAG',
+      'Thinking helps, but it is no guarantee – the working itself can contain mistakes. Getting a model to reason more reliably is something you train for by rewarding checked lines of reasoning – as in RLVR. And there is a limit that even the best reasoning cannot fix: when the model simply does not know something, it does not pause – it keeps writing fluently anyway. What comes out of that is the next stop.',
+    'cot.nextLabel': 'Next: Hallucinations',
+
+    // --- Hallucinations ---
+    'hl.title': 'Hallucinations: when the model is confidently wrong',
+    'hl.subtitle':
+      'Language models predict the most likely next text – not the truth. When they lack the knowledge, they rarely stay silent; they fill the gap with something plausible. Ask the model here about something made up and watch how confidently it invents.',
+    'hl.caption':
+      'Above, a language model (Gemini via Vertex) answers with an ordinary assistant prompt – with no instruction to invent anything. The probability bars further down come from the same mechanism as on the next-token page.',
+    'hl.part1.title': 'The invention machine',
+    'hl.part1.hint':
+      'Pick a topic – each one is entirely made up. Or type something invented yourself.',
+    'hl.chip.novel': 'A novel from 1931',
+    'hl.chip.physicist': 'A Swiss physicist',
+    'hl.chip.treaty': 'A historical treaty',
+    'hl.chip.effect': 'A technical term',
+    'hl.q.novel':
+      'What is the novel “The Clocks of Saint-Galmier” by Henri Vautrin (1931) about? Briefly summarise the plot.',
+    'hl.q.physicist':
+      'Who was the Swiss physicist Elsbeth Marrer (1894–1971) and what is she known for?',
+    'hl.q.treaty':
+      'What did the Treaty of Niederbüren (1647) regulate? Name the most important points.',
+    'hl.q.effect': 'Briefly explain the Hofstadter–Lindqvist effect from psycholinguistics.',
+    'hl.freePlaceholder': 'e.g. an invented book title, name or technical term …',
+    'hl.ask': 'Ask',
+    'hl.revealBtn': 'Reveal: is that true?',
+    'hl.reveal.title': 'Entirely made up.',
+    'hl.reveal.body':
+      'None of this exists – the novel, the person, the treaty and the term are all invented. Yet the answer sounds detailed and confident. The model did not look anything up; it continued with the most likely text and filled the gap. That is exactly what a hallucination is.',
+    'hl.freeNote':
+      'Invented or real? You cannot tell from the tone alone – the model sounds equally confident either way. When in doubt: verify.',
+    'hl.offline': 'Model not reachable right now – showing a previously recorded answer.',
+    'hl.errorFree': 'The model is not reachable right now. Please try again in a moment.',
+    'hl.part2.title': 'Why does it invent? A look at the probabilities',
+    'hl.part2.hint':
+      'The same mechanism as on the next-token page: the distribution over the next token – once for a fact, once for something unknowable.',
+    'hl.lp.known.label': 'Something it knows',
+    'hl.lp.known.prompt': 'The capital of France is',
+    'hl.lp.known.verdict':
+      'A single bar carries almost all of the probability. The model is sure – and it is right.',
+    'hl.lp.knownTag': 'one bar dominates.',
+    'hl.lp.guess.label': 'Something it cannot know',
+    'hl.lp.guess.prompt': 'Goethe’s secret favourite colour was',
+    'hl.lp.guess.verdict':
+      'Yet the model still picks one and writes it out as a fluent, confident sentence. In the finished text none of that uncertainty is visible any more – this is the breeding ground for hallucinations.',
+    'hl.lp.guessTag': 'The bars are flat and spread out – the model is guessing.',
+    'hl.lp.unavailable': 'Probabilities not available right now.',
+    'hl.moreP1':
+      'A language model has no fact database to look things up in. It has learned patterns from text and predicts the most likely next token at every step. If the most likely continuation happens to match reality, the answer is correct; if it does not, it sounds just as fluent – only wrong.',
+    'hl.moreP2':
+      'The key point: the model has no built-in “I don’t know” reflex. Where knowledge is missing it does not stop, it continues with whatever sounds plausible. That is why it invents novels, biographies or sources with made-up but credible details. The more specific and confident an answer sounds, the less that alone tells you about whether it is correct.',
+    'hl.moreP3':
+      'What does help: cross-check verifiable facts, ask for sources and actually open them, and give the model the documents it needs instead of letting it guess from memory. That last lever is exactly the next stop: RAG – look it up, then answer.',
+    'hl.nextLabel': 'Next: RAG',
 
     // --- RLVR ---
     'rlvr.title': 'RLVR: a reward you can check',
@@ -2027,6 +2271,32 @@ export const messages: Record<Locale, Record<string, string>> = {
     'a11y.toggleSidebar': 'Show/hide navigation',
     'a11y.toggleLanguage': 'Switch language',
     'a11y.toggleAccent': 'Choose accent colour',
+    'a11y.search': 'Search',
+    'a11y.openSearch': 'Open search',
+
+    // === Search (header) ===
+    'search.placeholder': 'Search …',
+    'search.hint': 'Search pages and terms',
+    'search.pages': 'Pages',
+    'search.terms': 'Terms',
+    'search.empty': 'No results.',
+
+    // === Glossary ===
+    'glossary.title': 'Glossary',
+    'glossary.subtitle':
+      'The key terms around AI language models – briefly explained, with links to the explainer pages and further sources.',
+    'glossary.filterPlaceholder': 'Search a term …',
+    'glossary.empty': 'No term found.',
+    'glossary.explainOn': 'Learn more on this page',
+    'glossary.external': 'Further reading',
+    'glossary.wikipedia': 'Wikipedia',
+    'glossary.countLabel': 'terms',
+    'glossary.category.data': 'Data',
+    'glossary.category.training': 'Training',
+    'glossary.category.inference': 'Inference',
+    'glossary.category.mlBasics': 'ML basics',
+    'glossary.category.general': 'General',
+    'glossary.backBtn': 'To introduction',
 
     // === Viz components ===
     // --- mini-training.tsx ---
@@ -2037,6 +2307,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'miniTraining.speedTurbo': 'Turbo',
     'miniTraining.customLabel': 'Custom',
     'miniTraining.customHint': 'Enter your own words (space-separated) – the model learns only from these. Try animal names, cities or made-up words.',
+    'miniTraining.customPlaceholder': 'apple banana cherry …',
     'miniTraining.customApply': 'Apply & restart',
     'miniTraining.customWords': 'words',
     'miniTraining.pause': 'Pause',
@@ -2136,6 +2407,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'rlhfLab.genHeading': 'New answers the model has never seen',
     'rlhfLab.genHint': 'Pick the better one again – then see whether your reward model agrees.',
     'rlhfLab.genYourChoice': 'your choice',
+    'rlhfLab.genRewardModel': 'Reward model',
     'rlhfLab.genAgree': 'times the model matches your choice – from only',
     'rlhfLab.genAgreeSuffix': 'clicks. That is what makes RLHF practical: a few thousand comparisons and the model can rate millions of answers without a human reading each one.',
     'rlhfLab.genNext': 'Where it breaks',
@@ -2295,6 +2567,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     'nextTokenPred.useSimulation': 'Use simulation',
     'nextTokenPred.simMode': 'Simulation mode active – no real API used',
     'nextTokenPred.apiFailed': 'API request failed:',
+    'nextTokenPred.noProbs': 'No token probabilities received from the model. Try a different text.',
+    'nextTokenPred.usingSim': 'Using simulated data instead of API results',
 
     // --- multimodal-sequence.tsx ---
     'multimodalSeq.sceneLabel': 'Tiles:',

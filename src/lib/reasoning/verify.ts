@@ -48,11 +48,11 @@ export function evalArith(expr: string): number | null {
 
 /**
  * Holt die Antwort aus einer Modell-Ausgabe. Bevorzugt die letzte Zeile der Form
- * „Antwort: …"; fehlt sie, nimmt sie den ganzen Text. Liefert den rohen String
- * (z. B. „-31", „0,05 Franken", „4 Buchstaben").
+ * „Antwort: …" bzw. „Answer: …" (beide Sprachen); fehlt sie, nimmt sie den ganzen
+ * Text. Liefert den rohen String (z. B. „-31", „0,05 Franken", „4 Buchstaben").
  */
 export function parseAnswer(text: string): string {
-  const matches = [...text.matchAll(/Antwort:\s*(.+)/gi)]
+  const matches = [...text.matchAll(/(?:Antwort|Answer):\s*(.+)/gi)]
   const tail = matches.length ? matches[matches.length - 1][1] : text
   return tail.trim()
 }

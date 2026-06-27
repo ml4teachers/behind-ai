@@ -2,18 +2,28 @@
 
 import { useUIStore } from '../store'
 import { useMounted } from '../use-mounted'
-import { defaultLocale } from './config'
+import { defaultLocale, type Locale } from './config'
 import { messages } from './messages'
 
 /**
- * Liefert eine `t(key)`-Funktion in der aktiven Sprache. Vor dem Mount wird
- * immer die Default-Sprache verwendet (verhindert Hydration-Mismatch), danach
- * die im Store gespeicherte. Unbekannte Keys fallen auf Deutsch zurück.
+ * Aktive Sprache des UI. Vor dem Mount IMMER die Default-Sprache (verhindert
+ * Hydration-Mismatch), danach die im Store gespeicherte. Wer Text *und* etwas
+ * Sprachabhängiges (z.B. die Glossar-Begriffserkennung) gleichzeitig nutzt,
+ * muss dieselbe Quelle verwenden, damit Text und Logik aus derselben Sprache
+ * stammen.
  */
-export function useTranslations() {
+export function useActiveLocale(): Locale {
   const locale = useUIStore((state) => state.locale)
   const mounted = useMounted()
-  const active = mounted ? locale : defaultLocale
+  return mounted ? locale : defaultLocale
+}
+
+/**
+ * Liefert eine `t(key)`-Funktion in der aktiven Sprache. Unbekannte Keys fallen
+ * auf Deutsch zurück.
+ */
+export function useTranslations() {
+  const active = useActiveLocale()
 
   return (key: string): string =>
     messages[active]?.[key] ?? messages[defaultLocale][key] ?? key

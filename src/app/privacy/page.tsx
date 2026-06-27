@@ -11,6 +11,7 @@ import {
 import { ShieldCheck, Sparkles, Wrench } from 'lucide-react'
 import { MessageCheck } from '@/components/visualizations/message-check'
 import { useTranslations } from '@/lib/i18n/use-translations'
+import { GlossaryText } from '@/components/glossary/glossary-text'
 
 // Rechtliche Auslegeordnung KI im Bildungsraum Schweiz (Thouvenin/Volz, 2024).
 const SOURCE_URL =
@@ -23,7 +24,7 @@ export default function PrivacyPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8 space-y-10">
       <header className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">{t('privacy.title')}</h1>
-        <p className="text-lg text-muted-foreground">{t('privacy.subtitle')}</p>
+        <p className="text-lg text-muted-foreground"><GlossaryText>{t('privacy.subtitle')}</GlossaryText></p>
       </header>
 
       {/* Interaktiv zuoberst: Nachrichten-Check */}
@@ -31,7 +32,7 @@ export default function PrivacyPage() {
         <div className="rounded-xl border bg-card p-4 sm:p-6">
           <MessageCheck />
         </div>
-        <p className="text-sm text-muted-foreground">{t('privacy.caption')}</p>
+        <p className="text-sm text-muted-foreground"><GlossaryText>{t('privacy.caption')}</GlossaryText></p>
       </section>
 
       {/* Worauf kommt es an? – Faktoren in Alltagssprache */}
@@ -59,9 +60,9 @@ export default function PrivacyPage() {
           <AccordionItem value="more" className="border-b-0">
             <AccordionTrigger className="text-base">{t('common.moreAbout')}</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base leading-relaxed text-muted-foreground">
-              <p>{t('privacy.moreP1')}</p>
-              <p>{t('privacy.moreP2')}</p>
-              <p>{t('privacy.moreP3')}</p>
+              <p><GlossaryText>{t('privacy.moreP1')}</GlossaryText></p>
+              <p><GlossaryText>{t('privacy.moreP2')}</GlossaryText></p>
+              <p><GlossaryText>{t('privacy.moreP3')}</GlossaryText></p>
               <p className="text-sm">
                 {t('privacy.sourceLabel')}{' '}
                 <a

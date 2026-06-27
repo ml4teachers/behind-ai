@@ -21,7 +21,16 @@ import { Textarea } from '@/components/ui/textarea'
 import { PlayIcon, PauseIcon, ReloadIcon, ShuffleIcon, PlusIcon, CheckIcon } from '@radix-ui/react-icons'
 import { useMounted } from '@/lib/use-mounted'
 import { useTranslations } from '@/lib/i18n/use-translations'
-import { type Corpus, CORPORA, corpusWords, buildCustomCorpus } from '@/lib/mini-llm/corpora'
+import { useUIStore } from '@/lib/store'
+import { defaultLocale } from '@/lib/i18n/config'
+import {
+  type Corpus,
+  corpora,
+  corpusWords,
+  buildCustomCorpus,
+  DEFAULT_CUSTOM_TEXT,
+  defaultCustomText,
+} from '@/lib/mini-llm/corpora'
 import { type Distribution, type EmbeddingPoint, type ExampleProbe, Trainer } from '@/lib/mini-llm/trainer'
 
 // Schritte pro Frame je Tempo (Bruchwerte via Akkumulator → echte Zeitlupe).
@@ -34,9 +43,6 @@ const SAMPLE_N = 8
 type Speed = 'slow' | 'normal' | 'turbo'
 const INCREMENTS = [50, 500] as const
 const VOWELS = new Set('aeiouäöü'.split(''))
-
-const DEFAULT_CUSTOM =
-  'apfel banane birne kirsche pflaume traube erdbeere himbeere brombeere zitrone orange mandarine ananas melone pfirsich aprikose kiwi mango feige dattel walnuss haselnuss mandel karotte gurke tomate kartoffel zwiebel paprika kürbis spinat salat brokkoli erbse bohne linse pilz kohl rettich spargel'
 
 interface CurvePoint {
   x: number
@@ -88,6 +94,12 @@ function deriveExample(words: string[]): Example {
 export function MiniTraining() {
   const t = useTranslations()
   const mounted = useMounted()
+  const storeLocale = useUIStore((s) => s.locale)
+  const locale = mounted ? storeLocale : defaultLocale
+  // Korpora (Inhalt) in der UI-Sprache; gleiche Mechanik, andere „Sprache".
+  const CORPORA = useMemo(() => corpora(locale), [locale])
+  const numLocale = locale === 'en' ? 'en-US' : 'de-CH'
+  const customLabel = t('miniTraining.customLabel')
 
   const trainerRef = useRef<Trainer | null>(null)
   const rafRef = useRef<number>(0)
@@ -104,7 +116,7 @@ export function MiniTraining() {
 
   const [corpusKey, setCorpusKey] = useState('woerter')
   const [customCorpus, setCustomCorpus] = useState<Corpus | null>(null)
-  const [customText, setCustomText] = useState(DEFAULT_CUSTOM)
+  const [customText, setCustomText] = useState(DEFAULT_CUSTOM_TEXT.de)
   const [running, setRunning] = useState(false)
   const [speed, setSpeed] = useState<Speed>('normal')
   const [step, setStep] = useState(0)
@@ -123,7 +135,7 @@ export function MiniTraining() {
 
   const corpus: Corpus =
     corpusKey === 'eigene'
-      ? customCorpus ?? { key: 'eigene', label: 'Eigene', text: '', prefixes: [''] }
+      ? customCorpus ?? { key: 'eigene', label: customLabel, text: '', prefixes: [''] }
       : CORPORA.find((c) => c.key === corpusKey) ?? CORPORA[0]
   const words = useMemo(() => corpusWords(corpus), [corpus])
   const wordSet = useMemo(() => new Set(words), [words])
@@ -204,10 +216,23 @@ export function MiniTraining() {
     rafRef.current = requestAnimationFrame(loop)
   }, [pushUi])
 
+  // Beim Mount und bei Sprachwechsel: den gewählten Korpus in der aktuellen
+  // Sprache neu aufsetzen (Default-Custom-Text mitübersetzen, falls unangetastet).
   useEffect(() => {
-    if (mounted) initTrainer(CORPORA[0])
+    if (!mounted) return
+    setCustomText((prev) =>
+      prev === DEFAULT_CUSTOM_TEXT.de || prev === DEFAULT_CUSTOM_TEXT.en ? defaultCustomText(locale) : prev,
+    )
+    const list = corpora(locale)
+    if (corpusKey === 'eigene') {
+      const c = buildCustomCorpus(customText, customLabel)
+      initTrainer(corpusWords(c).length >= 2 ? c : list[0])
+    } else {
+      initTrainer(list.find((c) => c.key === corpusKey) ?? list[0])
+    }
     return () => cancelAnimationFrame(rafRef.current)
-  }, [mounted, initTrainer])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted, locale])
 
   const startLoop = (target: number | null) => {
     if (!trainerRef.current) return
@@ -235,7 +260,7 @@ export function MiniTraining() {
     if (key === corpusKey && key !== 'eigene') return
     setCorpusKey(key)
     if (key === 'eigene') {
-      const c = customCorpus ?? buildCustomCorpus(customText)
+      const c = customCorpus ?? buildCustomCorpus(customText, customLabel)
       setCustomCorpus(c)
       if (corpusWords(c).length >= 2) initTrainer(c)
     } else {
@@ -244,7 +269,7 @@ export function MiniTraining() {
   }
 
   const applyCustom = () => {
-    const c = buildCustomCorpus(customText)
+    const c = buildCustomCorpus(customText, customLabel)
     if (corpusWords(c).length < 2) return
     setCorpusKey('eigene')
     setCustomCorpus(c)
@@ -351,7 +376,7 @@ export function MiniTraining() {
               onChange={(e) => setCustomText(e.target.value)}
               rows={3}
               className="font-mono text-sm"
-              placeholder="apfel banane kirsche …"
+              placeholder={t('miniTraining.customPlaceholder')}
             />
             <div className="mt-2 flex items-center gap-2">
               <Button onClick={applyCustom} size="sm">
@@ -396,7 +421,7 @@ export function MiniTraining() {
         </div>
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>{status}</span>
-          <span className="tabular-nums">{t('miniTraining.stepLabel')} {step.toLocaleString('de-CH')}</span>
+          <span className="tabular-nums">{t('miniTraining.stepLabel')} {step.toLocaleString(numLocale)}</span>
         </div>
       </div>
 
@@ -460,7 +485,7 @@ export function MiniTraining() {
         {showData && (
           <div className="mt-3 border-t pt-3">
             <p className="mb-2 text-xs text-muted-foreground">
-              {t('miniTraining.dataLabel')} {words.length.toLocaleString('de-CH')} {corpus.label} {t('miniTraining.dataLabelSuffix')}
+              {t('miniTraining.dataLabel')} {words.length.toLocaleString(numLocale)} {corpus.label} {t('miniTraining.dataLabelSuffix')}
             </p>
             <div className="flex max-h-40 flex-wrap gap-x-2 gap-y-1 overflow-y-auto rounded-md bg-muted/40 p-2">
               {words.map((w, i) => (
