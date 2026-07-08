@@ -197,7 +197,7 @@ export const slides: SlideDef[] = [
           <br />
           verantwortungsvoll nutzen
         </Title>
-        <Lede>Ein interaktives Referat – Ihr Smartphone ist Ihr Labor.</Lede>
+        <Lede>Ein interaktives Referat – euer Smartphone ist euer Labor.</Lede>
         <p className="mt-12 text-lg text-muted-foreground md:text-2xl">
           Thomas Zurfluh ·{' '}
           <span className="font-mono text-primary">behind-ai.ch</span>
@@ -213,7 +213,7 @@ export const slides: SlideDef[] = [
       '«Give a man a fish …» – Prompts veralten, das Prinzip bleibt. Copilot, fobizz, SchuBa – und was in zwei Jahren kommt.',
     render: (step) => (
       <div>
-        <Title>Heute lernen Sie keine fünf Prompts.</Title>
+        <Title>Heute lernt ihr keine fünf Prompts.</Title>
         <Step at={1} step={step}>
           <Lede className="mt-8">
             Wer versteht, wie ein Sprachmodell funktioniert, kann{' '}
@@ -258,12 +258,12 @@ export const slides: SlideDef[] = [
       <div>
         <Kicker>Live-Experiment</Kicker>
         <Title className="text-3xl md:text-5xl">
-          Sie sind jetzt das Sprachmodell.
+          Ihr seid jetzt das Sprachmodell.
         </Title>
         <div className="mt-6 flex flex-col gap-8 md:flex-row md:items-start">
           <div className="min-w-0 flex-1">
             <p className="mb-4 text-lg text-muted-foreground md:text-2xl">
-              Tippen Sie auf Ihrem Handy das Wort ein, das{' '}
+              Tippe auf deinem Handy das Wort ein, das{' '}
               <strong className="text-foreground">als Nächstes</strong> kommt.
             </p>
             <PresenterPanel defaultPrompt="Die Schulen Baar sind bekannt für ihre" />
@@ -324,9 +324,9 @@ export const slides: SlideDef[] = [
       'Smartphone-Experiment (Min. 5–20): eigenen Namen oder ein Fachwort tokenisieren. Aha: Das Modell rechnet nicht mit Wörtern, sondern mit Zahlen für häufige Buchstabengruppen.',
     render: () => (
       <div>
-        <Kicker>Experiment auf Ihrem Handy</Kicker>
+        <Kicker>Experiment auf deinem Handy</Kicker>
         <Title className="text-3xl md:text-5xl">
-          Womit rechnet das Modell? Tokenisieren Sie Ihren Namen.
+          Womit rechnet das Modell? Tokenisiere deinen Namen.
         </Title>
         <div className="mt-6 flex flex-col gap-8 md:flex-row md:items-start">
           <div className="min-w-0 flex-1">
@@ -351,9 +351,9 @@ export const slides: SlideDef[] = [
       'Smartphone-Experiment: Kontext variieren, Wahrscheinlichkeiten kippen sehen. Beamer-Beispiel «Die Hauptstadt von Frankreich heisst» zeigt: Wenn das Modell etwas «weiss», ist EIN Balken riesig – das brauchen wir später beim Halluzinieren wieder.',
     render: () => (
       <div>
-        <Kicker>Experiment auf Ihrem Handy</Kicker>
+        <Kicker>Experiment auf deinem Handy</Kicker>
         <Title className="text-3xl md:text-5xl">
-          Ändern Sie den Kontext – die Wahrscheinlichkeiten kippen.
+          Ändere den Kontext – die Wahrscheinlichkeiten kippen.
         </Title>
         <div className="mt-6 flex flex-col gap-8 md:flex-row md:items-start">
           <div className="min-w-0 flex-1">
@@ -371,7 +371,7 @@ export const slides: SlideDef[] = [
     block: B1,
     steps: 2,
     notes:
-      'Woher «weiss» das Modell das? Training: Monate, Milliarden Texte, Millionenkosten – dabei werden nur Zahlen (Gewichte) eingestellt. Danach ist alles eingefroren: Ihr Chat schlägt nirgends nach. Vertiefung mit Mini-Training auf behind-ai.ch/training.',
+      'Woher «weiss» das Modell das? Training: Monate, Milliarden Texte, Millionenkosten – dabei werden nur Zahlen (Gewichte) eingestellt. Danach ist alles eingefroren: euer Chat schlägt nirgends nach. Vertiefung mit Mini-Training auf behind-ai.ch/training.',
     render: (step) => (
       <div>
         <Kicker>Woher «weiss» es das?</Kicker>
@@ -392,12 +392,12 @@ export const slides: SlideDef[] = [
           <Step at={1} step={step}>
             <div className="h-full rounded-xl border bg-card p-6">
               <h3 className="text-2xl font-bold text-[hsl(var(--chart-2))] md:text-3xl">
-                Anwendung <span className="font-normal text-muted-foreground">· Ihr Chat</span>
+                Anwendung <span className="font-normal text-muted-foreground">· euer Chat</span>
               </h3>
               <ul className="mt-4 space-y-3 text-lg md:text-2xl">
                 <li>Die Gewichte sind eingefroren</li>
                 <li>Kein Nachschlagen, keine Datenbank</li>
-                <li>Nur noch: raten, raten, raten – mit Ihrem Text als Kontext</li>
+                <li>Nur noch: raten, raten, raten – mit eurem Text als Kontext</li>
               </ul>
             </div>
           </Step>
@@ -527,7 +527,7 @@ export const slides: SlideDef[] = [
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {[
             ['Internetsuche', 'aktuelle Quellen in den Kontext holen'],
-            ['Eigene Dokumente', 'Ihre Unterlagen als Grundlage (RAG)'],
+            ['Eigene Dokumente', 'eure Unterlagen als Grundlage (RAG)'],
             ['Memory & Werkzeuge', 'Notizen, Rechner, Code ausführen'],
           ].map(([term, def], i) => (
             <Step key={term} at={i} step={step}>
@@ -657,7 +657,7 @@ export const slides: SlideDef[] = [
       'Gedankenexperiment (Min. 33–45): Augen zu, Bild vorstellen. Fragen langsam einblenden, Pausen lassen. Noch NICHT auflösen.',
     render: (step) => (
       <div className="text-center">
-        <Kicker>Stellen Sie sich das Bild vor</Kicker>
+        <Kicker>Stellt euch das Bild vor</Kicker>
         <Title className="md:text-6xl">
           «Eine Person, die eine Wohnung putzt.»
         </Title>
@@ -759,7 +759,7 @@ export const slides: SlideDef[] = [
     block: B3,
     steps: 3,
     notes:
-      'Datenschutz konkret, kantonal verankert: Leitfaden Kanton Zug (2026) + Grundsatz Datenschutz im KI-Campus. Merksatz: Was Sie eintippen, verlässt die Schule. Die Ampel wird in den Workshops vertieft.',
+      'Datenschutz konkret, kantonal verankert: Leitfaden Kanton Zug (2026) + Grundsatz Datenschutz im KI-Campus. Merksatz: Was du eintippst, verlässt die Schule. Die Ampel wird in den Workshops vertieft.',
     render: (step) => (
       <div>
         <Kicker>Datenschutz – Leitfaden Kanton Zug (2026)</Kicker>
@@ -797,7 +797,7 @@ export const slides: SlideDef[] = [
         </div>
         <Step at={3} step={step}>
           <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-            Merksatz: Was Sie eintippen, verlässt die Schule. – Wird in den
+            Merksatz: Was du eintippst, verlässt die Schule. – Wird in den
             Workshops vertieft.
           </p>
         </Step>
@@ -874,7 +874,7 @@ export const slides: SlideDef[] = [
       'Zwei Rollen der Lehrperson: 1) KI als Werkzeug für die eigene Arbeit – Planung, Material, Differenzierung, Kommunikation (Workshops heute). 2) KI als Unterrichtsgegenstand – mit den Lernenden verstehen, was da rät (Lebenswelt-Grundsatz).',
     render: (step) => (
       <div>
-        <Kicker>Ihre zwei Rollen</Kicker>
+        <Kicker>Eure zwei Rollen</Kicker>
         <div className="mt-4 grid gap-6 md:grid-cols-2">
           <div className="rounded-xl border bg-card p-6">
             <h3 className="text-2xl font-bold md:text-3xl">
