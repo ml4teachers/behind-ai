@@ -99,7 +99,7 @@ export function corpusWords(c: Corpus): string[] {
 // Kleinbuchstaben, an Nicht-Buchstaben getrennt, auf vernünftige Länge/Anzahl
 // begrenzt. Vorschau-Präfixe werden aus den häufigsten Wortanfängen abgeleitet.
 export function buildCustomCorpus(input: string, label = 'Eigene'): Corpus {
-  const words = (input.toLowerCase().match(/[a-zäöüß]+/g) ?? [])
+  const words = (input.toLowerCase().match(/[a-zäöüß]+/g) ?? ([] as string[]))
     .filter((w) => w.length >= 1 && w.length <= 18)
     .slice(0, 800)
 
