@@ -9,7 +9,7 @@ import {
 } from '@/components/live/word-distribution'
 
 // ---------------------------------------------------------------------------
-// Publikumsseite fürs Referat: "Sie sind jetzt das Sprachmodell."
+// Publikumsseite fürs Referat: "Ihr seid jetzt das Sprachmodell."
 // Minimalistisch und mobile-first – ~350 Lehrpersonen öffnen das gleichzeitig
 // auf dem Smartphone. Die Seite pollt den Zustand und zeigt je nach Phase:
 // Warten -> Wort eingeben -> eingereicht -> Verteilung -> nächste Runde.
@@ -124,7 +124,7 @@ export default function LivePage() {
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5 py-6">
       <header className="mb-6 text-center">
         <p className="font-mono text-sm text-muted-foreground">behind-ai.ch/live</p>
-        <h1 className="mt-1 text-xl font-bold">Sie sind das Sprachmodell</h1>
+        <h1 className="mt-1 text-xl font-bold">Du bist das Sprachmodell</h1>
       </header>
 
       <main className="flex flex-1 flex-col justify-center pb-16">
@@ -151,8 +151,8 @@ export default function LivePage() {
               <div className="mx-auto mb-4 h-3 w-3 animate-pulse rounded-full bg-primary" />
               <p className="text-lg font-medium">Gleich geht&rsquo;s los.</p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Lassen Sie diese Seite offen – sobald das Experiment startet,
-                erscheint hier Ihre Aufgabe.
+                Lass diese Seite offen – sobald das Experiment startet,
+                erscheint hier deine Aufgabe.
               </p>
             </motion.div>
           )}
@@ -192,7 +192,7 @@ export default function LivePage() {
                   enterKeyHint="send"
                   maxLength={30}
                   className="h-12 min-w-0 flex-1 rounded-lg border bg-background px-4 text-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  placeholder="Ihr Wort …"
+                  placeholder="Dein Wort …"
                 />
                 <Button
                   size="lg"
@@ -222,7 +222,7 @@ export default function LivePage() {
                   </span>
                 </p>
               </div>
-              <p className="font-medium">Ihr Wort ist eingereicht.</p>
+              <p className="font-medium">Dein Wort ist eingereicht.</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Warten auf die Auszählung im Saal …
               </p>
