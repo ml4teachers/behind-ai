@@ -21,6 +21,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // Vor dem Mount immer offen rendern (= Server-Default), danach gespeicherter Wert.
   const open = mounted ? sidebarOpen : true
 
+  // Vollbild-Routen ohne Site-Chrome: Referatsfolien + Publikums-Live-Seite.
+  // (TooltipProvider bleibt, damit eingebettete Visualisierungen funktionieren.)
+  if (pathname === '/slides' || pathname === '/live') {
+    return (
+      <TooltipProvider delayDuration={300}>
+        <GlossaryScopeProvider key={pathname}>{children}</GlossaryScopeProvider>
+      </TooltipProvider>
+    )
+  }
+
   return (
     <TooltipProvider delayDuration={300}>
     <div className="flex min-h-screen flex-col">
