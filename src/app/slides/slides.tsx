@@ -197,7 +197,7 @@ export const slides: SlideDef[] = [
           <br />
           verantwortungsvoll nutzen
         </Title>
-        <Lede>Ein interaktives Referat – euer Smartphone ist euer Labor.</Lede>
+        <Lede>Ein interaktives Referat.</Lede>
         <p className="mt-12 text-lg text-muted-foreground md:text-2xl">
           Thomas Zurfluh ·{' '}
           <span className="font-mono text-primary">behind-ai.ch</span>
@@ -213,7 +213,7 @@ export const slides: SlideDef[] = [
       '«Give a man a fish …» – Prompts veralten, das Prinzip bleibt. Copilot, fobizz, SchuBa – und was in zwei Jahren kommt.',
     render: (step) => (
       <div>
-        <Title>Heute lernt ihr keine fünf Prompts.</Title>
+        <Title>Heute lernt ihr keine neuen Prompts.</Title>
         <Step at={1} step={step}>
           <Lede className="mt-8">
             Wer versteht, wie ein Sprachmodell funktioniert, kann{' '}
@@ -568,7 +568,7 @@ export const slides: SlideDef[] = [
         </Title>
         <Step at={1} step={step}>
           <Lede className="mt-8">
-            Was bedeutet das, wenn <strong className="text-foreground">5 %</strong>{' '}
+            Was bedeutet das, wenn <strong className="text-foreground">0.2 %</strong>{' '}
             davon erfunden sind –{' '}
             <strong className="text-foreground">und niemand es merkt?</strong>
           </Lede>
@@ -734,8 +734,8 @@ export const slides: SlideDef[] = [
               from={0}
               items={[
                 <>
-                  Trainiert auf Millionen Texten und Bildern von uns –{' '}
-                  <strong>inklusive unserer Schieflagen</strong>. Das gilt für
+                  Trainiert auf Millionen Texten und Bildern aus dem Internet –{' '}
+                  <strong>inklusive Verzerrungen (Bias)</strong>. Das gilt für
                   Text genauso wie für Bilder
                 </>,
                 <>
@@ -743,7 +743,7 @@ export const slides: SlideDef[] = [
                   die Muster stecken tief in den Gewichten
                 </>,
                 <>
-                  Chancengleichheit (Grundsatz KI-Campus):{' '}
+                  Chancengleichheit:{' '}
                   <strong>Wer profitiert von KI – und wer wird abgehängt?</strong>
                 </>,
               ]}
@@ -815,7 +815,7 @@ export const slides: SlideDef[] = [
         <Title className="md:text-7xl">
           KI-Output ist ein <span className="text-primary">Entwurf</span>,
           <br />
-          keine Entscheidung.
+          der überprüft werden muss.
         </Title>
         <Step at={1} step={step}>
           <Lede className="mt-10">
@@ -963,7 +963,7 @@ export const slides: SlideDef[] = [
           <Lede>
             Tokens, Training, Halluzinationen, Bias, Glossar –
             <br />
-            alles zum Selbst-Ausprobieren und für den Unterricht.
+            alles zum Selbst-Ausprobieren.
           </Lede>
           <p className="mt-10 text-lg text-muted-foreground md:text-2xl">
             Danke! – Weiter geht&rsquo;s mit Stefan Huber und Sarah Hotz.
