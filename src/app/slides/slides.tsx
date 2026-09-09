@@ -780,8 +780,7 @@ export const slides: SlideDef[] = [
             <div className="flex items-center gap-5 rounded-xl border border-yellow-600/40 bg-yellow-500/10 p-5">
               <span className="h-6 w-6 shrink-0 rounded-full bg-yellow-500" />
               <p className="text-lg md:text-2xl">
-                <strong>Personendaten:</strong> nur in von der Schule
-                freigegebene, vertraglich geregelte Tools
+                <strong>Anonymisiert:</strong> Schülerarbeiten, Fallbeschreibungen oder Leistungsdaten nur ohne Personenbezüge
               </p>
             </div>
           </Step>
@@ -789,8 +788,8 @@ export const slides: SlideDef[] = [
             <div className="flex items-center gap-5 rounded-xl border border-red-600/40 bg-red-500/10 p-5">
               <span className="h-6 w-6 shrink-0 rounded-full bg-red-500" />
               <p className="text-lg md:text-2xl">
-                <strong>Besonders schützenswerte Daten</strong> (Gesundheit,
-                Leistung, Familie): nie in freie KI-Tools
+                <strong>Besonders schützenswerte Daten</strong> (Gesundheitsdaten,
+                Förder- und Beurteilungsinformationen, Fotos oder Audioaufnahmen von Kindern): nie in KI-Tools
               </p>
             </div>
           </Step>
@@ -801,6 +800,71 @@ export const slides: SlideDef[] = [
             Workshops vertieft.
           </p>
         </Step>
+      </div>
+    ),
+  },
+  {
+    id: 'anonymisieren',
+    block: B3,
+    steps: 4,
+    notes:
+      'Konkret zur gelben Zone: Anonymisieren heisst mehr als den Namen löschen. Vier Techniken – Ersetzen, Generalisieren, Abstrahieren, Fiktionalisieren – von schwach zu stark. Wichtig: Auch ohne Namen kann die Kombination von Details eine Person erkennbar machen (kleine Klasse, kleines Dorf). Am sichersten ist, was gar nicht eingegeben wird. Quelle: OSKIN-Empfehlung, wird in den Workshops geübt.',
+    render: (step) => (
+      <div>
+        <Kicker>Datenschutz – konkret</Kicker>
+        <Title className="text-3xl md:text-5xl">
+          Vier Techniken zum Anonymisieren
+        </Title>
+        <div className="mt-8 grid gap-5 md:grid-cols-2">
+          {[
+            {
+              title: 'Ersetzen',
+              desc: 'Namen und identifizierende Angaben durch Platzhalter',
+              example: '«Lea hat …» → «die Schülerin hat …»',
+            },
+            {
+              title: 'Generalisieren',
+              desc: 'Konkrete Angaben auf die relevante Kategorie reduzieren',
+              example: '«3b, Baar, 9 Jahre» → «Mittelstufe»',
+            },
+            {
+              title: 'Abstrahieren',
+              desc: 'Nur die Aufgabenstellung oder das Fehlermuster beschreiben',
+              example: '«Wie erkläre ich diesen Fehlertyp beim Bruchrechnen?»',
+            },
+            {
+              title: 'Fiktionalisieren',
+              desc: 'Den realen Fall in ein konstruiertes Szenario überführen',
+              example: '«Angenommen, ein Kind reagiert so …»',
+            },
+          ].map((t, i) => (
+            <Step key={t.title} at={i} step={step}>
+              <div className="h-full rounded-xl border bg-card p-5 md:p-6">
+                <h3 className="text-2xl font-bold md:text-3xl">
+                  <span className="text-primary">{i + 1}.</span> {t.title}
+                </h3>
+                <p className="mt-2 text-base text-muted-foreground md:text-xl">
+                  {t.desc}
+                </p>
+                <p className="mt-3 border-l-2 border-primary/50 pl-3 text-base md:text-lg">
+                  {t.example}
+                </p>
+              </div>
+            </Step>
+          ))}
+        </div>
+        <Step at={4} step={step}>
+          <p className="mt-6 text-lg md:text-2xl">
+            <strong>Achtung:</strong> Auch ohne Namen kann die{' '}
+            <strong className="text-primary">Kombination von Details</strong>{' '}
+            eine Person erkennbar machen – kleine Klasse, kleines Dorf. Am
+            sichersten ist, was gar nicht eingegeben wird.
+          </p>
+        </Step>
+        <p className="mt-4 text-sm text-muted-foreground md:text-base">
+          Quelle: OSKIN, «Empfehlung zum Einsatz generativer KI an Schulen» –
+          oskin.ch/empfehlungen-28
+        </p>
       </div>
     ),
   },
