@@ -70,6 +70,7 @@ const TERM_META: TermMeta[] = [
   { id: 'vocabulary', category: 'data', term: { de: 'Vokabular', en: 'Vocabulary' }, page: '/tokenization' },
   { id: 'training-data', category: 'data', term: { de: 'Trainingsdaten', en: 'Training data' }, page: '/data', links: [L_KARPATHY_DEEP] },
   { id: 'context-window', category: 'data', term: { de: 'Kontextfenster', en: 'Context window' }, page: '/next-token' },
+  { id: 'data-bias', category: 'data', term: { de: 'Verzerrung (Bias)', en: 'Bias' }, page: '/bias', wikipedia: { de: 'Algorithmic_Bias', en: 'Algorithmic_bias' } },
   { id: 'multimodal', category: 'data', term: { de: 'Multimodal', en: 'Multimodal' }, page: '/multimodal', wikipedia: { en: 'Multimodal_learning' } },
 
   // ── Training ───────────────────────────────────────────────────────────────
@@ -112,7 +113,7 @@ const TERM_META: TermMeta[] = [
   // ── ML-Grundlagen ────────────────────────────────────────────────────────────
   { id: 'perceptron', category: 'mlBasics', term: { de: 'Perzeptron', en: 'Perceptron' }, page: '/perceptron', wikipedia: { de: 'Perzeptron', en: 'Perceptron' }, links: [L_3B1B_NN] },
   { id: 'neuron', category: 'mlBasics', term: { de: 'Neuron', en: 'Neuron' }, page: '/perceptron', wikipedia: { de: 'Künstliches_Neuron' }, links: [L_3B1B_NN] },
-  { id: 'bias', category: 'mlBasics', term: { de: 'Bias (Schwellenwert)', en: 'Bias' }, page: '/perceptron', links: [L_3B1B_NN] },
+  { id: 'bias', category: 'mlBasics', term: { de: 'Bias (Schwellenwert)', en: 'Bias (threshold)' }, page: '/perceptron', links: [L_3B1B_NN] },
   { id: 'mlp', category: 'mlBasics', term: { de: 'MLP (Mehrschichtiges Perzeptron)', en: 'MLP (Multilayer perceptron)' }, page: '/mlp', wikipedia: { de: 'Mehrlagiges_Perzeptron', en: 'Multilayer_perceptron' }, links: [L_3B1B_NN] },
   { id: 'activation-function', category: 'mlBasics', term: { de: 'Aktivierungsfunktion', en: 'Activation function' }, page: '/mlp', wikipedia: { de: 'Aktivierungsfunktion', en: 'Activation_function' }, links: [L_3B1B_NN] },
   { id: 'relu', category: 'mlBasics', term: { de: 'ReLU', en: 'ReLU' }, page: '/mlp', wikipedia: { en: 'Rectifier_(neural_networks)' } },
@@ -326,6 +327,33 @@ const TERM_CONTENT: Record<string, TermContent> = {
     "long": {
       "de": "Das Kontextfenster ist die Menge an Text – gemessen in Tokens –, die ein Modell bei einer Antwort gleichzeitig im Blick hat: die Eingabe plus das bisher Geschriebene. Alles innerhalb dieses Fensters kann die nächste Vorhersage beeinflussen; was darüber hinausgeht, fällt aus dem Blick. Bei langen Gesprächen oder Dokumenten entscheidet diese Grenze, woran sich das Modell noch „erinnert“.",
       "en": "The context window is the amount of text – measured in tokens – a model can keep in view at once while answering: the input plus what it has written so far. Everything within this window can shape the next prediction; anything beyond it drops out of view. For long conversations or documents, this limit decides what the model still \"remembers\"."
+    }
+  },
+  "data-bias": {
+    "aliases": {
+      "de": [
+        "Verzerrungen",
+        "verzerrt",
+        "Schlagseite",
+        "Vorurteil",
+        "Vorurteile",
+        "Stereotyp",
+        "Stereotype"
+      ],
+      "en": [
+        "biases",
+        "biased",
+        "stereotype",
+        "stereotypes"
+      ]
+    },
+    "short": {
+      "de": "Eine systematische Schlagseite in den Ausgaben eines Modells, die aus den Mustern seiner Trainingsdaten stammt.",
+      "en": "A systematic slant in a model's output that comes from the patterns in its training data."
+    },
+    "long": {
+      "de": "Verzerrung (englisch Bias) meint hier nicht den Schwellenwert eines Neurons, sondern eine Schieflage im Verhalten eines Modells: Es verbindet zum Beispiel Berufe enger mit einem Geschlecht, als es der Wirklichkeit entspricht. Niemand hat das einprogrammiert – das Muster steckt in den Texten, aus denen das Modell gelernt hat, und wird beim Feinschliff mit menschlichem Feedback eher überdeckt als entfernt. Weil die Verzerrung nicht an einer Stelle sitzt, sondern über den ganzen Vektor verteilt ist, lässt sie sich abmildern, aber nicht per Knopfdruck löschen.",
+      "en": "Bias here does not mean a neuron's threshold but a slant in a model's behaviour: it may tie jobs to a gender more tightly than reality does. Nobody programmed that in – the pattern sits in the texts the model learned from, and fine-tuning with human feedback tends to cover it up rather than remove it. Because the bias is spread across the whole vector rather than sitting in one place, it can be softened but not deleted at the push of a button."
     }
   },
   "multimodal": {

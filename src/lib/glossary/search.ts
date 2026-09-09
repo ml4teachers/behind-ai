@@ -1,4 +1,5 @@
 import type { Locale } from '@/lib/i18n/config'
+import { messages } from '@/lib/i18n/messages'
 import {
   homeLink,
   glossaryLink,
@@ -36,20 +37,33 @@ export function buildSearchIndex(t: (key: string) => string, locale: Locale): Se
   const items: SearchItem[] = []
   const seenHref = new Set<string>()
 
-  const addPage = (href: string, title: string, subtitle: string) => {
+  // Seitentitel der jeweils *anderen* Sprache landen mit in der Suchfläche:
+  // Wer auf Deutsch „bias" tippt, meint die Seite „Verzerrung"; wer auf
+  // Englisch „hallucinations" tippt, die Seite „Halluzinationen".
+  const otherLocale: Locale = locale === 'de' ? 'en' : 'de'
+  const otherTitle = (key: string) => messages[otherLocale]?.[key] ?? ''
+
+  const addPage = (href: string, title: string, subtitle: string, alias = '') => {
     if (seenHref.has(href)) return
     seenHref.add(href)
-    items.push({ kind: 'page', id: href, href, title, subtitle, haystack: normalize(`${title} ${subtitle}`) })
+    items.push({
+      kind: 'page',
+      id: href,
+      href,
+      title,
+      subtitle,
+      haystack: normalize(`${title} ${subtitle} ${alias}`),
+    })
   }
 
-  addPage(homeLink.href, t(homeLink.key), '')
+  addPage(homeLink.href, t(homeLink.key), '', otherTitle(homeLink.key))
   for (const section of navSections) {
     const sectionLabel = t(section.key)
-    for (const link of section.links) addPage(link.href, t(link.key), sectionLabel)
+    for (const link of section.links) addPage(link.href, t(link.key), sectionLabel, otherTitle(link.key))
   }
-  addPage(glossaryLink.href, t(glossaryLink.key), '')
-  addPage(resourcesLink.href, t(resourcesLink.key), '')
-  addPage(impressumLink.href, t(impressumLink.key), '')
+  addPage(glossaryLink.href, t(glossaryLink.key), '', otherTitle(glossaryLink.key))
+  addPage(resourcesLink.href, t(resourcesLink.key), '', otherTitle(resourcesLink.key))
+  addPage(impressumLink.href, t(impressumLink.key), '', otherTitle(impressumLink.key))
 
   for (const term of glossaryTerms) {
     const title = term.term[locale]
@@ -59,7 +73,10 @@ export function buildSearchIndex(t: (key: string) => string, locale: Locale): Se
       href: `/glossary#${term.id}`,
       title,
       subtitle: t(`glossary.category.${term.category}`),
-      haystack: normalize([title, ...term.aliases[locale], term.short[locale]].join(' ')),
+      // Auch der fremdsprachige Begriff ist Suchfläche („gradient descent" → Gradientenabstieg).
+      haystack: normalize(
+        [title, ...term.aliases[locale], term.short[locale], term.term[otherLocale], ...term.aliases[otherLocale]].join(' '),
+      ),
     })
   }
 

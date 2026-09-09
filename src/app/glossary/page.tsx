@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import type { Locale } from '@/lib/i18n/config'
 import { useActiveLocale, useTranslations } from '@/lib/i18n/use-translations'
 import { GlossaryText } from '@/components/glossary/glossary-text'
 import {
@@ -96,9 +97,19 @@ export default function GlossaryPage() {
     const q = normalize(query)
     if (!q) return glossaryTerms
     const tokens = q.split(/\s+/).filter(Boolean)
+    const other: Locale = locale === 'de' ? 'en' : 'de'
     return glossaryTerms.filter((term) => {
+      // Der fremdsprachige Begriff zählt mit: Wer „gradient descent" tippt,
+      // soll „Gradientenabstieg" finden (und umgekehrt).
       const hay = normalize(
-        [term.term[locale], ...term.aliases[locale], term.short[locale], term.long[locale]].join(' '),
+        [
+          term.term[locale],
+          ...term.aliases[locale],
+          term.short[locale],
+          term.long[locale],
+          term.term[other],
+          ...term.aliases[other],
+        ].join(' '),
       )
       return tokens.every((tok) => hay.includes(tok))
     })

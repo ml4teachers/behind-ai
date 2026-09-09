@@ -672,7 +672,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     // --- Verzerrung / Bias ---
     'bias.title': 'Verzerrung: woher die Schlagseite kommt',
     'bias.subtitle':
-      'Sprachmodelle übernehmen die Muster ihrer Trainingstexte – auch die unausgesprochenen. Hier wird eine solche Verzerrung messbar: Wie eng verbindet ein Modell Berufe mit einem Geschlecht?',
+      'Sprachmodelle übernehmen die Muster ihrer Trainingstexte – auch die unausgesprochenen. Hier wird eine solche Verzerrung (englisch: Bias) messbar: Wie eng verbindet ein Modell Berufe mit einem Geschlecht?',
     'bias.caption':
       'Die Berufe oben sind mit einem Embedding-Modell (gemini-embedding-2) platziert: Ihr Ort auf der Achse ist die echte Nähe zu typisch männlichen oder weiblichen Wörtern. Niemand hat dem Modell gesagt, dass Berufe ein Geschlecht haben – die Schlagseite stammt aus den Texten, mit denen es trainiert wurde.',
     'bias.moreP1':
