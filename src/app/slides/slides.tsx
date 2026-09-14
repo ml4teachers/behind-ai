@@ -938,7 +938,7 @@ export const slides: SlideDef[] = [
       'Zwei Rollen der Lehrperson: 1) KI als Werkzeug für die eigene Arbeit – Planung, Material, Differenzierung, Kommunikation (Workshops heute). 2) KI als Unterrichtsgegenstand – mit den Lernenden verstehen, was da rät (Lebenswelt-Grundsatz).',
     render: (step) => (
       <div>
-        <Kicker>Eure zwei Rollen</Kicker>
+        <Kicker>Zwei Perspektiven</Kicker>
         <div className="mt-4 grid gap-6 md:grid-cols-2">
           <div className="rounded-xl border bg-card p-6">
             <h3 className="text-2xl font-bold md:text-3xl">
