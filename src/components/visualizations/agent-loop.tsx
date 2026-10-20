@@ -58,6 +58,7 @@ type Part = {
   text?: string
   functionCall?: { name: string; args?: Record<string, unknown> }
   functionResponse?: { name: string; response: Record<string, unknown> }
+  thoughtSignature?: string
 }
 type Content = { role: 'user' | 'model'; parts: Part[] }
 type ToolCall = { name: string; args: Record<string, unknown> }
@@ -165,9 +166,14 @@ export function AgentLoop() {
 
       // Modell-Zug anzeigen + in den Verlauf übernehmen.
       push({ kind: 'model', thought, calls })
-      const modelParts: Part[] = []
-      if (thought) modelParts.push({ text: thought })
-      for (const c of calls) modelParts.push({ functionCall: { name: c.name, args: c.args } })
+      // Die rohen Teile der Route übernehmen: Gemini 3 verlangt die
+      // thoughtSignature der Aufrufe im nächsten Zug zurück.
+      const modelParts: Part[] = Array.isArray(data.modelParts) && data.modelParts.length
+        ? data.modelParts
+        : [
+            ...(thought ? [{ text: thought }] : []),
+            ...calls.map((c) => ({ functionCall: { name: c.name, args: c.args } })),
+          ]
       contentsRef.current.push({ role: 'model', parts: modelParts })
 
       // Jeden Aufruf clientseitig ausführen, Ergebnis zurückgeben.

@@ -751,9 +751,9 @@ export const messages: Record<Locale, Record<string, string>> = {
     // --- Finetuning ---
     'finetuning.title': 'Finetuning',
     'finetuning.subtitle':
-      'Dasselbe Modell, zwei Verhaltensweisen: Stell eine Frage und sieh, wie aus einem reinen Text-Fortsetzer ein hilfreicher Assistent wird.',
+      'Vor und nach dem Finetuning: Gib einen Text ein und sieh, wie aus einem reinen Text-Fortsetzer ein hilfreicher Assistent wird.',
     'finetuning.caption':
-      'Links verhält sich das Sprachmodell wie direkt nach dem Pretraining und setzt deinen Text einfach fort; rechts läuft dasselbe Modell als finegetunter Assistent.',
+      'Links ein echtes Basismodell direkt nach dem Pretraining: Es setzt deinen Text einfach fort. Rechts ein Modell nach dem Finetuning, das als Assistent antwortet.',
     'finetuning.moreP1':
       'Das Pretraining macht aus dem Modell einen treffsicheren Text-Fortsetzer: Es enthält ein riesiges Wissen, ist aber nicht darauf ausgelegt, Fragen zu beantworten – es schreibt einfach weiter, was wahrscheinlich als Nächstes käme. Finetuning gibt diesem Wissen eine nützliche Form.',
     'finetuning.moreP2':
@@ -1012,7 +1012,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'miniTraining.svgEmbMap': 'Zeichen-Embeddings',
 
     // --- finetuning-comparison.tsx ---
-    'finetuningComp.placeholder': 'Stell eine Frage oder gib eine Anweisung …',
+    'finetuningComp.placeholder': 'Schreib einen Satzanfang, eine Frage oder einen Dialog …',
     'finetuningComp.askBoth': 'Beide fragen',
     'finetuningComp.baseTitle': 'Basismodell',
     'finetuningComp.baseTag': 'nur Pretraining',
@@ -1020,8 +1020,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     'finetuningComp.assistantTag': 'nach Finetuning',
     'finetuningComp.loading': 'Modell schreibt …',
     'finetuningComp.retry': 'Erneut versuchen',
-    'finetuningComp.idle': 'Stell eine Frage, um den Unterschied zu sehen.',
-    'finetuningComp.baseNote': 'Es setzt deinen Text einfach fort, statt zu antworten, und stoppt nicht von selbst – hier brechen wir nach rund 100 Tokens ab.',
+    'finetuningComp.idle': 'Gib einen Text ein, um den Unterschied zu sehen.',
+    'finetuningComp.baseNote': 'Es setzt deinen Text einfach fort, statt zu antworten – sieht er aus wie ein Dialog, schreibt es eben die Antwort weiter. Es stoppt nicht von selbst; hier brechen wir nach rund 100 Tokens ab.',
     'finetuningComp.assistantNote': 'Es erkennt die Anfrage, antwortet direkt und strukturiert – und hört von selbst auf, wenn die Antwort fertig ist.',
     'finetuningComp.noOutput': 'Keine Ausgabe – bitte nochmal versuchen.',
     'finetuningComp.userLabel': 'Du:',
@@ -2093,9 +2093,9 @@ export const messages: Record<Locale, Record<string, string>> = {
     // --- Fine-tuning ---
     'finetuning.title': 'Fine-tuning',
     'finetuning.subtitle':
-      'Same model, two behaviours: ask a question and watch a mere text-continuer turn into a helpful assistant.',
+      'Before and after fine-tuning: enter a text and watch a mere text-continuer turn into a helpful assistant.',
     'finetuning.caption':
-      'On the left the language model behaves as it would right after pre-training, simply continuing your text; on the right the same model runs as a fine-tuned assistant.',
+      'On the left a real base model straight after pre-training: it simply continues your text. On the right a model after fine-tuning that answers as an assistant.',
     'finetuning.moreP1':
       'Pre-training turns the model into a highly accurate text-continuer: it holds vast knowledge, but it is not set up to answer questions – it just keeps writing whatever would plausibly come next. Fine-tuning gives that knowledge a useful shape.',
     'finetuning.moreP2':
@@ -2354,7 +2354,7 @@ export const messages: Record<Locale, Record<string, string>> = {
     'miniTraining.svgEmbMap': 'Character embeddings',
 
     // --- finetuning-comparison.tsx ---
-    'finetuningComp.placeholder': 'Ask a question or give an instruction …',
+    'finetuningComp.placeholder': 'Type the start of a sentence, a question or a dialogue …',
     'finetuningComp.askBoth': 'Ask both',
     'finetuningComp.baseTitle': 'Base model',
     'finetuningComp.baseTag': 'pre-training only',
@@ -2362,8 +2362,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     'finetuningComp.assistantTag': 'after fine-tuning',
     'finetuningComp.loading': 'Model is writing …',
     'finetuningComp.retry': 'Try again',
-    'finetuningComp.idle': 'Ask a question to see the difference.',
-    'finetuningComp.baseNote': 'It just continues your text instead of answering, and doesn\'t stop on its own – we cut it off after about 100 tokens.',
+    'finetuningComp.idle': 'Enter a text to see the difference.',
+    'finetuningComp.baseNote': 'It just continues your text instead of answering – if it looks like a dialogue, it simply writes the reply. It doesn\'t stop on its own; we cut it off after about 100 tokens.',
     'finetuningComp.assistantNote': 'It recognises the request, answers directly and in a structured way – and stops on its own when the answer is done.',
     'finetuningComp.noOutput': 'No output – please try again.',
     'finetuningComp.userLabel': 'You:',

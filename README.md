@@ -32,17 +32,21 @@ pnpm lint    # ESLint
 
 Umgebungsvariablen in `.env.local` setzen (siehe [`.env.example`](./.env.example) für alle Optionen).
 
-Die Seite **Next-Token-Prediction** nutzt Gemini-Logprobs über **Vertex AI** und benötigt ein Dienstkonto:
+Zwei Modell-Anbieter:
 
-- **Lokal:** `GOOGLE_APPLICATION_CREDENTIALS` = Pfad zur Dienstkonto-JSON.
-- **Deployment (Vercel):** `GCP_SERVICE_ACCOUNT_KEY` = JSON-Inhalt oder dessen Base64.
+- **Gemini über Vertex AI** für die Chat-Seiten (Halluzinationen, RAG, Reasoning, Agenten, Datenschutz) und Embeddings. Benötigt ein Dienstkonto mit der Rolle *Agent Platform User* (früher *Vertex AI User*):
+  - **Lokal:** `GOOGLE_APPLICATION_CREDENTIALS` = Pfad zur Dienstkonto-JSON.
+  - **Deployment (Vercel):** `GCP_SERVICE_ACCOUNT_KEY` = JSON-Inhalt oder dessen Base64.
+  - Modell-Kette zentral in [`src/lib/vertex-models.ts`](./src/lib/vertex-models.ts).
+- **OpenRouter** für Next-Token-Prediction (Logprobs) und den Assistenten der Finetuning-Seite: `OPENROUTER_API_KEY`. Modellwahl und Begründung in [`src/lib/openrouter.ts`](./src/lib/openrouter.ts).
+- **Hugging Face** (Anbieter Featherless) für das echte Basismodell der Finetuning-Seite: `HUGGINGFACE_API_KEY` mit Guthaben. Details in [`src/lib/base-model.ts`](./src/lib/base-model.ts).
 
-Das Dienstkonto braucht die Rolle *Vertex AI User*. Details und optionale Variablen (Region, Modell) stehen in `.env.example`.
+Details und optionale Variablen stehen in `.env.example`.
 
 ## Features
 
 - Tokenisierung (interaktiv)
-- Next-Token-Prediction mit echten Logprobs (Gemini via Vertex AI)
+- Next-Token-Prediction mit echten Logprobs (Qwen3 via OpenRouter)
 - Training vs. Inferenz, Finetuning
 - RAG (Retrieval Augmented Generation)
 - RLHF (Reinforcement Learning from Human Feedback)

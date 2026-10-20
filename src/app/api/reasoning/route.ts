@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleAuth } from 'google-auth-library';
+import { CHAT_MODEL_CANDIDATES, THINKING_OFF, vertexGenerateUrl } from '@/lib/vertex-models';
 
 // ---------------------------------------------------------------------------
 // Reasoning-Generierung für die Chain-of-Thought- und RLVR-Seiten.
@@ -18,19 +19,6 @@ import { GoogleAuth } from 'google-auth-library';
 // Auth = dasselbe Dienstkonto wie Next-Token/Finetuning (OAuth Bearer Token),
 // kein Plain-API-Key. Setup-Details siehe api/predict-next/route.ts.
 // ---------------------------------------------------------------------------
-
-const LOCATION = process.env.GCP_LOCATION || 'us-central1';
-
-// Identische Modell-Kette wie die übrigen Routen (Fallback bei 404).
-const MODEL_CANDIDATES: string[] = Array.from(
-  new Set(
-    [
-      process.env.GEMINI_MODEL,
-      'gemini-2.5-flash',
-      'gemini-2.5-flash-lite',
-    ].filter((m): m is string => Boolean(m))
-  )
-);
 
 // Die System-Anweisungen gibt es je Sprache (de/en), damit der sichtbare
 // Rechenweg bzw. die Schätzung in der Sprache der Aufgabe erscheint. „Antwort:"
@@ -148,7 +136,7 @@ export async function POST(request: NextRequest) {
         temperature: temp,
         topP: 0.95,
         // „Thinking" aus: der sichtbare Rechenweg IST die Ausgabe.
-        thinkingConfig: { thinkingBudget: 0 },
+        thinkingConfig: THINKING_OFF,
       },
     });
 
@@ -166,10 +154,8 @@ export async function POST(request: NextRequest) {
     for (let attempt = 0; attempt < MAX_ATTEMPTS && responseText.length < 1; attempt++) {
       // Modelle der Reihe nach; bei 404 zum nächsten Kandidaten.
       let data: GeminiResponse | null = null;
-      for (const model of MODEL_CANDIDATES) {
-        const endpoint =
-          `https://${LOCATION}-aiplatform.googleapis.com/v1/projects/${projectId}` +
-          `/locations/${LOCATION}/publishers/google/models/${model}:generateContent`;
+      for (const model of CHAT_MODEL_CANDIDATES) {
+        const endpoint = vertexGenerateUrl(projectId, model);
 
         const geminiResponse = await fetch(endpoint, {
           method: 'POST',

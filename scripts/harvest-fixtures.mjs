@@ -205,14 +205,14 @@ const LETTER_WORDS = {
 const FINETUNING_QS = {
   de: [
     'Wer war Marie Curie?',
-    'Schreibe ein kurzes Gedicht über den Herbst.',
     'Erkläre Photosynthese in einem Satz.',
+    'Schreibe ein kurzes Gedicht über den Herbst.',
     'Gib mir drei Tipps gegen Lampenfieber.',
   ],
   en: [
     'Who was Marie Curie?',
-    'Write a short poem about autumn.',
     'Explain photosynthesis in one sentence.',
+    'Write a short poem about autumn.',
     'Give me three tips against stage fright.',
   ],
 }
