@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleAuth } from 'google-auth-library';
+import { CHAT_MODEL_CANDIDATES, THINKING_OFF, vertexGenerateUrl } from '@/lib/vertex-models';
 
 // ---------------------------------------------------------------------------
 // RAG-Antwort: dieselbe Frage, einmal OHNE und einmal MIT abgerufenem Kontext.
@@ -20,22 +21,6 @@ import { GoogleAuth } from 'google-auth-library';
 // Auth = dasselbe Dienstkonto wie Next-Token/Embeddings/Finetuning (OAuth
 // Bearer Token), kein Plain-API-Key. Siehe api/predict-next/route.ts.
 // ---------------------------------------------------------------------------
-
-const LOCATION = process.env.GCP_LOCATION || 'us-central1';
-
-// Modell-Kandidaten mit Fallback bei 404 – identische Kette wie die anderen
-// Gemini-Routen, damit alle dasselbe Modell nutzen.
-const MODEL_CANDIDATES: string[] = Array.from(
-  new Set(
-    [
-      process.env.GEMINI_MODEL,
-      // flash-lite als Primär: günstiger; das Grounding/Verzicht-Verhalten
-      // dieser Route trägt es zuverlässig. flash bleibt als Fallback.
-      'gemini-2.5-flash-lite',
-      'gemini-2.5-flash',
-    ].filter((m): m is string => Boolean(m))
-  )
-);
 
 type Lang = 'de' | 'en';
 
@@ -164,17 +149,15 @@ export async function POST(request: NextRequest) {
         // Grounded bewusst etwas „kühler", damit es nah am Text bleibt.
         temperature: grounded ? 0.3 : 0.7,
         topP: 0.95,
-        thinkingConfig: { thinkingBudget: 0 },
+        thinkingConfig: THINKING_OFF,
       },
     });
 
     // Modelle der Reihe nach probieren; bei 404 zum nächsten Kandidaten.
     let data: GeminiResponse | null = null;
     let lastError = '';
-    for (const model of MODEL_CANDIDATES) {
-      const endpoint =
-        `https://${LOCATION}-aiplatform.googleapis.com/v1/projects/${projectId}` +
-        `/locations/${LOCATION}/publishers/google/models/${model}:generateContent`;
+    for (const model of CHAT_MODEL_CANDIDATES) {
+      const endpoint = vertexGenerateUrl(projectId, model);
 
       const geminiResponse = await fetch(endpoint, {
         method: 'POST',

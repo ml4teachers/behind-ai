@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleAuth } from 'google-auth-library';
+import { CHAT_MODEL_CANDIDATES, THINKING_OFF, vertexGenerateUrl } from '@/lib/vertex-models';
 import { declarationsFor } from '@/lib/agent/tools';
 
 // ---------------------------------------------------------------------------
@@ -20,19 +21,6 @@ import { declarationsFor } from '@/lib/agent/tools';
 // `thinking` ist AUS: die sichtbare Kurz-Begründung des Modells IST seine Ausgabe.
 // Auth = dasselbe Dienstkonto wie Next-Token/Reasoning. Details: api/predict-next.
 // ---------------------------------------------------------------------------
-
-const LOCATION = process.env.GCP_LOCATION || 'us-central1';
-
-// Identische Modell-Kette wie die übrigen Routen (Fallback bei 404).
-const MODEL_CANDIDATES: string[] = Array.from(
-  new Set(
-    [
-      process.env.GEMINI_MODEL,
-      'gemini-2.5-flash',
-      'gemini-2.5-flash-lite',
-    ].filter((m): m is string => Boolean(m))
-  )
-);
 
 // Die Sprache der sichtbaren Ausgabe (Begründung + Endantwort) wird über das
 // System-Prompt gesteuert, nicht über die Aufgabensprache: die Werkzeug-Namen,
@@ -92,6 +80,9 @@ type Part = {
   text?: string;
   functionCall?: { name: string; args?: Record<string, unknown> };
   functionResponse?: { name: string; response: Record<string, unknown> };
+  // Ab Gemini 3 Pflicht: die Signatur eines functionCall-Teils muss im nächsten
+  // Zug unverändert mitgeschickt werden, sonst 400 INVALID_ARGUMENT.
+  thoughtSignature?: string;
 };
 
 type GeminiResponse = {
@@ -133,7 +124,7 @@ export async function POST(request: NextRequest) {
         temperature: temp,
         topP: 0.95,
         // „Thinking" aus: die sichtbare Begründung IST die Ausgabe.
-        thinkingConfig: { thinkingBudget: 0 },
+        thinkingConfig: THINKING_OFF,
       },
     });
 
@@ -150,10 +141,8 @@ export async function POST(request: NextRequest) {
     let data: GeminiResponse | null = null;
     let usedModel = '';
     let lastError = '';
-    for (const model of MODEL_CANDIDATES) {
-      const endpoint =
-        `https://${LOCATION}-aiplatform.googleapis.com/v1/projects/${projectId}` +
-        `/locations/${LOCATION}/publishers/google/models/${model}:generateContent`;
+    for (const model of CHAT_MODEL_CANDIDATES) {
+      const endpoint = vertexGenerateUrl(projectId, model);
 
       const geminiResponse = await fetch(endpoint, {
         method: 'POST',
@@ -206,6 +195,9 @@ export async function POST(request: NextRequest) {
       calls,
       // Kein Aufruf mehr → der Text ist die Endantwort.
       final: calls.length === 0 ? thought : null,
+      // Rohe Modell-Teile (inkl. thoughtSignature) – der Client übernimmt sie
+      // unverändert in den Verlauf, statt den Zug selbst nachzubauen.
+      modelParts: parts,
       finishReason: candidate?.finishReason ?? null,
       model: usedModel,
     });

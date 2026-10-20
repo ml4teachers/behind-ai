@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleAuth } from 'google-auth-library';
+import { CHAT_MODEL_CANDIDATES, THINKING_OFF, vertexGenerateUrl } from '@/lib/vertex-models';
 
 // ---------------------------------------------------------------------------
 // Generierung für die Halluzinations-Seite.
@@ -14,18 +15,6 @@ import { GoogleAuth } from 'google-auth-library';
 // Auth = dasselbe Dienstkonto wie die übrigen Routen (OAuth Bearer Token).
 // Setup-Details siehe api/predict-next/route.ts.
 // ---------------------------------------------------------------------------
-
-const LOCATION = process.env.GCP_LOCATION || 'us-central1';
-
-const MODEL_CANDIDATES: string[] = Array.from(
-  new Set(
-    [
-      process.env.GEMINI_MODEL,
-      'gemini-2.5-flash',
-      'gemini-2.5-flash-lite',
-    ].filter((m): m is string => Boolean(m))
-  )
-);
 
 // Neutraler Assistenten-Prompt – kein Auftrag zu erfinden. Knapper Fliesstext,
 // damit die Antwort gut lesbar bleibt und der „klingt fundiert"-Effekt trägt.
@@ -105,7 +94,7 @@ export async function POST(request: NextRequest) {
         topP: 0.95,
         // „Thinking" aus: keine verborgene Deliberation, die das Modell zum
         // Zurückrudern bringt – wir zeigen sein unmittelbares Fortsetzen.
-        thinkingConfig: { thinkingBudget: 0 },
+        thinkingConfig: THINKING_OFF,
       },
     });
 
@@ -119,10 +108,8 @@ export async function POST(request: NextRequest) {
 
     let data: GeminiResponse | null = null;
     let lastError = '';
-    for (const model of MODEL_CANDIDATES) {
-      const endpoint =
-        `https://${LOCATION}-aiplatform.googleapis.com/v1/projects/${projectId}` +
-        `/locations/${LOCATION}/publishers/google/models/${model}:generateContent`;
+    for (const model of CHAT_MODEL_CANDIDATES) {
+      const endpoint = vertexGenerateUrl(projectId, model);
 
       const geminiResponse = await fetch(endpoint, {
         method: 'POST',

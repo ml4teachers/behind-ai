@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleAuth } from 'google-auth-library';
+import { CHAT_MODEL_CANDIDATES, THINKING_OFF, vertexGenerateUrl } from '@/lib/vertex-models';
 
 // ---------------------------------------------------------------------------
 // Datenfluss-Demo (Lokal vs. Cloud): Was verlässt dein Gerät?
@@ -12,27 +13,11 @@ import { GoogleAuth } from 'google-auth-library';
 //
 // Früher lief diese Route über OpenAI (gpt-4.1 / gpt-4.1-mini, 4 Calls). Jetzt
 // dasselbe Dienstkonto/Muster wie predict-next & finetuning-simulate (OAuth
-// Bearer, Modell-Fallback-Kette, thinkingBudget 0). Damit ist OpenAI aus dem
+// Bearer, Modell-Fallback-Kette, Thinking aus). Damit ist OpenAI aus dem
 // Projekt verschwunden.
 // ---------------------------------------------------------------------------
 
 export const maxDuration = 60;
-
-const LOCATION = process.env.GCP_LOCATION || 'us-central1';
-
-// Modell-Fallback-Kette wie die übrigen Vertex-Routen (404 -> nächster Kandidat).
-const MODEL_CANDIDATES: string[] = Array.from(
-  new Set(
-    [
-      process.env.GEMINI_MODEL,
-      // Bewusst auf flash (nicht flash-lite): flash-lite übersieht verlässlich
-      // nicht-offensichtliche Stellen (z. B. „Schwierigkeiten zu Hause") – genau
-      // die zu erkennen ist aber der didaktische Kern dieser Route.
-      'gemini-2.5-flash',
-      'gemini-2.5-flash-lite',
-    ].filter((m): m is string => Boolean(m))
-  )
-);
 
 // GoogleAuth einmal pro Server-Instanz (Token wird gecacht/erneuert).
 function createAuth(): GoogleAuth {
@@ -201,17 +186,15 @@ export async function POST(request: NextRequest) {
         topP: 0.95,
         responseMimeType: 'application/json',
         responseSchema: RESPONSE_SCHEMA,
-        thinkingConfig: { thinkingBudget: 0 },
+        thinkingConfig: THINKING_OFF,
       },
     });
 
     // Modelle der Reihe nach probieren; bei 404 zum nächsten Kandidaten.
     let data: GeminiResponse | null = null;
     let lastError = '';
-    for (const model of MODEL_CANDIDATES) {
-      const endpoint =
-        `https://${LOCATION}-aiplatform.googleapis.com/v1/projects/${projectId}` +
-        `/locations/${LOCATION}/publishers/google/models/${model}:generateContent`;
+    for (const model of CHAT_MODEL_CANDIDATES) {
+      const endpoint = vertexGenerateUrl(projectId, model);
 
       const geminiResponse = await fetch(endpoint, {
         method: 'POST',

@@ -1,88 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleAuth } from 'google-auth-library';
+import { baseCompletion } from '@/lib/base-model';
+import { openRouterChat } from '@/lib/openrouter';
 
 // ---------------------------------------------------------------------------
 // Finetuning-Vergleich: Basismodell (nur Pretraining) vs. Assistent.
 //
-// WARUM SO?
-// - Ein echtes Basismodell (nur Pretraining, KEIN Assistenz-Finetuning) wie
-//   damals OpenAI babbage-002 bieten die grossen Anbieter praktisch nicht mehr
-//   über eine API an – verfügbar sind fast nur fertig finegetunte Chat-Modelle.
-// - Das charakteristische Basismodell-Verhalten lässt sich aber reproduzieren:
-//   Wir geben demselben Chat-Modell (Gemini über Vertex) den Text als
-//   MODEL-Turn (Prefill) und weisen es an, ihn wie ein rohes Sprachmodell
-//   bloss FORTZUSETZEN statt zu antworten. Genau diesen Prefill-Trick nutzt
-//   schon die Next-Token-Route – er erzeugt echte Text-Fortsetzung.
-// - Der "Assistent" ist dasselbe Modell im normalen Chat-Modus: Frage als
-//   user-Turn + System-Anweisung "hilfreicher Assistent".
+// - LINKS ein ECHTES Basismodell (Llama 3.1 8B Base über Hugging Face, siehe
+//   @/lib/base-model): Es bekommt nur den rohen Text und setzt ihn fort – ohne
+//   Anweisung, ohne Chat-Vorlage, ohne Trick. Was dabei herauskommt (Fragenliste,
+//   Forenbeitrag, ein Dialog für beide Rollen …), ist authentisches Pretraining-
+//   Verhalten und lässt sich nicht für jede Eingabe vorhersehen – genau darum
+//   geht es.
+// - RECHTS ein Chat-Modell nach Finetuning (Qwen3 über OpenRouter, siehe
+//   @/lib/openrouter): Frage als user-Turn + System-Anweisung "hilfreicher
+//   Assistent".
 //
-// Didaktische Ehrlichkeit: Der Unterschied, den Finetuning real durch
-// veränderte Gewichte bewirkt, wird hier durch zwei Nutzungsarten desselben
-// Modells SICHTBAR gemacht. Es geht um den Verhaltensunterschied, nicht um die
-// Behauptung, dies sei mechanisch identisch mit echtem Finetuning.
-//
-// Auth = dasselbe Dienstkonto wie Next-Token/Embeddings (OAuth Bearer Token),
-// kein Plain-API-Key. Siehe api/predict-next/route.ts für das Setup.
+// Frühere Versuche, das Basismodell mit einem Chat-Modell zu simulieren
+// (Prefill + „nur fortsetzen", vorgesetzte Fragenliste), scheiterten: Das
+// Finetuning schlägt bei Fragen und Aufgaben immer wieder durch.
 // ---------------------------------------------------------------------------
 
-const LOCATION = process.env.GCP_LOCATION || 'us-central1';
-
-// Modell-Kandidaten mit Fallback bei 404 (abgeschaltete Generation).
-// Identische Kette wie die Next-Token-Route, damit beide dasselbe Modell nutzen.
-const MODEL_CANDIDATES: string[] = Array.from(
-  new Set(
-    [
-      process.env.GEMINI_MODEL,
-      'gemini-2.5-flash',
-      'gemini-2.5-flash-lite',
-    ].filter((m): m is string => Boolean(m))
-  )
-);
-
-// Anweisung für den BASIS-Modus: Text fortsetzen wie ein rohes Sprachmodell,
-// NICHT antworten. Bewusst stark formuliert, weil heutige Chat-Modelle stark
-// auf "hilfreich antworten" trainiert sind und sonst sofort in den Assistenz-
-// Modus fallen.
 type Lang = 'de' | 'en';
 
-// Das „Basismodell" wird durch einen Prefill-Trick reproduziert: die Eingabe
-// steht als letzte Zeile einer LISTE gemischter Fragen/Aufgaben (BASE_PRIME),
-// die das Modell als MODEL-Turn fortsetzt. So setzt es zuverlässig die Liste fort
-// (nächste unzusammenhängende Zeile) statt zu antworten – auch im stark assistenz-
-// geprägten Englisch (empirisch geprüft, scripts/probe-base.mjs). Die Pointe:
-// ohne Finetuning folgt es der Anweisung NICHT, es setzt nur Text fort.
-const BASE_INSTRUCTION_DE =
-  'Du bist ein ROHES Sprachmodell direkt nach dem Pretraining, ganz OHNE ' +
-  'Assistenz-Finetuning – du kennst das Konzept "Assistent" gar nicht. Du ' +
-  'beantwortest NICHTS und befolgst KEINE Anweisung. Du setzt den Text nur so ' +
-  'fort, wie eine gemischte Liste von Fragen und Aufgaben aus dem Internet ' +
-  'weitergeht: mit der NÄCHSTEN, thematisch UNZUSAMMENHÄNGENDEN Frage oder ' +
-  'Aufgabe. Niemals eine Antwort, niemals ein Gedicht, niemals Tipps – immer nur ' +
-  'die nächste Listenzeile. Ohne Markdown (keine Sternchen, keine Aufzählungen, ' +
-  'keine Überschriften). Bleibe jugendfrei und unanstössig.';
-const BASE_INSTRUCTION_EN =
-  'You are a RAW language model straight after pretraining, entirely WITHOUT ' +
-  'assistant finetuning – you do not even know the concept of an "assistant". ' +
-  'You answer NOTHING and follow NO instruction. You only continue the text the ' +
-  'way a mixed list of questions and tasks from the internet would continue: ' +
-  'with the NEXT, topically UNRELATED question or task. Never an answer, never a ' +
-  'poem, never tips – always just the next list line. No Markdown (no asterisks, ' +
-  'no bullet points, no headings). Stay family-friendly and inoffensive.';
-
 // System-Anweisung für den ASSISTENT-Modus (normaler Chat).
-const ASSISTANT_INSTRUCTION_DE =
-  'Du bist ein hilfreicher Assistent. Beantworte die Anfrage direkt, präzise ' +
-  'und klar strukturiert. Halte dich kurz. Antworte in der Sprache der Anfrage. ' +
-  'Verwende keine Markdown-Formatierung (keine Sternchen, keine Rauten); für ' +
-  'Aufzählungen einfache Spiegelstriche (–).';
-const ASSISTANT_INSTRUCTION_EN =
-  'You are a helpful assistant. Answer the request directly, precisely and in a ' +
-  'clearly structured way. Keep it short. Answer in the language of the request. ' +
-  'Do not use Markdown formatting (no asterisks, no hashes); for lists use ' +
-  'simple dashes (–).';
-
-const BASE_INSTRUCTION: Record<Lang, string> = { de: BASE_INSTRUCTION_DE, en: BASE_INSTRUCTION_EN };
-const ASSISTANT_INSTRUCTION: Record<Lang, string> = { de: ASSISTANT_INSTRUCTION_DE, en: ASSISTANT_INSTRUCTION_EN };
+const ASSISTANT_INSTRUCTION: Record<Lang, string> = {
+  de:
+    'Du bist ein hilfreicher Assistent. Beantworte die Anfrage direkt, präzise ' +
+    'und klar strukturiert. Halte dich kurz. Antworte in der Sprache der Anfrage. ' +
+    'Verwende keine Markdown-Formatierung (keine Sternchen, keine Rauten). Nur ' +
+    'für echte Aufzählungen einfache Spiegelstriche (–), sonst normaler Text ' +
+    'bzw. bei Gedichten normale Verse.',
+  en:
+    'You are a helpful assistant. Answer the request directly, precisely and in a ' +
+    'clearly structured way. Keep it short. Answer in the language of the request. ' +
+    'Do not use Markdown formatting (no asterisks, no hashes). Use simple dashes ' +
+    '(–) only for real lists; otherwise plain text, or plain verses for poems.',
+};
 
 // Basis-Modus bewusst kurz: ein Basismodell würde endlos weiterschreiben, also
 // brechen wir nach ~100 Tokens ab (didaktisch: "es stoppt nicht von selbst").
@@ -91,81 +44,10 @@ const ASSISTANT_INSTRUCTION: Record<Lang, string> = { de: ASSISTANT_INSTRUCTION_
 const MAX_OUTPUT_TOKENS_BASE = 100;
 const MAX_OUTPUT_TOKENS_ASSISTANT = 256;
 
-// GoogleAuth einmal pro Server-Instanz (Token wird gecacht/erneuert).
-function createAuth(): GoogleAuth {
-  const scopes = 'https://www.googleapis.com/auth/cloud-platform';
-  const raw = process.env.GCP_SERVICE_ACCOUNT_KEY?.trim();
-
-  if (raw) {
-    const jsonStr = raw.startsWith('{')
-      ? raw
-      : Buffer.from(raw, 'base64').toString('utf8');
-    const credentials = JSON.parse(jsonStr);
-    return new GoogleAuth({
-      scopes,
-      credentials,
-      projectId: process.env.GCP_PROJECT_ID || credentials.project_id,
-    });
-  }
-
-  return new GoogleAuth({ scopes });
-}
-
-const auth = createAuth();
-
-type GeminiResponse = {
-  candidates?: Array<{
-    content?: { parts?: Array<{ text?: string }> };
-    finishReason?: string;
-  }>;
-};
-
-// Wie oft ein leeres Ergebnis neu versucht wird. Der Basis-Modus (Prefill)
-// samplet gelegentlich sofort ein End-Token -> leere Fortsetzung; ein erneuter
-// Versuch liefert dann fast immer Text.
+// Wie oft ein leeres Ergebnis neu versucht wird. Das Basismodell samplet
+// gelegentlich sofort ein End-Token -> leere Fortsetzung; ein erneuter Versuch
+// liefert dann fast immer Text.
 const MAX_ATTEMPTS = 3;
-
-// Prefill als LISTE: zwei generische, unzusammenhängende Prompts VOR der Eingabe.
-// Dadurch steht die Eingabe als jüngster Listeneintrag da, und das Modell setzt
-// die Liste fort (nächste unzusammenhängende Zeile) statt zu antworten. Die
-// Prime-Zeilen werden NICHT angezeigt (die Komponente zeigt nur die Eingabe).
-const BASE_PRIME: Record<Lang, string> = {
-  de: 'In welchem Jahr begann die Französische Revolution?\n\nNenne drei Länder in Südamerika.\n\n',
-  en: 'In which year did the French Revolution begin?\n\nName three countries in South America.\n\n',
-};
-
-// Baut den Request-Body je nach Modus.
-function buildRequestBody(query: string, mode: 'base' | 'assistant', lang: Lang): string {
-  if (mode === 'base') {
-    // Prefill-Trick: die Eingabe kommt als letzte Zeile einer Liste im MODEL-Turn,
-    // damit Gemini die Liste fortsetzt statt frisch zu antworten.
-    return JSON.stringify({
-      contents: [
-        { role: 'user', parts: [{ text: BASE_INSTRUCTION[lang] }] },
-        { role: 'model', parts: [{ text: BASE_PRIME[lang] + query + '\n\n' }] },
-      ],
-      generationConfig: {
-        maxOutputTokens: MAX_OUTPUT_TOKENS_BASE,
-        temperature: 0.8,
-        topP: 0.95,
-        // "Thinking" aus: die Ausgabe soll die rohe Text-Fortsetzung sein.
-        thinkingConfig: { thinkingBudget: 0 },
-      },
-    });
-  }
-
-  // assistant: normaler Chat mit System-Anweisung.
-  return JSON.stringify({
-    systemInstruction: { parts: [{ text: ASSISTANT_INSTRUCTION[lang] }] },
-    contents: [{ role: 'user', parts: [{ text: query }] }],
-    generationConfig: {
-      maxOutputTokens: MAX_OUTPUT_TOKENS_ASSISTANT,
-      temperature: 0.7,
-      topP: 0.95,
-      thinkingConfig: { thinkingBudget: 0 },
-    },
-  });
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -187,71 +69,40 @@ export async function POST(request: NextRequest) {
 
     const lang: Lang = locale === 'en' ? 'en' : 'de';
 
-    // OAuth-Token + Projekt-ID vom Dienstkonto.
-    const client = await auth.getClient();
-    const accessTokenResponse = await client.getAccessToken();
-    const accessToken = accessTokenResponse?.token;
-    if (!accessToken) {
-      throw new Error('Konnte kein OAuth-Token vom Dienstkonto erhalten');
-    }
-    const projectId = process.env.GCP_PROJECT_ID || (await auth.getProjectId());
-
-    const requestBody = buildRequestBody(query, mode, lang);
-
     // Leere/sehr kurze Fortsetzung neu anfragen. Im Basis-Modus verlangen wir
     // eine substanzielle Länge (eine 23-Zeichen-Fortsetzung ist anschaulich
     // wertlos); im Assistent-Modus reicht "nicht leer", weil kurze Antworten
     // dort legitim sind. temperature > 0 sorgt für Varianz -> Retry hilft.
     const minLen = mode === 'base' ? 40 : 1;
     let responseText = '';
-    let lastError = '';
-    let lastFinish = '';
     for (
       let attempt = 0;
       attempt < MAX_ATTEMPTS && responseText.length < minLen;
       attempt++
     ) {
-      // Modelle der Reihe nach probieren; bei 404 zum nächsten Kandidaten.
-      let data: GeminiResponse | null = null;
-      for (const model of MODEL_CANDIDATES) {
-        const endpoint =
-          `https://${LOCATION}-aiplatform.googleapis.com/v1/projects/${projectId}` +
-          `/locations/${LOCATION}/publishers/google/models/${model}:generateContent`;
-
-        const geminiResponse = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: requestBody,
-        });
-
-        if (geminiResponse.ok) {
-          data = await geminiResponse.json();
-          break;
-        }
-
-        const errorBody = await geminiResponse.text();
-        lastError = `Vertex-API-Fehler ${geminiResponse.status} (${model}): ${errorBody}`;
-        if (geminiResponse.status === 404) {
-          console.warn(`Modell ${model} nicht verfügbar, versuche nächstes…`);
-          continue;
-        }
-        throw new Error(lastError);
-      }
-
-      if (data === null) {
-        throw new Error(lastError || 'Kein Vertex-Modell verfügbar');
-      }
-
-      const parts = data.candidates?.[0]?.content?.parts ?? [];
-      responseText = parts.map((p) => p.text ?? '').join('').trim();
-      lastFinish = data.candidates?.[0]?.finishReason ?? '?';
+      responseText = (
+        mode === 'base'
+          ? // Nur der rohe Text – das Basismodell setzt ihn einfach fort.
+            await baseCompletion({
+              prompt: query,
+              maxTokens: MAX_OUTPUT_TOKENS_BASE,
+              temperature: 0.8,
+            })
+          : (
+              await openRouterChat({
+                messages: [
+                  { role: 'system', content: ASSISTANT_INSTRUCTION[lang] },
+                  { role: 'user', content: query },
+                ],
+                maxTokens: MAX_OUTPUT_TOKENS_ASSISTANT,
+                temperature: 0.7,
+              })
+            ).text
+      ).trim();
       if (responseText.length < minLen) {
         console.warn(
           `Leere/kurze Antwort (${mode}, Versuch ${attempt + 1}/${MAX_ATTEMPTS}, ` +
-            `len=${responseText.length}, finishReason=${lastFinish})`
+            `len=${responseText.length})`
         );
       }
     }

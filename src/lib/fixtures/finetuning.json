@@ -1,81 +1,82 @@
 {
   "Erkläre Photosynthese in einem Satz.": {
     "base": [
-      "Was ist die Quadratwurzel von 81?\n\nSchreibe einen kurzen Absatz über die Bedeutung von Wasser.\n\nWer war der erste Mensch auf dem Mond?\n\nBerechne 15% von 200.\n\nNenne ein Synonym für \"glücklich\".\n\nWelche Farbe hat eine reife Banane?\n\nGib ein Beispiel für ein Verb.",
-      "Wie viele Kontinente gibt es?\n\nSchreibe einen kurzen Text über dein liebstes Hobby.\n\nWas ist die Hauptstadt von Australien?\n\nBerechne 25% von 200.\n\nNenne ein Synonym für \"glücklich\".\n\nWas ist das chemische Symbol für Wasser?\n\nBeschreibe das Wetter an einem typischen Sommertag.\n\nWer war Albert Einstein?\n\nWie viele Zähne hat ein erwachsener Mensch normalerweise?\n\nNenne"
+      "Einzelne Wörter sind in Klammern gesetzt. Wenn Sie keine Antwort finden, klicken Sie auf das Wort. Für weitere Erklärungen klicken Sie auf die Menüpunkte in der Symbolleiste. (Sie können die Symbolleiste auch vergrößern, indem Sie auf das Symbol am oberen Bildrand klicken.) Einfach erklärte Themen: Photosynthese (Erklärung) Hier gibt es eine einfache Erklärung",
+      "[Erkläre Photosynthese in einem Satz.] - Phänomen Photosynthese\nErkläre Photosynthesen in einem Satz. [Erkläre Photosynthesen in einem Satz.] - Phänomen Photosynthese\nPhotosynthese Definition: die Abnahme von Kohlendioxyd und Wasser mit der Bildung von Kohlenhydraten und Sauerstoff unter Hilfe von Sonnenlicht\nPhotosynthese ist ein Prozess, in"
     ],
     "assistant": [
-      "Photosynthese ist der Prozess, bei dem Pflanzen, Algen und einige Bakterien Lichtenergie nutzen, um Kohlendioxid und Wasser in Glukose (Zucker) und Sauerstoff umzuwandeln."
-    ]
-  },
-  "Wer war Marie Curie?": {
-    "base": [
-      "Erkläre den Begriff \"Photosynthese\".\n\nWas ist die Hauptstadt von Australien?\n\nWie viele Kontinente gibt es?\n\nBerechne 2 + 2.\n\nNenne ein Synonym für \"glücklich\".\n\nWas ist das chemische Symbol für Wasser?\n\nWer hat das Telefon erfunden?\n\nSchreibe die Zahlen von 1 bis 5.\n\nWas ist ein Verb?\n\nNenne zwei Planeten in unserem Sonnensystem.\n\nIn welcher Stadt",
-      "Schreibe einen kurzen Absatz über die Bedeutung von Recycling.\n\nBerechne 25% von 80.\n\nWas ist ein Synonym für \"glücklich\"?\n\nWie funktioniert eine Dampfmaschine?\n\nNenne die Hauptstadt von Australien.\n\nErkläre den Unterschied zwischen Wetter und Klima.\n\nWas ist die chemische Formel für Wasser?\n\nBeschreibe ein typisches Frühstück in Deutschland.\n\nWer schrieb \"Romeo und Julia\"?\n\nWelches ist das größte Meer der"
-    ],
-    "assistant": [
-      "Marie Curie war eine polnisch-französische Physikerin und Chemikerin.\n\n– Sie war die erste Frau, die einen Nobelpreis erhielt.\n– Sie war die erste und einzige Person, die Nobelpreise in zwei verschiedenen wissenschaftlichen Disziplinen gewann (Physik und Chemie).\n– Sie entdeckte die Elemente Polonium und Radium.\n– Ihre Forschungen zur Radioaktivität legten den Grundstein für die moderne Nuklearmedizin.",
-      "Marie Curie war eine polnisch-französische Physikerin und Chemikerin.\n\n- Sie forschte auf dem Gebiet der Radioaktivität.\n- Sie entdeckte die Elemente Polonium und Radium.\n- Sie erhielt als erste Frau einen Nobelpreis (Physik, 1903).\n- Sie war die erste Person und einzige Frau, die zwei Nobelpreise in zwei verschiedenen Wissenschaftsgebieten erhielt (Chemie, 1911).\n- Sie war die erste Professorin an der Universität von Paris."
+      "Die Photosynthese ist der Prozess, bei dem Pflanzen mit Hilfe von Lichtenergie aus Kohlenstoffdioxid und Wasser Sauerstoff und Glucose herstellen.",
+      "Die Photosynthese ist der Prozess, bei dem Pflanzen mithilfe von Lichtenergie aus Wasser und Kohlenstoffdioxid Zucker und Sauerstoff herstellen."
     ]
   },
   "Schreibe ein kurzes Gedicht über den Herbst.": {
     "base": [
-      "Wie viele Kontinente gibt es auf der Erde?\n\nBerechne 25 mal 7.\n\nWas ist die Hauptstadt von Australien?\n\nErkläre den Begriff \"Photosynthese\".\n\nNenne zwei bekannte Werke von William Shakespeare.\n\nWelches Tier ist das größte Landtier?\n\nÜbersetze \"hello\" ins Spanische.\n\nBeschreibe die Funktionsweise eines Verbrennungsmotors.\n\nWie lautet die chemische Formel für Wasser?",
-      "Berechne den Flächeninhalt eines Kreises mit Radius 5 cm.\n\nWelche Farbe hat eine reife Banane?\n\nÜbersetze den Satz \"Ich liebe dich\" ins Spanische.\n\nWas ist die Hauptstadt von Australien?\n\nZähle die ersten fünf Primzahlen auf.\n\nSchreibe eine kurze Geschichte über einen sprechenden Hund.\n\nWie viele Planeten gibt es in unserem Sonnensystem?\n\nErkläre den Begriff \"Photosynthese\"."
+      "5. write about the first time you did something you regretted 6. write a poem in the voice of a vampire or a werewolf 7. write about a song that reminds you of someone 8. write about a person you want to meet but can’t 9. write a poem about the worst nightmare you’ve ever had 10. write a poem about the first time you felt like you were in love 11. write about a time you felt like you were the",
+      "Weißt Du, wie es geht? Wir helfen Dir gern!\nKurz nachdem die Schule wieder begonnen hatte, merkte ich, dass das ganze Umfeld und die Stimmung sich gewandelt hatten. Was sich in der Schule abspielte, war nicht mehr dasselbe wie in den letzten Jahren. Das war nicht nur meine persönliche Meinung. Alle schienen unruhig zu sein. Als wir einen Tag später in die Klasse kamen"
     ],
     "assistant": [
-      "Der Herbstwind weht, so kühl und klar,\nDas Laub tanzt bunt, ein Wunder wahr.\nDie Tage kürzer, Nächte lang,\nEin warmer Tee, ein süßer Klang.\nDie Natur legt sich zur Ruh',\nDer Sommer geht, der Winter naht im Nu.",
-      "Der Herbstwind weht, Blätter fallen,\nIn Rot und Gold die Wälder prallen.\nDie Sonne sinkt, ein sanfter Schein,\nMacht die Natur zum Kunstverein.\nKürbisse leuchten, warm und rund,\nEin süßer Duft macht die Welt kunterbunt."
+      "Die Blätter fallen leis zur Erd,  \nin Gold und Rot gebettet.  \nDer Wind zieht singend durch die Welt,  \ndie Tage werden kürzer.\n\nDer Wald steht da in stiller Pracht,  \ndie Nebel steigen früh empor.  \nDie letzte Blume hält die Wacht –  \nder Herbst zieht leise vor die Tür.",
+      "Die Blätter tanzen leis im Wind,  \nin Gold und Rot, so bunt, so lind.  \nDer Himmel grau, der Morgen kalt,  \nder Herbst zieht still durch Wald und Feld.  \n\nDie Ernte reift, der Tag wird kurz,  \nder Duft von Reif liegt in der Burg.  \nEin letzter Schimmer, warm und mild –  \ndie Welt bereitet sich auf Winterruh vor."
     ]
   },
   "Gib mir drei Tipps gegen Lampenfieber.": {
     "base": [
-      "Erkläre den Begriff \"Künstliche Intelligenz\" in einfachen Worten.\n\nSchreibe ein kurzes Gedicht über den Frühling.\n\nWas ist die Hauptstadt von Australien?\n\nWie viele Planeten hat unser Sonnensystem?\n\nBerechne 25% von 200.\n\nNenne ein bekanntes Zitat von Albert Einstein.\n\nBeschreibe, wie man einen Kuchen backt.\n\nWas ist der Unterschied zwischen Wetter und Klima?\n\nWel",
-      "Schreibe einen kurzen Text über die Vorteile von Bewegung.\n\nWas ist der Unterschied zwischen Wetter und Klima?\n\nWie viele Kontinente gibt es auf der Erde?\n\nZeichne ein Haus mit einem Baum daneben.\n\nBeschreibe die Funktionsweise eines Verbrennungsmotors.\n\nWas ist die Hauptstadt von Australien?\n\nErkläre den Begriff \"Künstliche Intelligenz\" in einfachen Worten.\n\nNenne drei berühmte Maler.\n\nSchreibe ein"
+      "Mit Hilfe dieser Tipps kannst du dein Lampenfieber überwinden.\nApt. 2 with a private entry. 1 Bedroom, 1 Bath, Living Room, Dining Room, Kitchen, 1 Queen Bed, 1 Twin Bed, and a Sleeper Sofa.",
+      "Drei Tipps gegen Lampenfieber.\nHow do I stop my dog from chewing on the carpet?\nHow do I stop my dog from chewing on the carpet?"
     ],
     "assistant": [
-      "Hier sind drei Tipps gegen Lampenfieber:\n\n– Bereite dich gründlich vor: Je besser du den Inhalt beherrschst, desto sicherer fühlst du dich. Übe deine Präsentation oder dein Auftreten mehrmals, bis du dich wohlfühlst.\n\n– Atme tief und bewusst: Langsames, tiefes Ein- und Ausatmen beruhigt das Nervensystem. Mach vor deinem Auftritt ein paar tiefe Atemübungen, um dich zu zentrieren.\n\n– Visualisiere Erfolg: Stell dir vor, wie du selbstbewusst auftrittst und das Publikum positiv reagiert. Eine positive mentale Einstellung kann dir helfen, Ängste zu überwinden.",
-      "Hier sind drei Tipps gegen Lampenfieber:\n\n– Bereite dich gründlich vor: Je besser du den Inhalt beherrschst, desto sicherer fühlst du dich. Übe deine Präsentation mehrmals laut, am besten vor einem Spiegel oder einer vertrauten Person.\n\n– Entspannungsübungen: Kurz vor dem Auftritt können tiefe Atemübungen oder leichte Dehnübungen helfen, die Nervosität zu reduzieren. Atme langsam und tief durch die Nase ein, halte den Atem kurz an und atme dann langsam durch den Mund aus.\n\n– Visualisiere den Erfolg: Stell dir vor, wie gut dein Auftritt läuft und wie positiv das Publikum reagiert. Eine positive Einstellung kann Wunder wirken."
+      "– Atme tief und langsam, um deinen Puls zu beruhigen und den Körper zu entspannen.  \n– Stelle dir den Ablauf im Voraus mental vor – positive Bilder helfen gegen Angst.  \n– Konzentriere dich auf dein Publikum als Partner, nicht als Richter – das mindert Druck.",
+      "– Atme tief und langsam, um deinen Körper zu beruhigen und den Herzschlag zu verlangsamen.  \n– Stelle dir den Ablauf im Voraus mental vor – positive Bilder reduzieren die Angst vor dem Unbekannten.  \n– Fokussiere dich auf deine Botschaft, nicht auf dich selbst – das lenkt vom eigenen Zittern ab und stärkt die Sicherheit."
     ]
   },
-  "Write a short poem about autumn.": {
+  "Wer war Marie Curie?": {
     "base": [
-      "What is the capital of Australia?\n\nCalculate the area of a circle with a radius of 5 cm.\n\nDescribe the process of photosynthesis.\n\nWho wrote \"To Kill a Mockingbird\"?\n\nSolve for x: 2x + 7 = 15.\n\nList five different types of clouds.\n\nExplain the concept of supply and demand.",
-      "What is the capital of Australia?\n\nCalculate the sum of 15 and 27.\n\nList five different types of fruit.\n\nExplain the concept of photosynthesis.\n\nWho wrote the play \"Romeo and Juliet\"?\n\nDescribe the weather in a desert.\n\nWhat is the chemical symbol for water?"
+      "Wer war Marie Curie? 14440\nThe great rock wars The great rock wars 22399\nSensory Systems Sensory Systems 6474\nThe Bedford reader The Bedford reader 42174\nThe 2000 Import and Export Market for Tanning Extracts in N. America & Caribbean (World Trade Report) The 2000 Import and Export Market for Tanning Extracts in N. America & Caribbean (World Trade Report) 40621\nSociology and Social",
+      "Eine Forscherin mit vielen Ehren\nMarie Curie (1867-1934) is the name of one of the most famous scientists in the world. She was not only a woman, but also a scientist and a Nobel Prize winner. This article will provide you with information about her life and work.\nMarie Curie was born on November 7, 1867 in Warsaw, Poland. Her parents were teachers. Her father taught mathematics and her mother taught physics and chemistry."
     ],
     "assistant": [
-      "Golden leaves fall,\nCrisp air blows,\nPumpkins on display,\nAutumn glows.",
-      "Golden leaves descend and twirl,\nA crisp breeze whispers through the world.\nPumpkins glow, a vibrant sight,\nAutumn's beauty, pure and bright."
+      "Marie Curie war eine Physikerin und Chemikerin polnischer Herkunft, die später die französische Staatsbürgerschaft erhielt. Sie lebte von 1867 bis 1934 und ist bekannt für ihre bahnbrechenden Forschungen zur Radioaktivität. Sie war die erste Frau, die einen Nobelpreis erhielt, und bis heute die einzige Person, die in zwei verschiedenen naturwissenschaftlichen Disziplinen – Physik (1903) und Chemie (1911) – ausgezeichnet wurde. Gemeinsam mit ihrem Mann Pierre Curie entdeckte sie die Elemente Polonium und Radium. Marie Curie leistete auch wichtige Beiträge zur medizinischen Anwendung der Röntgentechnik, insbesondere während des Ersten Weltkriegs.",
+      "Marie Curie war eine Physikerin und Chemikerin polnischer Herkunft, die später die französische Staatsbürgerschaft erhielt. Sie lebte von 1867 bis 1934 und ist bekannt für ihre bahnbrechenden Forschungen zur Radioaktivität. Sie war die erste Frau, die einen Nobelpreis erhielt, und bis heute die einzige Person, die Nobelpreise in zwei verschiedenen naturwissenschaftlichen Disziplinen gewann: 1903 in Physik (gemeinsam mit Pierre Curie und Henri Becquerel) für Arbeiten zur Strahlung, und 1911 in Chemie für die Entdeckung der Elemente Radium und Polonium. Sie war zudem die erste Professorin an der Sorbonne in Paris. Ihr Engagement in der Wissenschaft und ihre Pionierrolle für Frauen in der Forschung machen sie zu einer ikonischen Persönlichkeit."
     ]
   },
   "Explain photosynthesis in one sentence.": {
     "base": [
-      "Draw a picture of a cat.\n\nWhat is the capital of Australia?\n\nWrite a short story about a talking squirrel.\n\nSolve for x: 2x + 5 = 11.\n\nList the planets in our solar system.\n\nDescribe your favorite food.\n\nTranslate \"hello\" into Spanish.",
-      "Calculate the area of a circle with a radius of 5 units.\n\nWhat is the capital of Australia?\n\nWrite a short paragraph about the benefits of exercise.\n\nWho wrote the play \"Romeo and Juliet\"?\n\nList five types of fruit.\n\nDefine the term \"democracy.\"\n\nSolve for x: 2x + 7 = 15.\n\nWhat is the chemical symbol for water?\n\nDescribe the main characteristics of a desert biome.\n\nName the largest ocean on Earth."
+      "Explain photosynthesis in one sentence.\nPhotosynthesis is a process used by plants and other organisms to convert light energy into chemical energy that can later be released to fuel the organisms' activities. Photosynthesis occurs in plants, algae, and some bacteria. During photosynthesis, plants use energy from the sun, water, and carbon dioxide to produce glucose and oxygen. Oxygen is a waste product of photosynthesis and is released into the atmosphere. Glucose is used by plants as food, and some is stored for",
+      "What is the definition of photosynthesis? 2019-01-07\nPhotosynthesis Definition & Process (with pictures)\nPhotosynthesis is the process by which plants use sunlight, water, and carbon dioxide to create their own food. The light-dependent reactions capture energy from sunlight and use it to power the synthesis of adenosine triphosphate and the conversion of carbon dioxide into organic molecules. In the first stage of photosynthesis, the plant uses the chlorophyll in its leaves to convert light"
     ],
     "assistant": [
-      "Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize nutrients from carbon dioxide and water, releasing oxygen as a byproduct.",
-      "Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize nutrients from carbon dioxide and water, producing oxygen as a byproduct."
+      "Photosynthesis is the process by which green plants use sunlight to convert carbon dioxide and water into glucose and oxygen.",
+      "Photosynthesis is the process by which green plants and some organisms use sunlight to synthesize nutrients from carbon dioxide and water, releasing oxygen as a byproduct."
+    ]
+  },
+  "Write a short poem about autumn.": {
+    "base": [
+      "Autumn is a season of the year, when leaves change color and fall off the trees. It's a beautiful time of the year, when nature is at its most colorful.\nAutumn is a beautiful time of the year when the leaves on the trees change color and fall to the ground. It is a time of change and new beginnings.\nThe first frost of the season has arrived and the trees are beginning to change color. The air is crisp and the leaves crunch underfoot as you walk through the",
+      "To the right you will find a poem that I wrote. It is a bit sad. It is about my wife who died this year after a long illness. The poem is about the autumn colors that she loved so much. When we moved to the Midwest she was fascinated by the changing of the seasons. This was especially true in the fall when the leaves would change to all kinds of colors. In the poem I use the colors of the leaves as a way of showing the stages of her illness."
+    ],
+    "assistant": [
+      "Leaves turn gold in morning light,  \nCrisp air hums a quiet tune.  \nGeese etch lines across the sky,  \nSummer fades beneath the moon.  \n\nPumpkins ripen, nuts fall near,  \nChildren laugh in woolen gear.  \nThe world breathes deep, prepares for sleep—  \nAutumn whispers, short and sweet.",
+      "Leaves turn gold in evening light,  \nCrisp air hums a quiet tune.  \nGeese carve lines across the sky,  \nHarvest ends beneath the moon.  \n\nWinds grow bold, the trees stand bare,  \nRoots hold fast to memories.  \nAutumn sighs and slips away—  \nWinter waits among the trees."
     ]
   },
   "Who was Marie Curie?": {
     "base": [
-      "What is the capital of Australia?\n\nCalculate the area of a rectangle with length 10 and width 5.\n\nList the planets in our solar system.\n\nExplain the concept of photosynthesis.\n\nWho wrote \"To Kill a Mockingbird\"?\n\nWhat is the chemical symbol for water?\n\nDescribe the main functions of the human heart.",
-      "Calculate the square root of 144.\n\nWhat is the capital of Australia?\n\nWrite a sentence using the word \"serendipity.\"\n\nDefine \"photosynthesis.\"\n\nList the primary colors.\n\nWho wrote \"To Kill a Mockingbird\"?\n\nWhat is the chemical symbol for water?\n\nWhen is Thanksgiving celebrated in the United States?\n\nDescribe the main function of the heart.\n\nIdentify the largest ocean on Earth.\n\nWhat is the formula for the area of a circle"
+      "Find out about this Nobel Prize winning scientist and discover how her work helped people with cancer.\nGet to know a scientist who was born in Poland but is well known around the world. She was the first woman to win a Nobel Prize, and the only person to win two Nobels in two different fields!\nMarie Curie was a very clever scientist. She discovered how to make x-rays. She also discovered the radioactive elements polonium and radium.\nMarie Curie was born in Warsaw,",
+      "Who was Marie Curie? 46786\nTwenty years of New Zealand history Twenty years of New Zealand history 14184\nTelemedicine Telemedicine 78688\nFundamental physical constants and the frontier of measurement Fundamental physical constants and the frontier of measurement 14907\nStatistics for the non-statistician Statistics for the non-statistician 7030\nCollected works of William Dunbar Collected works of William Dunbar 82787\nThe life and voyages of Captain James Cook"
     ],
     "assistant": [
-      "Marie Curie was a Polish and naturalized French physicist and chemist.\n\n– She was a pioneer in radioactivity research.\n– She was the first woman to win a Nobel Prize.\n– She was the first person and only woman to win the Nobel Prize twice.\n– She was the only person to win the Nobel Prize in two different scientific fields.\n– She was the first woman to become a professor at the University of Paris.",
-      "Marie Curie was:\n– A Polish-French physicist and chemist\n– Renowned for her pioneering research on radioactivity\n– The first woman to win a Nobel Prize\n– The first person and only woman to win the Nobel Prize twice\n– The only person to win the Nobel Prize in two different scientific fields\n– The first woman to become a professor at the University of Paris"
+      "Marie Curie was a pioneering physicist and chemist born in 1867 in Warsaw, Poland. She is best known for her groundbreaking research on radioactivity, a term she herself coined. Curie was the first woman to win a Nobel Prize and remains the only person to have won Nobel Prizes in both Physics and Chemistry. She discovered the elements polonium and radium, and her work laid the foundation for advances in medical treatments and nuclear science. She died in 1934 from complications related to her long-term exposure to radiation.",
+      "Marie Curie was a Polish-born physicist and chemist who conducted pioneering research on radioactivity. She was the first woman to win a Nobel Prize and remains the only person to have won Nobel Prizes in both physics and chemistry. Along with her husband Pierre Curie, she discovered the elements polonium and radium. She developed techniques for isolating radioactive isotopes and played a key role in the advancement of X-ray technology, especially during World War I. Her work laid the foundation for modern nuclear science."
     ]
   },
   "Give me three tips against stage fright.": {
     "base": [
-      "What is the capital of Australia?\n\nWrite a short story about a talking dog.\n\nHow many planets are in our solar system?\n\nList three synonyms for \"happy.\"\n\nExplain the concept of quantum entanglement.\n\nWhat is the best way to learn a new language?\n\nDraw a cat.\n\nWho painted the Mona Lisa?\n\nDescribe your ideal vacation.\n\nWhat is the square root of 64?\n\nWrite a haiku about nature.\n\nWhat is the chemical symbol for water",
-      "How to fix a leaky faucet.\n\nWhat is the capital of Australia?\n\nWrite a short story about a talking cat.\n\nExplain the concept of quantum entanglement.\n\nList five benefits of exercise.\n\nTranslate \"hello\" into Spanish.\n\nWho was the first person to walk on the moon?\n\nDesign a logo for a coffee shop.\n\nWhat is the formula for the area of a circle?\n\nDescribe the process of photosynthesis.\n\nHow to make a perfect omelet.\n\nName the"
+      "One should work for everybody, two should work for most and the third should work for you.\nHow do I prepare for stage fright?\nThe first tip is the most obvious. Practice. Get out there and perform as often as possible. The more you do it, the less stage fright you will have. And the more you will be able to focus on performing. The more you perform, the more opportunities you will get. The more opportunities you get, the more you will improve and the more you",
+      "I'm on stage with my band and I'm afraid of it.\nStage fright is a tough one. I don't know if I can give you three tips that will completely take away your stage fright. But I'm going to do my best.\nNumber one is, you don't have to be perfect. You can be imperfect and that's okay. Don't think that you have to be perfect. Just be honest and real. If you make a mistake, that's okay, you can always"
     ],
     "assistant": [
-      "Here are three tips against stage fright:\n\n– Practice extensively: The more familiar you are with your material, the more confident you'll feel.\n– Visualize success: Before your performance, imagine yourself performing well and receiving positive feedback.\n– Focus on your breathing: Deep, slow breaths can help calm your nervous system.",
-      "Here are three tips against stage fright:\n\n– Prepare thoroughly: Knowing your material inside and out builds confidence.\n– Practice relaxation techniques: Deep breathing or progressive muscle relaxation can calm your nerves.\n– Visualize success: Imagine yourself performing well and receiving positive feedback."
+      "– Practice your speech or performance multiple times to build confidence and familiarity.  \n– Focus on your breathing – take slow, deep breaths to calm your nervous system before going on stage.  \n– Shift your mindset: see the audience as supportive rather than judgmental, and remember that some nervous energy can enhance your performance.",
+      "– Practice your performance thoroughly to build confidence and familiarity with the material.  \n– Focus on your breathing – take slow, deep breaths before going on stage to calm your nerves.  \n– Shift your mindset by viewing the audience as supportive rather than judgmental."
     ]
   }
 }

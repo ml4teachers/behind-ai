@@ -1,13 +1,13 @@
 'use client'
 
 // ---------------------------------------------------------------------------
-// Finetuning-Vergleich: dieselbe Frage an dasselbe Modell, zwei Nutzungsarten.
-//   • Basismodell (nur Pretraining): setzt den Text als Dokument fort (Prefill-
-//     Trick über /api/finetuning-simulate) -> driftet ab, beantwortet nichts.
-//   • Assistent (nach Finetuning): normaler Chat -> antwortet direkt & strukturiert.
-// Der Verhaltensunterschied IST die Lektion des Finetunings. Honest framing:
-// ein echtes Basismodell ist per API kaum verfügbar, also reproduzieren wir
-// sein typisches Verhalten durch reines Fortsetzen (siehe Route-Kommentar).
+// Finetuning-Vergleich: derselbe Text an zwei Modelle.
+//   • Basismodell (nur Pretraining): ein ECHTES Basismodell (Llama 3.1 8B Base)
+//     setzt den rohen Text fort -> Fragenliste, Forenbeitrag, Dialog für beide
+//     Rollen … beantwortet aber nichts gezielt.
+//   • Assistent (nach Finetuning): Chat-Modell -> antwortet direkt & strukturiert.
+// Der Verhaltensunterschied IST die Lektion des Finetunings (Details in der
+// Route /api/finetuning-simulate).
 //
 // Zwei unabhängige, parallele Fetches (jedes Panel füllt sich für sich).
 // Interne Strings DE inline (Viz-Konvention, EN-Migration in Thread 9).
@@ -42,17 +42,18 @@ const IDLE: PanelState = { query: '', text: '', loading: false, error: null }
 // Beispielanfragen: je eine Frage und mehrere Anweisungen mit Formatvorgaben.
 // Bewusst jugendfrei & schulnah; alle zeigen den Kontrast zuverlässig. Je Sprache
 // eigene Beispiele, damit das Modell in der UI-Sprache antwortet (Schlüssel des
-// Caches ist der exakte Anfragetext).
+// Caches ist der exakte Anfragetext). Wissensfrage, Erklärung, kreative
+// Aufgabe und Tipps zeigen, dass das Basismodell Anweisungen NICHT befolgt.
 const EXAMPLES_DE = [
   'Wer war Marie Curie?',
-  'Schreibe ein kurzes Gedicht über den Herbst.',
   'Erkläre Photosynthese in einem Satz.',
+  'Schreibe ein kurzes Gedicht über den Herbst.',
   'Gib mir drei Tipps gegen Lampenfieber.',
 ]
 const EXAMPLES_EN = [
   'Who was Marie Curie?',
-  'Write a short poem about autumn.',
   'Explain photosynthesis in one sentence.',
+  'Write a short poem about autumn.',
   'Give me three tips against stage fright.',
 ]
 
@@ -210,7 +211,9 @@ export function FinetuningComparison() {
           renderText={(s) => (
             <p className="whitespace-pre-line text-sm leading-relaxed">
               <span className="text-foreground">{s.query}</span>
-              {'\n'}
+              {/* Echte Fortsetzung: direkt hinter der Eingabe weiter (mit
+                  Leerzeichen, ausser sie beginnt mit Satzzeichen). */}
+              {/^[.,;:!?)]/.test(s.text) ? '' : ' '}
               <span className="text-muted-foreground">{s.text}</span>
             </p>
           )}
